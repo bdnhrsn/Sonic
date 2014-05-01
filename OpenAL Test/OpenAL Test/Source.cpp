@@ -143,15 +143,6 @@ static void printALCInfo (void)
     checkForErrors();
 }
 
-static void printALInfo(void)
-{
-    printf("OpenAL vendor string: %s\n", alGetString(AL_VENDOR));
-    printf("OpenAL renderer string: %s\n", alGetString(AL_RENDERER));
-    printf("OpenAL version string: %s\n", alGetString(AL_VERSION));
-    printExtensions("OpenAL extensions", ' ', alGetString(AL_EXTENSIONS));
-    checkForErrors();
-}
-
 int main()
 {
     ALCdevice *device = alcOpenDevice(NULL);
@@ -160,7 +151,6 @@ int main()
     checkForErrors();
 
     printALCInfo();
-    printALInfo();
     checkForErrors();
 
     alcMakeContextCurrent(NULL);
