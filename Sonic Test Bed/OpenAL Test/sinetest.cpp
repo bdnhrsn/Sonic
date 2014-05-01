@@ -16,23 +16,7 @@
 
 using namespace std;
 
-static void list_audio_devices(const ALCchar *devices)
-{
-        const ALCchar *device = devices, *next = devices + 1;
-        size_t len = 0;
-
-        fprintf(stdout, "Devices list:\n");
-        fprintf(stdout, "----------\n");
-        while (device && *device != '\0' && next && *next != '\0') 
-		{
-                fprintf(stdout, "%s\n", device);
-                len = strlen(device);
-                device += (len + 1);
-                next += (len + 2);
-        }
-        fprintf(stdout, "----------\n");
-}
-
+//This will automatically assume 16-bit audio. It will not work otherwise, will fix this later.
 void fillSine(ALvoid *bufferData, short channels, unsigned long frames, int sampleRate, float frequency, short amplitude)
 {
 	double time = 0;
@@ -64,8 +48,6 @@ int main()
 	enumeration = alcIsExtensionPresent(NULL, "ALC_ENUMERATION_EXT");
 	if (enumeration == AL_FALSE)
 		printf("no enumeration supported!\n");
-
-	list_audio_devices(alcGetString(NULL, ALC_DEVICE_SPECIFIER));
 
 	ALCcontext *context;
 	context = alcCreateContext(device, NULL);
