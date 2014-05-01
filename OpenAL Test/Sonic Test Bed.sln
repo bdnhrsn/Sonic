@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenAL Test", "OpenAL Test\OpenAL Test.vcxproj", "{5D610AAC-56C1-4741-803E-BAAB13D89E9D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PortAudio Test", "PortAudio Test\PortAudio Test.vcxproj", "{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{5D610AAC-56C1-4741-803E-BAAB13D89E9D}.Debug|Win32.Build.0 = Debug|Win32
 		{5D610AAC-56C1-4741-803E-BAAB13D89E9D}.Release|Win32.ActiveCfg = Release|Win32
 		{5D610AAC-56C1-4741-803E-BAAB13D89E9D}.Release|Win32.Build.0 = Release|Win32
+		{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}.Debug|Win32.Build.0 = Debug|Win32
+		{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}.Release|Win32.ActiveCfg = Release|Win32
+		{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
