@@ -73,11 +73,10 @@ int main()
 	ALvoid *bufferData = (ALvoid *)malloc(dataSize);
 	fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, 440, 25000);
 
-	//for(int i = 0; i < NUM_BUFFERS; i++)
-	//	alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
-	//alSourceQueueBuffers(source, NUM_BUFFERS, buffer);
-	alBufferData(buffer, AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);
-	alSourceQueueBuffers(source, AL_BUFFER, &buffer);
+	for(int i = 0; i < NUM_BUFFERS; i++)
+		alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
+	alSourceQueueBuffers(source, NUM_BUFFERS, buffer);
+	
 	alSourcePlay(source);
 
 	while(true);
