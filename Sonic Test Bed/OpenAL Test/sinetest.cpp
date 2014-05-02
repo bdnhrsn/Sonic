@@ -66,22 +66,20 @@ int main()
 	alSource3f(source, AL_VELOCITY, 0, 0, 0);
 	alSourcei(source, AL_LOOPING, AL_TRUE);
 
-	ALuint buffer;
-	alGenBuffers(1, &buffer);
+	ALuint *buffer = (ALuint*)malloc(sizeof(ALuint)*NUM_BUFFERS);
+	alGenBuffers(NUM_BUFFERS, buffer);
 
 	ALsizei dataSize = T_FRAMES * CHANNELS * (BITS/8);
 	ALvoid *bufferData = (ALvoid *)malloc(dataSize);
 	fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, 440, 25000);
 
-	//for(int i = 0; i < NUM_BUFFERS; i++)
-	//	alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
-	//alSourceQueueBuffers(source, NUM_BUFFERS, buffer);
-	alBufferData(buffer, AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);
-	alSourceQueueBuffers(source, AL_BUFFER, &buffer);
+	for(int i = 0; i < NUM_BUFFERS; i++)
+		alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
+	alSourceQueueBuffers(source, NUM_BUFFERS, buffer);
 	alSourcePlay(source);
 
 	while(true);
-	/*short state = 0;
+	short state = 0;
 	while(true)
 	{
 		ALint processed;
@@ -95,11 +93,11 @@ int main()
 			if(state == NUM_BUFFERS)
 				state = 0;
 		}
-	}*/
+	}
 
 	// cleanup context
 	alDeleteSources(1, &source);
-	alDeleteBuffers(1, &buffer);
+	alDeleteBuffers(NUM_BUFFERS, buffer);
 	device = alcGetContextsDevice(context);
 	alcMakeContextCurrent(NULL);
 	alcDestroyContext(context);
