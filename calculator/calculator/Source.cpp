@@ -17,10 +17,7 @@ int main(void)
 	cout << "sum     " << x + z << endl;
 	*/
 	PlaySound(TEXT("hype.wav"), NULL, SND_SYNC);
-	PlaySound(TEXT("hype.wav"), NULL, SND_SYNC);
-	PlaySound(TEXT("hype.wav"), NULL, SND_SYNC);
-	PlaySound(TEXT("hype.wav"), NULL, SND_SYNC);
-	PlaySound(TEXT("hype.wav"), NULL, SND_SYNC);
+	
 	system("pause");
 
 	return 0;
