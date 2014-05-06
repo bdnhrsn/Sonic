@@ -9,11 +9,11 @@
 #endif
 
 #define CHANNELS 2
-#define SAMPLE_RATE 44100
+#define SAMPLE_RATE 48000
 #define BITS 16
 #define LENGTH_S 1
-#define T_FRAMES 882
-#define NUM_BUFFERS 10
+#define T_FRAMES 120
+#define NUM_BUFFERS 2
 
 using namespace std;
 
@@ -71,7 +71,7 @@ int main()
 
 	ALsizei dataSize = T_FRAMES * CHANNELS * (BITS/8);
 	ALvoid *bufferData = (ALvoid *)malloc(dataSize);
-	fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, 440, 25000);
+	fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, 400, 25000);
 
 	for(int i = 0; i < NUM_BUFFERS; i++)
 		alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
