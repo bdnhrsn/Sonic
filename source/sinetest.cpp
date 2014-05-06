@@ -1,5 +1,5 @@
-#include "AL\al.h"
-#include "AL\alc.h"
+#include "al.h"
+#include "alc.h"
 #include <stdio.h>
 #include <string>
 #include <math.h>
@@ -10,7 +10,7 @@
 #endif
 
 #define CHANNELS 2
-#define SAMPLE_RATE 96000
+#define SAMPLE_RATE 48000
 #define BITS 16
 #define T_FRAMES 2400
 #define NUM_BUFFERS 2
