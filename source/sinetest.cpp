@@ -37,7 +37,24 @@ void fillSine(ALvoid *bufferData, short channels, unsigned long frames, int samp
 
 void fillSaw(ALvoid *bufferData, short channels, unsigned long frames, int sampleRate, float frequency, short amplitude)
 {
-	
+	double time = 0;
+	short *data = (short*)bufferData;
+		double val;
+
+	for (unsigned long i = 0; i < frames; i++)
+	{
+		time += 1 / (double)sampleRate;
+		if (time >= 1 / frequency)
+			time -= 1 / frequency;
+
+		val = (2 * amplitude* frequency * time - amplitude);
+		//printf("the value is %lf. \n", val);
+
+		for (short j = 0; j < channels; j++)
+		{
+			*data++ = (short)val;
+		}
+	}
 }
 
 int main()
@@ -78,8 +95,8 @@ int main()
 
 	ALsizei dataSize = T_FRAMES * CHANNELS * (BITS/8);
 	ALvoid *bufferData = (ALvoid *)malloc(dataSize);
-	float mPitch = 20;
-	fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, mPitch, 25000);
+	float mPitch = 440;
+	fillSaw(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, mPitch, 25000);
 
 	for(int i = 0; i < NUM_BUFFERS; i++)
 		alBufferData(buffer[i], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);	
@@ -98,13 +115,13 @@ int main()
 		while(processed--)
 		{
 			alSourceUnqueueBuffers(source, 1, &buffer[buffID]);
-			fillSine(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, mPitch, 25000);
+			fillSaw(bufferData, CHANNELS, T_FRAMES, SAMPLE_RATE, mPitch, 25000);
 			printf("Refilled the sine data into buffer: %d, Pitch is %f\n", buffID, mPitch);
 			alBufferData(buffer[buffID], AL_FORMAT_STEREO16, bufferData, dataSize, SAMPLE_RATE);
 			alSourceQueueBuffers(source, 1, &buffer[buffID]);
 
 			buffID++; totalBuffers++;
-			mPitch += totalBuffers;
+			//mPitch += totalBuffers;
 			if(buffID == NUM_BUFFERS)
 				buffID = 0;
 		}
