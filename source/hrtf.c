@@ -2663,7 +2663,3 @@ int main (const int argc, const char * argv []) {
   fprintf (stdout, "Operation completed.\n");
   return (0);
 }
-
-
-
-

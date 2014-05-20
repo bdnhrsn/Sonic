@@ -6,7 +6,7 @@
 
 
 
-#include	"FFTReal.h"
+#include	"../include/FFTReal.h"
 
 #include	<new>
 
@@ -73,25 +73,6 @@ int	main (void)
 			fft.rescale (x);
 
 			/* Display the result */
-			printf ("FFT:\n");
-			for (i = 0; i <= nbr_points/2; i ++)
-			{
-				double			img;
-
-				const double	real = f [i];
-				if (i > 0 && i < nbr_points/2)
-				{
-					img = f [i + nbr_points/2];
-				}
-				else
-				{
-					img = 0;
-				}
-
-				const double	f_abs = sqrt (real * real + img * img);
-				printf ("%5d: %+12.6f %+12.6f (%12.6f)\n", i, real, img, f_abs);
-			}
-			printf ("\n");
 
 			printf ("IFFT:\n");
 			for (i = 0; i < nbr_points; i ++)
