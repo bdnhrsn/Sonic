@@ -15,7 +15,7 @@
 
 /*\\\ INCLUDE FILES \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\*/
 
-#include	"FFTReal.h"
+#include	"../include/FFTReal.h"
 
 #include	<cassert>
 #include	<cmath>
