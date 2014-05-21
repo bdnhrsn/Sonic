@@ -1,0 +1,58 @@
+/*! \mainpage mit_hrtf_lib - MIT Kemar HRTF C Library
+
+\section about_sec About
+
+This is a C library making access to the MIT Kemar HRTF set easy, through
+the use of two functions. It is based on the "compact" data sets, which are
+trimmed to 128 taps at 44100Hz, from the the complete set of 512 taps. While
+Aristotel Digenis wrote this library, all the data itself is thanks to the
+work done at MIT by Bill Gardner and Keith Martin. All this library aims to
+do is to make the use of that data simpler.
+
+The original data available from the MIT website is stored in individual
+".wav" files, at 44100Hz sample rate. For creation of this library, resampled
+version were made. At this point there were 2944 files, so a Python script 
+was then written to iterate through all the files, sorting them and creating
+multi-dimensional C arrays out of them. Next, the mechanism for returning the
+appropriate array elements was written and tested.
+
+\section use_sec Use
+There are only two functions for use. Have a look at the example code below,
+or see mit_hrtf_lib.h for more information on their use.
+
+<CODE>
+int nAzimuth = 30;<br>
+int nElevation = 0;<br>
+int nTaps = 0;<br>
+short* pLeft = 0;<br>
+short* pRight = 0;<br>
+<br>
+nTaps = mit_hrtf_availability(nAzimuth, nElevation, 44100, 0);<br>
+<br>
+if(nTaps)<br>
+{<br>
+&nbsp;&nbsp;&nbsp;pLeft = malloc(nTaps * sizeof(short));<br>
+&nbsp;&nbsp;&nbsp;pRight = malloc(nTaps * sizeof(short));<br>
+<br>
+&nbsp;&nbsp;&nbsp;nTaps = mit_hrtf_get(&nAzimuth, &nElevation, 44100, 0, pLeft, pRight);<br>
+}<br>
+<br>
+if(pLeft)<br>
+&nbsp;&nbsp;&nbsp;free(pLeft);<br>
+if(pRight)<br>
+&nbsp;&nbsp;&nbsp;free(pRight);<br>
+</CODE>
+\section details_sec Details
+
+\subsection license Licence: 
+GNU Lesser General Public Licence
+
+\subsection samplerates Sample Rates: 
+44100, 48000, 88200, 96000
+
+\subsection bitdepth Bit Depth: 
+16
+
+\subsection datasets Data Sets: 
+Normal, Diffused
+*/
