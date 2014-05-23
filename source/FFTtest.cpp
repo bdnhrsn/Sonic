@@ -31,6 +31,7 @@ int	my_new_handler (size_t dummy)
 #endif	// _MSC_VER
 
 
+typedef float flt_t;
 
 int	main (void)
 {
