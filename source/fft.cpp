@@ -5,40 +5,113 @@
 //   You can use it on your own
 //   When utilizing credit LIBROW site
 
-//   Include declaration file
+#include <iostream>
+#include <math.h>
 #include "../include/fft.h"
-//   Include math library
-#include <math.h>
-#include "fft.h"
-//   Include math library
-#include <math.h>
 
-//convolution function
-//N is the FFT size, n1 is the size for the input, n2 is the size of the filter
+using namespace std;
 
-complex* CFFT::convolution(complex *input, complex *filter, int N, int n1, int n2)
+//Convolution function which returns the frequency representation of the result.
+//NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
+complex* CFFT::convolutionF(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT)
 {
-	//store the fft for the input data
-	complex *temp1 = new complex[N];
-	//store the fft for the filter data
-	complex *temp2 = new complex[N];
-	//store the output data
-	complex *temp3 = new complex[N];
+	//Check for invalid inputs.
+	if(input == NULL || filter == NULL)
+	{
+		cout << "Could not perform convolution on empty arrays!" << endl;
+		return NULL;
+	}
 
-	//doing fft to both input and filter
-	CFFT::Forward(input, temp1, N);
-	CFFT::Forward(filter, temp2, N);
+	bool NFFTChanged = false;
+	while(NFFT < NSIG || NFFT < NFIL)
+	{
+		cout << "Please input a valid NFFT, which is >= NSIG(" << NSIG << ") and >= NFIL(" << NFIL <<") : ";
+		cin >> NFFT;
+		NFFTChanged = true;
+	}
 
-	//multiplying input and filter in frequency domain
-	for (int i = 0; i < N; i++)	
-		temp3[i] = temp1[i] * temp2[i];
+	//Perform zero padding.
+	complex *fInput, *fFilter;
+
+	if(NSIG < NFFT)
+	{
+		fInput = new complex[NFFT];
+		for(int i = 0; i < NSIG; i++)
+			fInput[i] = input[i];
+	}
+	else
+		fInput = input;
+
+	if(NFIL < NFFT)
+	{
+		fFilter = new complex[NFFT];
+		for(int i = 0; i < NFIL; i++)
+			fFilter[i] = filter[i];
+	}
+	else
+		fFilter = filter;
 	
-	//doing ifft to the ouput
-	CFFT::Inverse(temp3, N);
+	//Store the output data.
+	complex *output = new complex[NFFT];
 	
-	return temp3;
+	//Perform FFT on both input and filter.
+	CFFT::Forward(fInput, NFFT);
+	CFFT::Forward(fFilter, NFFT);
+
+	for(int i = 0; i < NFFT; i++)
+		output[i] = fInput[i] * fFilter[i];
+
+	return output;
 }
 
+//Convolution function which returns the time representation of the result.
+//NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
+complex* CFFT::convolutionT(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT)
+{
+	//Check for invalid inputs.
+	if(input == NULL || filter == NULL)
+	{
+		cout << "Could not perform convolution on empty arrays!" << endl;
+		return NULL;
+	}
+
+	//Perform zero padding.
+	complex *fInput, *fFilter;
+
+	if(NSIG < NFFT)
+	{
+		fInput = new complex[NFFT];
+		for(int i = 0; i < NSIG; i++)
+			fInput[i] = input[i];
+	}
+	else
+		fInput = input;
+
+	if(NFIL < NFFT)
+	{
+		fFilter = new complex[NFFT];
+		for(int i = 0; i < NFIL; i++)
+			fFilter[i] = filter[i];
+	}
+	else
+		fFilter = filter;
+
+	//Store the output data.
+	complex *output = new complex[NFFT];
+
+	//Perform FFT on both input and filter.
+	CFFT::Forward(fInput, NFFT);
+	CFFT::Forward(fFilter, NFFT);
+
+	//Multiplying input and filter in frequency domain.
+	for (int i = 0; i < NFFT; i++)	
+		output[i] = fInput[i] * fFilter[i];
+	
+	//Perform IFFT on the ouput.
+	CFFT::Inverse(output, NFFT);
+	
+	return output;
+}
 
 //   FORWARD FOURIER TRANSFORM
 //     Input  - input data
