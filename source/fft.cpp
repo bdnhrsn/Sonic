@@ -6,7 +6,7 @@
 //   When utilizing credit LIBROW site
 
 //   Include declaration file
-#include "fft.h"
+#include "../include/fft.h"
 //   Include math library
 #include <math.h>
 
