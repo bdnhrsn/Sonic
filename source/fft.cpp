@@ -9,6 +9,36 @@
 #include "../include/fft.h"
 //   Include math library
 #include <math.h>
+#include "fft.h"
+//   Include math library
+#include <math.h>
+
+//convolution function
+//N is the FFT size, n1 is the size for the input, n2 is the size of the filter
+
+complex* CFFT::convolution(complex *input, complex *filter, int N, int n1, int n2)
+{
+	//store the fft for the input data
+	complex *temp1 = new complex[N];
+	//store the fft for the filter data
+	complex *temp2 = new complex[N];
+	//store the output data
+	complex *temp3 = new complex[N];
+
+	//doing fft to both input and filter
+	CFFT::Forward(input, temp1, N);
+	CFFT::Forward(filter, temp2, N);
+
+	//multiplying input and filter in frequency domain
+	for (int i = 0; i < N; i++)	
+		temp3[i] = temp1[i] * temp2[i];
+	
+	//doing ifft to the ouput
+	CFFT::Inverse(temp3, N);
+	
+	return temp3;
+}
+
 
 //   FORWARD FOURIER TRANSFORM
 //     Input  - input data
