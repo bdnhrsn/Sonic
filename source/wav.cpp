@@ -46,16 +46,19 @@ namespace utility
 		RIFF_Header riff_header;
 		WAVE_Data wave_data;
 		unsigned char* data;
+		std::string openM = "rb";
 
 		try 
 		{
 			std::cout << "Attempting to load file: " << fname << std::endl;
-			soundFile = fopen(fname.c_str(), "rb");
+			soundFile = fopen(fname.c_str(), openM.c_str());
+			std::cout << "File loaded!" << std::endl;
 
 			if (!soundFile)
 				throw(fname);
 
 			// Read in the first chunk into the struct
+			std::cout << "Reading RIFF Header..." << std::endl;
 			fread(&riff_header, sizeof(RIFF_Header), 1, soundFile);
 
 			// Read in first chunk to RIFF_Header
@@ -70,7 +73,9 @@ namespace utility
 				throw ("Invalid RIFF or WAVE Header");
 
 			// Read in second chunk to WAVE_Format
+			std::cout << "Reading WAV Format..." << std::endl;
 			fread(&wave_format, sizeof(WAVE_Format), 1, soundFile);
+
 			// Check for format tag in memory
 			if (wave_format.subChunkID[0] != 'f' ||
 				wave_format.subChunkID[1] != 'm' ||
@@ -84,15 +89,25 @@ namespace utility
 				fseek(soundFile, sizeof(char)*extraSize, SEEK_CUR);
 			}
 
-			// Read last byte of data before sound data
+			//Read the next header.
 			fread(&wave_data, sizeof(WAVE_Data), 1, soundFile);
-			// Check for data tag in memory
-			if (wave_data.subChunkID[0] != 'd' ||
+			while (wave_data.subChunkID[0] != 'd' ||
 				wave_data.subChunkID[1] != 'a' ||
 				wave_data.subChunkID[2] != 't' ||
-				wave_data.subChunkID[3] != 'a')
-				throw ("Invalid data header");
-			
+				wave_data.subChunkID[3] != 'a' )
+			{
+				if( wave_data.subChunkID[0] == 'j' &&
+					wave_data.subChunkID[1] == 'u' &&
+					wave_data.subChunkID[2] == 'n' &&
+					wave_data.subChunkID[3] == 'k' )
+				{
+					char junk[8];
+					fread(&junk, 4, 1, soundFile);
+				}
+				
+				fread(&wave_data, sizeof(WAVE_Data), 1, soundFile);
+			}
+
 			// Allocate memory for wave data
 			std::cout << "Extracting data from file..." << std::endl;
 			data = new unsigned char[wave_data.subChunk2Size];
@@ -102,13 +117,22 @@ namespace utility
 			if (!fread(data, wave_data.subChunk2Size, 1, soundFile))
 				throw ("error loading WAVE data into struct");
 
+
 			//Fill the complex data array using the overloaded assignment operator
 			std::cout << "Filling in complex array..." << std::endl;
 			complex *wavData = new complex[wave_data.subChunk2Size];
-			for(int i = 0; i < wave_data.subChunk2Size; i++)
-				wavData[i] = data[i];
 
-			std::cout << "Complex array filled!" << std::endl;
+			//Since it is 16-bit audio, we are going to convert the data into shorts, and rescale to complex floats.
+			if(	wave_format.bitsPerSample == 16 )
+			{
+				short *shortData = (short *) data;
+				for(int i = 0; i < wave_data.subChunk2Size / 2; i++)
+				{
+					wavData[i] = shortData[i] / (pow(2, 16) / 2.0);
+				}
+			}
+
+			std::cout << "Complex array filled!" << std::endl << std::endl;
 
 			// Set variables passed in
 			*size = wave_data.subChunk2Size;
