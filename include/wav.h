@@ -2,6 +2,7 @@
 #define WAV_H
 
 #include <string>
+#include "complex.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -16,7 +17,7 @@ extern "C" {
 		typedef struct WAVE_Data;
 
 		// Load WAVE file function
-		bool loadWAVFile(const std::string fname, void* buffer, int* size, int* frequency, short bitd, short channels);
+		complex *loadCmpWavData(const std::string fname, long *size, int *smpFreq, int *bitDepth, int *channels);
 	}
 #if defined(__cplusplus)
 }  /* extern "C" */

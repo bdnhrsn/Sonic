@@ -17,8 +17,8 @@ class CFFT
 		//NFFT is the FFT size (will be modified if invalid!), NSIG is the size for the input, NFIL is the size of the filter
 		//Zero padding is automatically taken care of in the convolution function.
 		//T means the function returns result in time domain; F is the result in the frequency domain.
-		static complex* convolutionF(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT);
-		static complex* convolutionT(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT);
+		static complex* convolutionF(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT);
+		static complex* convolutionT(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT);
 	
 		//   FORWARD FOURIER TRANSFORM
 		//     Input  - input data

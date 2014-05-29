@@ -13,7 +13,7 @@ using namespace std;
 
 //Convolution function which returns the frequency representation of the result.
 //NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
-complex* CFFT::convolutionF(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT)
+complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT)
 {
 	//Check for invalid inputs.
 	if(input == NULL || filter == NULL)
@@ -66,7 +66,7 @@ complex* CFFT::convolutionF(complex *input, complex *filter, int NSIG, int NFIL,
 
 //Convolution function which returns the time representation of the result.
 //NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
-complex* CFFT::convolutionT(complex *input, complex *filter, int NSIG, int NFIL, int &NFFT)
+complex* CFFT::convolutionT(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT)
 {
 	//Check for invalid inputs.
 	if(input == NULL || filter == NULL)
