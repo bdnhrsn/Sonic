@@ -1,9 +1,8 @@
-#include <iostream>
-#include <math.h>
-#include <stdio.h>
-#include <string>
-#include <fstream>
 #include <algorithm>
+#include <math.h>
+#include <string>
+#include <iostream>
+#include <fstream>
 
 #include "../include/fft.h"
 #include "../include/wav.h"
