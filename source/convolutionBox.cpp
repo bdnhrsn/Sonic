@@ -14,8 +14,8 @@ int main()
 {
 	const double PI = atan(1.0)*4;
 
-	string inFile = "input1mono.wav";
-	string impFile =  "impulse1mono.wav";
+	string inFile = "assets\\input1mono.wav";
+	string impFile =  "assets\\impulse1mono.wav";
 
 	long NSIG, NFIL;
 	complex *monoIn = NULL, *monoFil = NULL;
