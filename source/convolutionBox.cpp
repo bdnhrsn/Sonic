@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include <fstream>
+#include<algorithm>
 
 #include "../include/fft.h"
 #include "../include/wav.h"
@@ -13,8 +14,8 @@ int main()
 {
 	const double PI = atan(1.0)*4;
 
-	string inFile = "C:\\stuff\\input1mono.wav";
-	string impFile = "C:\\stuff\\impulse1mono.wav";
+	string inFile = "input1mono.wav";
+	string impFile =  "impulse1mono.wav";
 
 	long NSIG, NFIL;
 	complex *monoIn = NULL, *monoFil = NULL;
