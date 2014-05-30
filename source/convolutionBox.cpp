@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <string>
+#include <fstream>
 
 #include "../include/fft.h"
 #include "../include/wav.h"
@@ -45,6 +46,26 @@ int main()
 
 	for(long i = 0; i < NFFT; i++)
 		output[i] /= maxAmp;
+
+	ofstream outputFile("output.txt");
+	if(outputFile.is_open())
+	{
+		for(int i = 0; i < NFFT; i++)
+		{
+			outputFile << output[i].re() << endl;
+		}
+		outputFile.close();
+	}
+
+	ofstream outputFile2("Da.txt");
+	if(outputFile2.is_open())
+	{
+		for(int i = 0; i < NFFT; i++)
+		{
+			outputFile2 << output[i].re() << " " << output[i].im() << endl;
+		}
+		outputFile2.close();
+	}
 
 	delete monoIn;
 	delete monoFil;
