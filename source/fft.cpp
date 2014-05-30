@@ -33,23 +33,13 @@ complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFI
 	//Perform zero padding.
 	complex *fInput, *fFilter;
 
-	if(NSIG < NFFT)
-	{
-		fInput = new complex[NFFT];
-		for(int i = 0; i < NSIG; i++)
-			fInput[i] = input[i];
-	}
-	else
-		fInput = input;
+	fInput = new complex[NFFT];
+	for(int i = 0; i < NSIG; i++)
+		fInput[i] = input[i];
 
-	if(NFIL < NFFT)
-	{
-		fFilter = new complex[NFFT];
-		for(int i = 0; i < NFIL; i++)
-			fFilter[i] = filter[i];
-	}
-	else
-		fFilter = filter;
+	fFilter = new complex[NFFT];
+	for(int i = 0; i < NFIL; i++)
+		fFilter[i] = filter[i];
 	
 	//Store the output data.
 	complex *output = new complex[NFFT];
@@ -68,44 +58,8 @@ complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFI
 //NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
 complex* CFFT::convolutionT(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT)
 {
-	//Check for invalid inputs.
-	if(input == NULL || filter == NULL)
-	{
-		cout << "Could not perform convolution on empty arrays!" << endl;
-		return NULL;
-	}
-
-	//Perform zero padding.
-	complex *fInput, *fFilter;
-
-	if(NSIG < NFFT)
-	{
-		fInput = new complex[NFFT];
-		for(int i = 0; i < NSIG; i++)
-			fInput[i] = input[i];
-	}
-	else
-		fInput = input;
-
-	if(NFIL < NFFT)
-	{
-		fFilter = new complex[NFFT];
-		for(int i = 0; i < NFIL; i++)
-			fFilter[i] = filter[i];
-	}
-	else
-		fFilter = filter;
-
 	//Store the output data.
-	complex *output = new complex[NFFT];
-
-	//Perform FFT on both input and filter.
-	CFFT::Forward(fInput, NFFT);
-	CFFT::Forward(fFilter, NFFT);
-
-	//Multiplying input and filter in frequency domain.
-	for (int i = 0; i < NFFT; i++)	
-		output[i] = fInput[i] * fFilter[i];
+	complex *output = convolutionF(input, filter, NSIG, NFIL, NFFT);
 	
 	//Perform IFFT on the ouput.
 	CFFT::Inverse(output, NFFT);
