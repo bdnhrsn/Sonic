@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include <fstream>
-#include<algorithm>
+#include <algorithm>
 
 #include "../include/fft.h"
 #include "../include/wav.h"
@@ -48,7 +48,7 @@ int main()
 	for(long i = 0; i < NFFT; i++)
 		output[i] /= maxAmp;
 
-	ofstream outputFile("output.txt");
+	ofstream outputFile("real.txt");
 	if(outputFile.is_open())
 	{
 		for(int i = 0; i < NFFT; i++)
@@ -58,7 +58,7 @@ int main()
 		outputFile.close();
 	}
 
-	ofstream outputFile2("Da.txt");
+	ofstream outputFile2("realandimag.txt");
 	if(outputFile2.is_open())
 	{
 		for(int i = 0; i < NFFT; i++)
