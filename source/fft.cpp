@@ -23,7 +23,8 @@ complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFI
 	}
 
 	bool NFFTChanged = false;
-	while(NFFT < NSIG || NFFT < NFIL)
+	//If NFFT not a power of 2, or it is smaller than signal or filter, prompt for new.
+	while (log(NFFT) / log(2) != (int)log(NFFT) / log(2) || NFFT < NSIG || NFFT < NFIL)
 	{
 		cout << "Please input a valid NFFT, which is >= NSIG(" << NSIG << ") and >= NFIL(" << NFIL <<") : ";
 		cin >> NFFT;
