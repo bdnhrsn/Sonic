@@ -9,7 +9,7 @@
 
 using namespace std;
 
-struct wavFileData 
+struct wavFileData
 {
 	long n;
 	int sampleRate;
@@ -25,16 +25,16 @@ int main()
 	string impFile =  "assets\\impulse1mono.wav";
 
 	complex *input = NULL, *filter = NULL;
-	wavFileData inp, imp;
+	wavFileData inp, fil;
 
 	//LOAD THE WAV FILES
 	cout << "Attempting to load wav files..." << endl << endl;
 	input = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
-	filter = utility::loadCmpWavData(impFile, &imp.n, &imp.sampleRate, &imp.bitDepth, &imp.channels);
+	filter = utility::loadCmpWavData(impFile, &fil.n, &fil.sampleRate, &fil.bitDepth, &fil.channels);
 	cout << "Wav files loading complete!" << endl;
 
 	cout << "Signal size is " << inp.n << endl;
-	cout << "Filter size is " << imp.n << endl;
+	cout << "Filter size is " << fil.n << endl;
 
 	//Set up convolution output array.
 	complex *output = NULL;
@@ -42,7 +42,7 @@ int main()
 	cout << "NFFT was: " << NFFT << endl;
 
 	//Perform convolution.
-	output = CFFT::convolutionT(input, filter, inp.n, imp.n, NFFT);
+	output = CFFT::convolutionT(input, filter, inp.n, fil.n, NFFT);
 	cout << "Convolution complete!\n";
 
 	//Scale output from -1 to 1.
@@ -54,6 +54,7 @@ int main()
 	for(long i = 0; i < NFFT; i++)
 		output[i] /= maxAmp;
 	
+	//Output all real numbers of time domain to real.txt 
 	ofstream outputFile("real.txt");
 	if(outputFile.is_open())
 	{
