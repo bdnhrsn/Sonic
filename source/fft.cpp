@@ -5,6 +5,7 @@
 //   You can use it on your own
 //   When utilizing credit LIBROW site
 
+#include <fstream>
 #include <iostream>
 #include <math.h>
 #include "../include/fft.h"
@@ -13,7 +14,7 @@ using namespace std;
 
 //Convolution function which returns the frequency representation of the result.
 //NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
-complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT)
+complex* CFFT::convolutionF(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT)
 {
 	//Check for invalid inputs.
 	if(input == NULL || filter == NULL)
@@ -57,7 +58,7 @@ complex* CFFT::convolutionF(complex *input, complex *filter, long NSIG, long NFI
 
 //Convolution function which returns the time representation of the result.
 //NFFT is the FFT size, NSIG is the size for the input, NFIL is the size of the filter.
-complex* CFFT::convolutionT(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT)
+complex* CFFT::convolutionT(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT)
 {
 	//Store the output data.
 	complex *output = convolutionF(input, filter, NSIG, NFIL, NFFT);
@@ -67,6 +68,71 @@ complex* CFFT::convolutionT(complex *input, complex *filter, long NSIG, long NFI
 	
 	return output;
 }
+
+complex* CFFT::stereoConvF(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT)
+{
+	complex *result = stereoConvT(input, filterLeft, filterRight, NSIG, NFILL, NFILR, NFFT);
+	CFFT::Forward(result, NFFT);
+	return result;
+}
+
+complex* CFFT::stereoConvT(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFilR, long &NFFT)
+{
+	complex *tempLeft = new complex[NFFT / 2];
+	complex *tempRight = new complex[NFFT/ 2];
+	complex *result = new complex[NFFT];
+	for (int i = 0; i < NSIG / 2; i++)
+	{
+		tempLeft[i] = input[2 * i];
+		tempRight[i] = input[2 * i + 1];
+	}
+	NFFT = NFFT / 2;
+	tempLeft = CFFT::convolutionT(tempLeft, filterLeft, NSIG / 2, NFILL, NFFT);
+	tempRight = CFFT::convolutionT(tempRight, filterRight, NSIG / 2, NFILL, NFFT);
+
+	NFFT = NFFT * 2;
+	for (int i = 0; i < NFFT / 2; i++)
+	{
+		result[2 * i] = tempLeft[i];
+		result[2 * i + 1] = tempRight[i];
+	}
+
+	delete tempLeft;
+	delete tempRight;
+
+	return result;
+}
+//storing the an array into a text file
+//filename is the file name you want to store the data into
+//datatype represents the data you wanna store: real/real+imag/amplitude
+void CFFT::storingData(complex *data, int NFFT,string temp ,char datatype)
+{
+	//string temp= filename;
+	ofstream outputFile(temp.c_str());
+	if (outputFile.is_open())
+	{
+		switch (datatype)
+		{
+		case 'r':
+			//ofstream outputFile("real.txt");
+			for (int i = 0; i < NFFT; i++)
+				outputFile << data[i].re() << endl;
+			break;
+
+		case 'c':
+			for (int i = 0; i < NFFT; i++)
+				outputFile << data[i].re() << "    " << data[i].im() << endl;
+			break;
+		case 'a':
+			for (int i = 0; i < NFFT; i++)
+				outputFile << sqrt(data[i].norm()) << endl;
+			break;
+		}
+		outputFile.close();
+	}
+}
+
+
 
 //   FORWARD FOURIER TRANSFORM
 //     Input  - input data

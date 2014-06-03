@@ -9,6 +9,9 @@
 #define _FFT_H_
 
 #include "complex.h"
+#include "string.h"
+
+using namespace std;
 
 class CFFT
 {
@@ -17,9 +20,17 @@ class CFFT
 		//NFFT is the FFT size (will be modified if invalid!), NSIG is the size for the input, NFIL is the size of the filter
 		//Zero padding is automatically taken care of in the convolution function.
 		//T means the function returns result in time domain; F is the result in the frequency domain.
-		static complex* convolutionF(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT);
-		static complex* convolutionT(complex *input, complex *filter, long NSIG, long NFIL, long &NFFT);
-	
+		static complex* convolutionF(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT);
+		static complex* convolutionT(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT);
+		static complex* stereoConvF(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT);
+		static complex* stereoConvT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG,long NFILL, long NFILR, long &NFFT);
+
+
+		//storing the an array into a text file
+		//filename is the file name you want to store the data into
+		//datatype represents the data you wanna store: real/real+imag/amplitude
+		static void storingData(complex *data, int NFFT, string temp,char datatype);
+		
 		//   FORWARD FOURIER TRANSFORM
 		//     Input  - input data
 		//     Output - transform result
