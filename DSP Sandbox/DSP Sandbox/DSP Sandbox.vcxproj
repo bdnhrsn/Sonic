@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\..\source\convolutionBox.cpp" />
     <ClCompile Include="..\..\source\fft.cpp" />
+    <ClCompile Include="..\..\source\mit_hrtf_lib.c" />
     <ClCompile Include="..\..\source\wav.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

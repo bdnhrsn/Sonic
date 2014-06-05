@@ -35,7 +35,6 @@ int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigne
 	return size;
 }
 
-
 template <typename T>
 void write(std::ofstream& stream, const T& t)
 {

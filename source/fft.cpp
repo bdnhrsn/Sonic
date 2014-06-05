@@ -106,17 +106,11 @@ complex* CFFT::stereoConvStereoInputT(const complex *input, const complex *filte
 	complex *leftTemp = new complex[NFFT];
 	complex *rightTemp = new complex[NFFT];
 
-	complex *
-
-	for (int i = 0; i < NFFT; i++)
-	{
-		leftTemp[i] = input[i];
-		rightTemp[i] = input[2 * i + 1];
-	}
-
 	
 
 	
+
+	return 0;
 
 }
 

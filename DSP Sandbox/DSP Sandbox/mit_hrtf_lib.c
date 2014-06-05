@@ -13,7 +13,7 @@
 /*############################################################################*/
 
 
-#include "../../include/mit_hrtf_lib.h"
+#include "../include/mit_hrtf_lib.h"
 #include "normal/mit_hrtf_normal_44100.h"
 #include "diffuse/mit_hrtf_diffuse_44100.h"
 #include "normal/mit_hrtf_normal_48000.h"
@@ -57,7 +57,7 @@ unsigned int mit_hrtf_availability(int azimuth, int elevation, unsigned int samp
 
 
 
-unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short** psLeft, short** psRight)
+unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short* psLeft, short* psRight)
 {
 	int nInternalElevation = 0;
 	float fAzimuthIncrement = 0;
@@ -326,14 +326,10 @@ unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerat
 	}
 	
 	//Copy taps to user's arrays
-	
-	*psLeft = (short *)malloc(nTotalTaps*sizeof(short));
-	*psRight = (short *)malloc(nTotalTaps*sizeof(short));
-
 	for(niTap = 0; niTap < nTotalTaps; niTap++)
 	{
-		(*psLeft)[niTap] = psLeftTaps[niTap];
-		(*psRight)[niTap] = psRightTaps[niTap];
+		psLeft[niTap] = psLeftTaps[niTap];
+		psRight[niTap] = psRightTaps[niTap];
 	}
 
 	//Assign the real azimuth and elevation used
