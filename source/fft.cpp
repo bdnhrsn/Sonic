@@ -69,27 +69,23 @@ complex* CFFT::convolutionT(const complex *input,const complex *filter, long NSI
 	return output;
 }
 
-complex* CFFT::stereoConvF(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT)
+complex* CFFT::stereoConvMonoInputF(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT)
 {
-	complex *result = stereoConvT(input, filterLeft, filterRight, NSIG, NFILL, NFILR, NFFT);
+	complex *result = stereoConvMonoInputT(input, filterLeft, filterRight, NSIG, NFILL, NFILR, NFFT);
 	CFFT::Forward(result, NFFT);
 	return result;
 }
 
-complex* CFFT::stereoConvT(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFilR, long &NFFT)
+//The size of the ouput will be 2 times of the size of FFT for the input signal and the NFFT value
+//will be doubled after running the function
+complex* CFFT::stereoConvMonoInputT(const complex *input,const complex *filterLeft,const complex *filterRight, long NSIG, long NFILL, long NFilR, long &NFFT)
 {
-	complex *tempLeft = new complex[NFFT / 2];
-	complex *tempRight = new complex[NFFT/ 2];
-	complex *result = new complex[NFFT];
-	for (int i = 0; i < NSIG / 2; i++)
-	{
-		tempLeft[i] = input[2 * i];
-		tempRight[i] = input[2 * i + 1];
-	}
-	NFFT = NFFT / 2;
-	tempLeft = CFFT::convolutionT(tempLeft, filterLeft, NSIG / 2, NFILL, NFFT);
-	tempRight = CFFT::convolutionT(tempRight, filterRight, NSIG / 2, NFILL, NFFT);
-
+	complex *tempLeft = new complex[NFFT];
+	complex *tempRight = new complex[NFFT];
+	complex *result = new complex[2*NFFT];
+	
+	tempLeft = CFFT::convolutionT(input, filterLeft, NSIG, NFILL, NFFT);
+	tempRight = CFFT::convolutionT(input, filterRight, NSIG, NFILL, NFFT);
 	NFFT = NFFT * 2;
 	for (int i = 0; i < NFFT / 2; i++)
 	{
@@ -99,9 +95,32 @@ complex* CFFT::stereoConvT(const complex *input,const complex *filterLeft,const 
 
 	delete tempLeft;
 	delete tempRight;
-
+	
 	return result;
 }
+
+
+complex* CFFT::stereoConvStereoInputT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT)
+{
+	NFFT = NFFT / 2;
+	complex *leftTemp = new complex[NFFT];
+	complex *rightTemp = new complex[NFFT];
+
+	complex *
+
+	for (int i = 0; i < NFFT; i++)
+	{
+		leftTemp[i] = input[i];
+		rightTemp[i] = input[2 * i + 1];
+	}
+
+	
+
+	
+
+}
+
+
 //storing the an array into a text file
 //filename is the file name you want to store the data into
 //datatype represents the data you wanna store: real/real+imag/amplitude

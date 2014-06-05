@@ -6,6 +6,8 @@
 
 #include "../include/fft.h"
 #include "../include/wav.h"
+#include "../include/mit_hrtf_lib.h"
+
 
 using namespace std;
 
@@ -17,12 +19,61 @@ struct wavFileData
 	int channels;
 };
 
+int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused,complex *&leftFilter, complex *&rightFilter)
+{
+	short *leftTemp=0;
+	short *rightTemp =0;
+	int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, &leftTemp, &rightTemp);
+	leftFilter = new complex[size];
+	rightFilter = new complex[size];
+	for (int i = 0; i < size; i++)
+	{
+		leftFilter[i] = (leftTemp[i])/ 1.0;
+		rightFilter[i] = (rightTemp[i])/1.0;
+	}
+	
+	return size;
+}
+
+
+template <typename T>
+void write(std::ofstream& stream, const T& t)
+{
+	stream.write((const char*)&t, sizeof(T));
+}
+
+template <typename SampleType>
+void writeWAVData(const char* outFile, SampleType* buf, size_t bufSize, int sampleRate, short channels)
+{
+	std::ofstream stream(outFile, std::ios::binary);                // Open file stream at "outFile" location
+
+	/* Header */
+	stream.write("RIFF", 4);                                        // sGroupID (RIFF = Resource Interchange File Format)
+	write<int>(stream, 36 + bufSize);                               // dwFileLength
+	stream.write("WAVE", 4);                                        // sRiffType
+
+	/* Format Chunk */
+	stream.write("fmt ", 4);                                        // sGroupID (fmt = format)
+	write<int>(stream, 16);                                         // Chunk size (of Format Chunk)
+	write<short>(stream, 1);                                        // Format (1 = PCM)
+	write<short>(stream, channels);                                 // Channels
+	write<int>(stream, sampleRate);                                 // Sample Rate
+	write<int>(stream, sampleRate * channels * sizeof(SampleType)); // Byterate
+	write<short>(stream, channels * sizeof(SampleType));            // Frame size aka Block align
+	write<short>(stream, 8 * sizeof(SampleType));                   // Bits per sample
+
+	/* Data Chunk */
+	stream.write("data", 4);                                        // sGroupID (data)
+	stream.write((const char*)&bufSize, 4);                         // Chunk size (of Data, and thus of bufferSize)
+	stream.write((const char*)buf, bufSize);                        // The samples DATA!!!
+}
+
 
 int main()
 {
 	const double PI = atan(1.0)*4;
 
-	string inFile = "assets\\radioactive.mp3";
+	string inFile = "assets\\Android Porn_cutted.wav";
 	string impFile =  "assets\\impulse1mono.wav";
 
 	complex *input = NULL, *filter = NULL;
@@ -31,26 +82,35 @@ int main()
 	//LOAD THE WAV FILES
 	cout << "Attempting to load wav files..." << endl << endl;
 	input = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
-	filter = utility::loadCmpWavData(impFile, &fil.n, &fil.sampleRate, &fil.bitDepth, &fil.channels);
+	//filter = utility::loadCmpWavData(impFile, &fil.n, &fil.sampleRate, &fil.bitDepth, &fil.channels);
 	cout << "Wav files loading complete!" << endl;
 
+	inp.sampleRate = 88200;
+
 	cout << "Signal size is " << inp.n << endl;
-	cout << "Filter size is " << fil.n << endl;
+	//cout << "Filter size is " << fil.n << endl;
 	cout << "Sampling rate is " << inp.sampleRate << endl;
+
+	complex *leftFilter = NULL, *rightFilter = NULL;
+	
+	int Azimuth = 90;
+	int elevation = 0;
+	int filterSize = HRTFLoading(&Azimuth, &elevation, inp.sampleRate, 1, leftFilter, rightFilter);
+
 
 
 	//Set up convolution output array.
 	complex *output = NULL;
 	long NFFT = pow(2, (int)(log(inp.n)/log(2)) + 1);
-	NFFT = 2*NFFT;
-	cout << "NFFT was: " << NFFT << endl;
 	
+	//store the input wave and play it out in case needed
+	//CFFT::storingData(input, inp.n, "real_input.txt", 'r');
 
 	//Perform convolution.
-	//output = CFFT::stereoConvT(input, filter, filter, inp.n,fil.n, fil.n, NFFT);
-	output = CFFT::convolutionT(input, filter, inp.n, fil.n, NFFT);
+	output = CFFT::stereoConvMonoInputT(input, leftFilter, rightFilter,inp.n , filterSize, filterSize, NFFT);
+	//output = CFFT::convolutionT(input, filter, inp.n, fil.n, NFFT);
 	cout << "Convolution complete!\n";
-
+	cout << "NFFT was: " << NFFT << endl;
 	//Scale output from -1 to 1.
 	int maxAmp = 1;
 	for(long i = 0; i < NFFT; i++)
@@ -61,7 +121,7 @@ int main()
 		output[i] /= maxAmp;
 	
 	//Output all real numbers of time domain to real.txt 
-	CFFT::storingData(output, NFFT,"real.txt",'r');
+	CFFT::storingData(output, NFFT,"real0e90a.txt",'r');
 
 
 	delete input;

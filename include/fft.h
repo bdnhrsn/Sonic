@@ -22,10 +22,12 @@ class CFFT
 		//T means the function returns result in time domain; F is the result in the frequency domain.
 		static complex* convolutionF(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT);
 		static complex* convolutionT(const complex *input,const complex *filter, long NSIG, long NFIL, long &NFFT);
-		static complex* stereoConvF(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT);
-		static complex* stereoConvT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG,long NFILL, long NFILR, long &NFFT);
-
-
+		static complex* stereoConvMonoInputF(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT);
+		static complex* stereoConvMonoInputT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG,long NFILL, long NFILR, long &NFFT);
+		static complex* stereoConvStereoInputF(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT);
+		static complex* stereoConvStereoInputT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT);
+		
+		
 		//storing the an array into a text file
 		//filename is the file name you want to store the data into
 		//datatype represents the data you wanna store: real/real+imag/amplitude
