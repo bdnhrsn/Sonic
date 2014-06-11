@@ -14,11 +14,7 @@
     <ClCompile Include="..\..\MIT_HRTF_Library\source\mit_hrtf_lib.c" />
     <ClCompile Include="..\..\source\convolutionBox.cpp" />
     <ClCompile Include="..\..\source\fft.cpp" />
-    <ClCompile Include="..\..\source\Mixer3D.cpp" />
     <ClCompile Include="..\..\source\wav.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\include\Mixer3D.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A9332C95-2C46-4E7D-8A09-E05FEAE5E38A}</ProjectGuid>

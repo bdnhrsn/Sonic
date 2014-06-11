@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\source\convolutionBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\fft.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
@@ -27,13 +24,8 @@
     <ClCompile Include="..\..\MIT_HRTF_Library\source\mit_hrtf_lib.c">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\Mixer3D.cpp">
+    <ClCompile Include="..\..\source\convolutionBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\include\Mixer3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
