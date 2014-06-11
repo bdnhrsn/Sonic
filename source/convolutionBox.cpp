@@ -4,7 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "../include/sndfile.h"
 #include "../include/fft.h"
 #include "../include/wav.h"
 #include "../include/mit_hrtf_lib.h"
@@ -104,8 +103,8 @@ int main()
 
 	complex *leftFilter = NULL, *rightFilter = NULL;
 	
-	int Azimuth = 0;
-	int elevation = 60;
+	int Azimuth = -90;
+	int elevation = 0;
 	cout << "Loading filter..." << endl;
 	int filterSize = HRTFLoading(&Azimuth, &elevation, inp.sampleRate, 1, leftFilter, rightFilter);
 	
@@ -128,7 +127,7 @@ int main()
 	for (long i = 0; i < NFFT; i++)
 	{
 		output[i] /= maxAmp;
-		output[i] *= .999;
+		output[i] *= .9;
 	}
 
 	//Output all real numbers of time domain to real.txt 
@@ -142,7 +141,7 @@ int main()
 		wavData[2*i+1] = output[2*i+1].re() * pow(2, 16 - 1);
 	}
 
-	string s = "output60e0a.wav";
+	string s = "output0e-45a.wav";
 	writeWAVData(s.c_str(), wavData, NFFT, inp.sampleRate, 2);
 
 	delete input;
