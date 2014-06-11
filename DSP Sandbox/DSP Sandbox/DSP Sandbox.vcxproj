@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\MIT_HRTF_Library\source\mit_hrtf_lib.c" />
     <ClCompile Include="..\..\source\convolutionBox.cpp" />
     <ClCompile Include="..\..\source\fft.cpp" />
     <ClCompile Include="..\..\source\wav.cpp" />

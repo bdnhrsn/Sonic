@@ -4,10 +4,10 @@
 #include <iostream>
 #include <fstream>
 
+#include "../include/sndfile.h"
 #include "../include/fft.h"
 #include "../include/wav.h"
 #include "../include/mit_hrtf_lib.h"
-
 
 using namespace std;
 
@@ -19,13 +19,28 @@ struct wavFileData
 	int channels;
 };
 
-int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused,complex *&leftFilter, complex *&rightFilter)
+int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter)
 {
-	short *leftTemp=0;
-	short *rightTemp =0;
-	int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, &leftTemp, &rightTemp);
+	int nTaps = 0;
+	switch (samplerate)
+	{
+		case 44100:
+			nTaps = MIT_HRTF_44_TAPS;
+		case 48000:
+			nTaps = MIT_HRTF_48_TAPS;
+		case 88200:
+			nTaps = MIT_HRTF_88_TAPS;
+		case 96000:
+			nTaps = MIT_HRTF_96_TAPS;
+	}
+
+	short* leftTemp = new short[nTaps];
+	short* rightTemp = new short[nTaps];
+	
+	int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, leftTemp, rightTemp);
 	leftFilter = new complex[size];
 	rightFilter = new complex[size];
+	
 	for (int i = 0; i < size; i++)
 	{
 		leftFilter[i] = (leftTemp[i])/ 1.0;
@@ -73,8 +88,7 @@ int main()
 {
 	const double PI = atan(1.0)*4;
 
-	string inFile = "assets\\Android Porn_cutted.wav";
-	string impFile =  "assets\\impulse1mono.wav";
+	string inFile = "assets\\input1mono.wav";
 
 	complex *input = NULL, *filter = NULL;
 	wavFileData inp, fil;
@@ -82,10 +96,7 @@ int main()
 	//LOAD THE WAV FILES
 	cout << "Attempting to load wav files..." << endl << endl;
 	input = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
-	//filter = utility::loadCmpWavData(impFile, &fil.n, &fil.sampleRate, &fil.bitDepth, &fil.channels);
 	cout << "Wav files loading complete!" << endl;
-
-	inp.sampleRate = 88200;
 
 	cout << "Signal size is " << inp.n << endl;
 	//cout << "Filter size is " << fil.n << endl;
@@ -93,36 +104,46 @@ int main()
 
 	complex *leftFilter = NULL, *rightFilter = NULL;
 	
-	int Azimuth = 90;
-	int elevation = 0;
+	int Azimuth = 0;
+	int elevation = 60;
+	cout << "Loading filter..." << endl;
 	int filterSize = HRTFLoading(&Azimuth, &elevation, inp.sampleRate, 1, leftFilter, rightFilter);
-
-
-
+	
 	//Set up convolution output array.
 	complex *output = NULL;
 	long NFFT = pow(2, (int)(log(inp.n)/log(2)) + 1);
-	
-	//store the input wave and play it out in case needed
-	//CFFT::storingData(input, inp.n, "real_input.txt", 'r');
 
 	//Perform convolution.
-	output = CFFT::stereoConvMonoInputT(input, leftFilter, rightFilter,inp.n , filterSize, filterSize, NFFT);
-	//output = CFFT::convolutionT(input, filter, inp.n, fil.n, NFFT);
+	cout << "Performing convolution..." << endl;
+	output = CFFT::stereoConvMonoInputT(input, leftFilter, rightFilter, inp.n, filterSize, filterSize, NFFT);
 	cout << "Convolution complete!\n";
-	cout << "NFFT was: " << NFFT << endl;
+	cout << "Number of sample values was: " << NFFT << endl;
+	
 	//Scale output from -1 to 1.
 	int maxAmp = 1;
 	for(long i = 0; i < NFFT; i++)
 		if(output[i].re() > maxAmp)
 			maxAmp = output[i].re();
 
-	for(long i = 0; i < NFFT; i++)
+	for (long i = 0; i < NFFT; i++)
+	{
 		output[i] /= maxAmp;
-	
+		output[i] *= .999;
+	}
+
 	//Output all real numbers of time domain to real.txt 
 	CFFT::storingData(output, NFFT,"real0e90a.txt",'r');
 
+	//Output all wav data to output.wav
+	short* wavData = (short*)malloc(sizeof(short)*NFFT);
+	for (int i = 0 ; i < NFFT / 2; i++)
+	{
+		wavData[2*i] = output[2*i].re() * pow(2, 16 - 1);
+		wavData[2*i+1] = output[2*i+1].re() * pow(2, 16 - 1);
+	}
+
+	string s = "output60e0a.wav";
+	writeWAVData(s.c_str(), wavData, NFFT, inp.sampleRate, 2);
 
 	delete input;
 	delete filter;

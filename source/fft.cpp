@@ -99,7 +99,7 @@ complex* CFFT::stereoConvMonoInputT(const complex *input,const complex *filterLe
 	return result;
 }
 
-
+/*
 complex* CFFT::stereoConvStereoInputT(const complex *input, const complex *filterLeft, const complex *filterRight, long NSIG, long NFILL, long NFILR, long &NFFT)
 {
 	NFFT = NFFT / 2;
@@ -120,7 +120,7 @@ complex* CFFT::stereoConvStereoInputT(const complex *input, const complex *filte
 
 }
 
-
+*/
 //storing the an array into a text file
 //filename is the file name you want to store the data into
 //datatype represents the data you wanna store: real/real+imag/amplitude
