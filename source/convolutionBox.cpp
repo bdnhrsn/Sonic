@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 
-[<65;29;23M#include "../include/fft.h"
+#include "../include/fft.h"
 #include "../include/wav.h"
 #include "../include/mit_hrtf_lib.h"
 

@@ -1,7 +1,6 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "stdafx.h"
 #include <vector>
 #include "AudioObj.h"
 #include "Player.h"

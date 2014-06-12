@@ -77,7 +77,7 @@ unsigned int mit_hrtf_availability(int azimuth, int elevation, unsigned int samp
 	buffers. Returns 0 if the requested HRTF set is not available or if there
 	was an error.
 */
-unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short* psLeft, short* psRight);
+unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short** psLeft, short** psRight);
 
 
 #ifdef __cplusplus
