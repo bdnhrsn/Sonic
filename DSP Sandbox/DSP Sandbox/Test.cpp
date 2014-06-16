@@ -12,6 +12,15 @@
 
 using namespace std;
 
+struct wavFileData
+{
+	long n;
+	int sampleRate;
+	int bitDepth;
+	int channels;
+};
+
+
 /*
 	struct wavFileData
 	{
@@ -156,8 +165,13 @@ using namespace std;
 
 int main()
 {
-	int sampleRate = 44100;
-	int bufferSize = 1024;
+	string inFile = "assets\\input1mono.wav";
+	wavFileData inp;
+	//LOAD THE WAV FILES
+	cout << "Attempting to load wav files..." << endl << endl;
+	complex* temp = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
+	int sampleRate = inp.sampleRate;
+	int bufferSize = inp.n;
 	int bitDepth = 16;
 	int diffuse = 1;
 	Player playerA = Player();
@@ -166,7 +180,12 @@ int main()
 	Mixer3D myMixer = Mixer3D(bufferSize,sampleRate,bitDepth,&myWorld);
 
 	myMixer.mix();
-	complex *temp = myMixer.getLeftFilter();
+	temp = myMixer.getLeftFilter();
+	short *temp2;
+	temp2 = myMixer.getTemp();
+	string s = "output0e-45a.wav";
+	myMixer.writeWAVData(s.c_str(), temp2, bufferSize, inp.sampleRate, 2);
+	
 
 	//testing
  	return 0;
