@@ -57,16 +57,19 @@ unsigned int mit_hrtf_availability(int azimuth, int elevation, unsigned int samp
 
 
 
-unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short** psLeft, short** psRight)
+unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, short* psLeft, short* psRight)
 {
 	int nInternalElevation = 0;
 	float fAzimuthIncrement = 0;
 	int nInternalAzimuth = 0;
 	int nSwitchLeftRight = 0;
 	int nAzimuthIndex = 0;
-
-	//const short* psLeftTaps = 0;
-	//const short* psRightTaps = 0;
+	const mit_hrtf_filter_set_44* pFilter44 = 0;
+	const mit_hrtf_filter_set_48* pFilter48 = 0;
+	const mit_hrtf_filter_set_88* pFilter88 = 0;
+	const mit_hrtf_filter_set_96* pFilter96 = 0;
+	const short* psLeftTaps = 0;
+	const short* psRightTaps = 0;
 	const short* psTempTaps = 0;
 	unsigned int nTotalTaps = 0;
 	unsigned int niTap = 0;
@@ -146,236 +149,169 @@ unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerat
 	}
 
 	//Assign pointer to appropriate array depending on saple rate, normal or diffused filters, elevation, and azimuth index.
-	switch (samplerate)
+	switch(samplerate)
 	{
 	case 44100:
-		if (diffused)
-		{
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &diffuse_44.e_10[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &diffuse_44.e_20[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &diffuse_44.e_30[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &diffuse_44.e_40[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &diffuse_44.e00[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &diffuse_44.e10[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &diffuse_44.e20[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &diffuse_44.e30[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &diffuse_44.e40[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &diffuse_44.e50[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &diffuse_44.e60[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &diffuse_44.e70[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &diffuse_44.e80[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &diffuse_44.e90[nAzimuthIndex].left;
-				*psRight = &diffuse_44.e90[nAzimuthIndex].right;		break;
-			};
-		}
+		if(diffused)
+			pFilter44 = &diffuse_44;
 		else
-		{
-			
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &normal_44.e_10[nAzimuthIndex].left;
-				*psRight = &normal_44.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &normal_44.e_20[nAzimuthIndex].left;
-				*psRight = &normal_44.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &normal_44.e_30[nAzimuthIndex].left;
-				*psRight = &normal_44.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &normal_44.e_40[nAzimuthIndex].left;
-				*psRight = &normal_44.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &normal_44.e00[nAzimuthIndex].left;
-				*psRight = &normal_44.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &normal_44.e10[nAzimuthIndex].left;
-				*psRight = &normal_44.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &normal_44.e20[nAzimuthIndex].left;
-				*psRight = &normal_44.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &normal_44.e30[nAzimuthIndex].left;
-				*psRight = &normal_44.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &normal_44.e40[nAzimuthIndex].left;
-				*psRight = &normal_44.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &normal_44.e50[nAzimuthIndex].left;
-				*psRight = &normal_44.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &normal_44.e60[nAzimuthIndex].left;
-				*psRight = &normal_44.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &normal_44.e70[nAzimuthIndex].left;
-				*psRight = &normal_44.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &normal_44.e80[nAzimuthIndex].left;
-				*psRight = &normal_44.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &normal_44.e90[nAzimuthIndex].left;
-				*psRight = &normal_44.e90[nAzimuthIndex].right;		break;
-			};
-		}
-		
-		
+			pFilter44 = &normal_44;
 
+		switch(nInternalElevation)
+		{	
+		case -10:	psLeftTaps = pFilter44->e_10[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e_10[nAzimuthIndex].right;		break;
+		case -20:	psLeftTaps = pFilter44->e_20[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e_20[nAzimuthIndex].right;		break;
+		case -30:	psLeftTaps = pFilter44->e_30[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e_30[nAzimuthIndex].right;		break;
+		case -40:	psLeftTaps = pFilter44->e_40[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e_40[nAzimuthIndex].right;		break;
+		case 0:		psLeftTaps = pFilter44->e00[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e00[nAzimuthIndex].right;		break;
+		case 10:	psLeftTaps = pFilter44->e10[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e10[nAzimuthIndex].right;		break;
+		case 20:	psLeftTaps = pFilter44->e20[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e20[nAzimuthIndex].right;		break;
+		case 30:	psLeftTaps = pFilter44->e30[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e30[nAzimuthIndex].right;		break;
+		case 40:	psLeftTaps = pFilter44->e40[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e40[nAzimuthIndex].right;		break;
+		case 50:	psLeftTaps = pFilter44->e50[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e50[nAzimuthIndex].right;		break;
+		case 60:	psLeftTaps = pFilter44->e60[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e60[nAzimuthIndex].right;		break;
+		case 70:	psLeftTaps = pFilter44->e70[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e70[nAzimuthIndex].right;		break;
+		case 80:	psLeftTaps = pFilter44->e80[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e80[nAzimuthIndex].right;		break;
+		case 90:	psLeftTaps = pFilter44->e90[nAzimuthIndex].left;
+					psRightTaps = pFilter44->e90[nAzimuthIndex].right;		break;
+		};
+		
 		//How many taps to copy later to user's buffers
 		nTotalTaps = MIT_HRTF_44_TAPS;
 		break;
-
 	case 48000:
+		if(diffused)
+			pFilter48 = &diffuse_48;
+		else
+			pFilter48 = &normal_48;
+
+		switch(nInternalElevation)
+		{	
+		case -10:	psLeftTaps = pFilter48->e_10[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e_10[nAzimuthIndex].right;		break;
+		case -20:	psLeftTaps = pFilter48->e_20[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e_20[nAzimuthIndex].right;		break;
+		case -30:	psLeftTaps = pFilter48->e_30[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e_30[nAzimuthIndex].right;		break;
+		case -40:	psLeftTaps = pFilter48->e_40[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e_40[nAzimuthIndex].right;		break;
+		case 0:		psLeftTaps = pFilter48->e00[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e00[nAzimuthIndex].right;		break;
+		case 10:	psLeftTaps = pFilter48->e10[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e10[nAzimuthIndex].right;		break;
+		case 20:	psLeftTaps = pFilter48->e20[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e20[nAzimuthIndex].right;		break;
+		case 30:	psLeftTaps = pFilter48->e30[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e30[nAzimuthIndex].right;		break;
+		case 40:	psLeftTaps = pFilter48->e40[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e40[nAzimuthIndex].right;		break;
+		case 50:	psLeftTaps = pFilter48->e50[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e50[nAzimuthIndex].right;		break;
+		case 60:	psLeftTaps = pFilter48->e60[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e60[nAzimuthIndex].right;		break;
+		case 70:	psLeftTaps = pFilter48->e70[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e70[nAzimuthIndex].right;		break;
+		case 80:	psLeftTaps = pFilter48->e80[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e80[nAzimuthIndex].right;		break;
+		case 90:	psLeftTaps = pFilter48->e90[nAzimuthIndex].left;
+					psRightTaps = pFilter48->e90[nAzimuthIndex].right;		break;
+		};
+		
 		//How many taps to copy later to user's buffers
 		nTotalTaps = MIT_HRTF_48_TAPS;
 		break;
-
 	case 88200:
-		if (diffused)
-		{
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &diffuse_88.e_10[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &diffuse_88.e_20[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &diffuse_88.e_30[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &diffuse_88.e_40[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &diffuse_88.e00[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &diffuse_88.e10[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &diffuse_88.e20[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &diffuse_88.e30[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &diffuse_88.e40[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &diffuse_88.e50[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &diffuse_88.e60[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &diffuse_88.e70[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &diffuse_88.e80[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &diffuse_88.e90[nAzimuthIndex].left;
-				*psRight = &diffuse_88.e90[nAzimuthIndex].right;		break;
-			};
-		}
+		if(diffused)
+			pFilter88 = &diffuse_88;
 		else
-		{
+			pFilter88 = &normal_88;
 
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &normal_88.e_10[nAzimuthIndex].left;
-				*psRight = &normal_88.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &normal_88.e_20[nAzimuthIndex].left;
-				*psRight = &normal_88.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &normal_88.e_30[nAzimuthIndex].left;
-				*psRight = &normal_88.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &normal_88.e_40[nAzimuthIndex].left;
-				*psRight = &normal_88.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &normal_88.e00[nAzimuthIndex].left;
-				*psRight = &normal_88.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &normal_88.e10[nAzimuthIndex].left;
-				*psRight = &normal_88.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &normal_88.e20[nAzimuthIndex].left;
-				*psRight = &normal_88.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &normal_88.e30[nAzimuthIndex].left;
-				*psRight = &normal_88.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &normal_88.e40[nAzimuthIndex].left;
-				*psRight = &normal_88.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &normal_88.e50[nAzimuthIndex].left;
-				*psRight = &normal_88.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &normal_88.e60[nAzimuthIndex].left;
-				*psRight = &normal_88.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &normal_88.e70[nAzimuthIndex].left;
-				*psRight = &normal_88.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &normal_88.e80[nAzimuthIndex].left;
-				*psRight = &normal_88.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &normal_88.e90[nAzimuthIndex].left;
-				*psRight = &normal_88.e90[nAzimuthIndex].right;		break;
-			};
-		}
+		switch(nInternalElevation)
+		{	
+		case -10:	psLeftTaps = pFilter88->e_10[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e_10[nAzimuthIndex].right;		break;
+		case -20:	psLeftTaps = pFilter88->e_20[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e_20[nAzimuthIndex].right;		break;
+		case -30:	psLeftTaps = pFilter88->e_30[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e_30[nAzimuthIndex].right;		break;
+		case -40:	psLeftTaps = pFilter88->e_40[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e_40[nAzimuthIndex].right;		break;
+		case 0:		psLeftTaps = pFilter88->e00[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e00[nAzimuthIndex].right;		break;
+		case 10:	psLeftTaps = pFilter88->e10[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e10[nAzimuthIndex].right;		break;
+		case 20:	psLeftTaps = pFilter88->e20[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e20[nAzimuthIndex].right;		break;
+		case 30:	psLeftTaps = pFilter88->e30[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e30[nAzimuthIndex].right;		break;
+		case 40:	psLeftTaps = pFilter88->e40[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e40[nAzimuthIndex].right;		break;
+		case 50:	psLeftTaps = pFilter88->e50[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e50[nAzimuthIndex].right;		break;
+		case 60:	psLeftTaps = pFilter88->e60[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e60[nAzimuthIndex].right;		break;
+		case 70:	psLeftTaps = pFilter88->e70[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e70[nAzimuthIndex].right;		break;
+		case 80:	psLeftTaps = pFilter88->e80[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e80[nAzimuthIndex].right;		break;
+		case 90:	psLeftTaps = pFilter88->e90[nAzimuthIndex].left;
+					psRightTaps = pFilter88->e90[nAzimuthIndex].right;		break;
+		};
+		
 		//How many taps to copy later to user's buffers
 		nTotalTaps = MIT_HRTF_88_TAPS;
 		break;
 	case 96000:
-		if (diffused)
-		{
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &diffuse_96.e_10[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &diffuse_96.e_20[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &diffuse_96.e_30[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &diffuse_96.e_40[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &diffuse_96.e00[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &diffuse_96.e10[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &diffuse_96.e20[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &diffuse_96.e30[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &diffuse_96.e40[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &diffuse_96.e50[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &diffuse_96.e60[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &diffuse_96.e70[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &diffuse_96.e80[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &diffuse_96.e90[nAzimuthIndex].left;
-				*psRight = &diffuse_96.e90[nAzimuthIndex].right;		break;
-			};
-		}
-			
+		if(diffused)
+			pFilter96 = &diffuse_96;
 		else
-		{
-			switch (nInternalElevation)
-			{
-			case -10:	*psLeft = &normal_96.e_10[nAzimuthIndex].left;
-				*psRight = &normal_96.e_10[nAzimuthIndex].right;		break;
-			case -20:	*psLeft = &normal_96.e_20[nAzimuthIndex].left;
-				*psRight = &normal_96.e_20[nAzimuthIndex].right;		break;
-			case -30:	*psLeft = &normal_96.e_30[nAzimuthIndex].left;
-				*psRight = &normal_96.e_30[nAzimuthIndex].right;		break;
-			case -40:	*psLeft = &normal_96.e_40[nAzimuthIndex].left;
-				*psRight = &normal_96.e_40[nAzimuthIndex].right;		break;
-			case 0:		*psLeft = &normal_96.e00[nAzimuthIndex].left;
-				*psRight = &normal_96.e00[nAzimuthIndex].right;		break;
-			case 10:	*psLeft = &normal_96.e10[nAzimuthIndex].left;
-				*psRight = &normal_96.e10[nAzimuthIndex].right;		break;
-			case 20:	*psLeft = &normal_96.e20[nAzimuthIndex].left;
-				*psRight = &normal_96.e20[nAzimuthIndex].right;		break;
-			case 30:	*psLeft = &normal_96.e30[nAzimuthIndex].left;
-				*psRight = &normal_96.e30[nAzimuthIndex].right;		break;
-			case 40:	*psLeft = &normal_96.e40[nAzimuthIndex].left;
-				*psRight = &normal_96.e40[nAzimuthIndex].right;		break;
-			case 50:	*psLeft = &normal_96.e50[nAzimuthIndex].left;
-				*psRight = &normal_96.e50[nAzimuthIndex].right;		break;
-			case 60:	*psLeft = &normal_96.e60[nAzimuthIndex].left;
-				*psRight = &normal_96.e60[nAzimuthIndex].right;		break;
-			case 70:	*psLeft = &normal_96.e70[nAzimuthIndex].left;
-				*psRight = &normal_96.e70[nAzimuthIndex].right;		break;
-			case 80:	*psLeft = &normal_96.e80[nAzimuthIndex].left;
-				*psRight = &normal_96.e80[nAzimuthIndex].right;		break;
-			case 90:	*psLeft = &normal_96.e90[nAzimuthIndex].left;
-				*psRight = &normal_96.e90[nAzimuthIndex].right;		break;
-			};
-		}
+			pFilter96 = &normal_96;
 
+		switch(nInternalElevation)
+		{	
+		case -10:	psLeftTaps = pFilter96->e_10[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e_10[nAzimuthIndex].right;		break;
+		case -20:	psLeftTaps = pFilter96->e_20[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e_20[nAzimuthIndex].right;		break;
+		case -30:	psLeftTaps = pFilter96->e_30[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e_30[nAzimuthIndex].right;		break;
+		case -40:	psLeftTaps = pFilter96->e_40[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e_40[nAzimuthIndex].right;		break;
+		case 0:		psLeftTaps = pFilter96->e00[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e00[nAzimuthIndex].right;		break;
+		case 10:	psLeftTaps = pFilter96->e10[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e10[nAzimuthIndex].right;		break;
+		case 20:	psLeftTaps = pFilter96->e20[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e20[nAzimuthIndex].right;		break;
+		case 30:	psLeftTaps = pFilter96->e30[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e30[nAzimuthIndex].right;		break;
+		case 40:	psLeftTaps = pFilter96->e40[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e40[nAzimuthIndex].right;		break;
+		case 50:	psLeftTaps = pFilter96->e50[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e50[nAzimuthIndex].right;		break;
+		case 60:	psLeftTaps = pFilter96->e60[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e60[nAzimuthIndex].right;		break;
+		case 70:	psLeftTaps = pFilter96->e70[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e70[nAzimuthIndex].right;		break;
+		case 80:	psLeftTaps = pFilter96->e80[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e80[nAzimuthIndex].right;		break;
+		case 90:	psLeftTaps = pFilter96->e90[nAzimuthIndex].left;
+					psRightTaps = pFilter96->e90[nAzimuthIndex].right;		break;
+		};
 		
-
 		//How many taps to copy later to user's buffers
 		nTotalTaps = MIT_HRTF_96_TAPS;
 		break;
@@ -384,17 +320,21 @@ unsigned int mit_hrtf_get(int* pAzimuth, int* pElevation, unsigned int samplerat
 	//Switch left and right ear if the azimuth is to the left of front centre (azimuth < 0)
 	if(nSwitchLeftRight)
 	{
-		psTempTaps = psRight;
-		psRight = psLeft;
-		psLeft = psTempTaps;
+		psTempTaps = psRightTaps;
+		psRightTaps = psLeftTaps;
+		psLeftTaps = psTempTaps;
 	}
 	
-	
+	//Copy taps to user's arrays
+	for(niTap = 0; niTap < nTotalTaps; niTap++)
+	{
+		psLeft[niTap] = psLeftTaps[niTap];
+		psRight[niTap] = psRightTaps[niTap];
+	}
 
 	//Assign the real azimuth and elevation used
 	*pAzimuth = nInternalAzimuth;
 	*pElevation = nInternalElevation;
-	free(psTempTaps);
 
 	return nTotalTaps;	
 }
@@ -461,7 +401,7 @@ int mit_hrtf_findAzimuthFor40Elev(int azimuth)
 		return 174;
 	else
 		return 180;
-}
+};
 
 
 

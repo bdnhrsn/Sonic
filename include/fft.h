@@ -60,7 +60,7 @@ class CFFT
 	protected:
 		//   Rearrange function and its inplace version
 		static void Rearrange(const complex *const Input, complex *const Output, const unsigned int N);
-		static void Rearrange(complex const*Data, const unsigned int N);
+		static void Rearrange(complex *Data, const unsigned int N);
 	
 		//   FFT implementation
 		static void Perform(complex * Data, const unsigned int N, const bool Inverse = false);

@@ -1,5 +1,5 @@
-#include<iostream>
-#include "../include/AudioObj.h"
+#include "stdafx.h"
+#include "AudioObj.h"
 
 AudioObj::AudioObj() {
 	location[0] = 0;

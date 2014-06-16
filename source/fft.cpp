@@ -245,7 +245,7 @@ void CFFT::Rearrange(const complex *const Input, complex *const Output, const un
 }
 
 //   Inplace version of rearrange function
-void CFFT::Rearrange(complex const*Data, const unsigned int N)
+void CFFT::Rearrange(complex *Data, const unsigned int N)
 {
 	//   Swap position
 	unsigned int Target = 0;

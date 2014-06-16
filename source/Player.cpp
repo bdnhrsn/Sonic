@@ -1,7 +1,7 @@
-#include<iostream>
+#include "stdafx.h"
 #include "Math.h"
-#include "../include/Player.h"
-
+#include "Player.h"
+#include <iostream>
 
 Player::Player() {
 	location[0] = 0;
