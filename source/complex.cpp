@@ -6,7 +6,7 @@
 //   When utilizing credit LIBROW site
 
 //   Include header file
-#include "complex.h"
+#include "../include/complex.h"
 
 //   Imaginary unity constants
 const complex complex::i(0., 1.);

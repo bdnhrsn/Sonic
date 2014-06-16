@@ -1,8 +1,8 @@
-#include "stdafx.h"
+
 #include <vector>
-#include "AudioObj.h"
-#include "World.h"
-#include "Player.h"
+#include "../include/AudioObj.h"
+#include "../include/World.h"
+#include "../include/Player.h"
 
 World::World() {
 	player = Player();

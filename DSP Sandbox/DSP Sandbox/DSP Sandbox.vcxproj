@@ -12,8 +12,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\MIT_HRTF_Library\source\mit_hrtf_lib.c" />
+    <ClCompile Include="..\..\source\AudioObj.cpp" />
+    <ClCompile Include="..\..\source\complex.cpp" />
     <ClCompile Include="..\..\source\fft.cpp" />
+    <ClCompile Include="..\..\source\Mixer3D.cpp" />
+    <ClCompile Include="..\..\source\Player.cpp" />
     <ClCompile Include="..\..\source\wav.cpp" />
+    <ClCompile Include="..\..\source\World.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

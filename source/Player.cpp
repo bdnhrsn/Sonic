@@ -1,6 +1,6 @@
-#include "stdafx.h"
+#include "..//include/Player.h"
 #include "Math.h"
-#include "Player.h"
+
 #include <iostream>
 
 Player::Player() {

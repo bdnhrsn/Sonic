@@ -12,16 +12,14 @@
 
 using namespace std;
 
-
-struct wavFileData
-{
-	long n;
-	int sampleRate;
-	int bitDepth;
-	int channels;
-};
 /*
-	
+	struct wavFileData
+	{
+		long n;
+		int sampleRate;
+		int bitDepth;
+		int channels;
+	};
 
 	int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter)
 	{
