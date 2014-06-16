@@ -168,7 +168,7 @@ int main()
 	myMixer.mix();
 	complex *temp = myMixer.getLeftFilter();
 
-	
+	//testing
  	return 0;
 
 }
