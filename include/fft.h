@@ -42,7 +42,7 @@ class CFFT
 		//   FORWARD FOURIER TRANSFORM, INPLACE VERSION
 		//     Data - both input data and output
 		//     N    - length of input data
-		static bool Forward(complex *Data, const unsigned int N);
+		static bool Forward(complex *const Data, const unsigned int N);
 	
 		//   INVERSE FOURIER TRANSFORM
 		//     Input  - input data
@@ -60,10 +60,13 @@ class CFFT
 	protected:
 		//   Rearrange function and its inplace version
 		static void Rearrange(const complex *const Input, complex *const Output, const unsigned int N);
+
 		static void Rearrange(complex *Data, const unsigned int N);
+
+	
 	
 		//   FFT implementation
-		static void Perform(complex * Data, const unsigned int N, const bool Inverse = false);
+		static void Perform(complex *const Data, const unsigned int N, const bool Inverse = false);
 	
 		//   Scaling of inverse FFT result
 		static void Scale(complex *const Data, const unsigned int N);
