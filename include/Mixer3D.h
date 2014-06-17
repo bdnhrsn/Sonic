@@ -27,7 +27,8 @@ public:
 
 	void convolution(complex *input, complex *filter, complex *output, long NSIG, long NFIL, long &NFFT);
 	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long NSIG, long NFIL, long &NFFT);
-
+	void mixDown();
+	void convoluionAll(); 
 	complex *getLeftFilter();
 	short *getTemp()
 	{
@@ -37,11 +38,11 @@ public:
 private:
 	//It is named 
 	World *myWorld;
-	complex **input, **output, **outputLeft,**outputRight,*result, *clFil, *crFil;
+	complex **input, **outputLeft,**outputRight,*result, *clFil, *crFil;
 	AudioObj **AOList;
-	short *lFil, *rFil, *cbResult;
+	short *lFil, *rFil, *cbResult,*cbResultLeft,*cbResultRight;
 
-	long bufferSize, sampleRate, bitDepth,nTaps;//nTaps represents the size of the filter data
+	long bufferSize, sampleRate, bitDepth,nTaps,*begin,*end;//nTaps represents the size of the filter data, *begin and *end are the arrays which store the beginning and ending point of the data which is read in every time. 
 	int nObj;
 	void reassignWorld(World* w);
 };

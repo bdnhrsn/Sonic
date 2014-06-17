@@ -28,21 +28,23 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	bitDepth = bitD;
 	nObj = w->getNumActiveObjects();
 	input = new complex*[World::MAX_OBJ];
-	output = new complex*[World::MAX_OBJ];
 	outputLeft = new complex*[World::MAX_OBJ];
 	outputRight = new complex*[World::MAX_OBJ];
+	
 	for (int i = 0; i < World::MAX_OBJ; i++)
 	{
 		input[i] = new complex[bufferSize];
-		output[i] = new complex[bufferSize * 2];
 		outputLeft[i] = new complex[bufferSize];
 		outputRight[i] = new complex[bufferSize];
 	}
 
 
-
+	begin = new long[World::MAX_OBJ];
+	end = new long[World::MAX_OBJ];
 	result = new complex[bufferSize * 2];
 	cbResult = new short[bufferSize * 2];
+	cbResultLeft = new short[bufferSize];
+	cbResultRight = new short[bufferSize];
 	lFil = new short[bufferSize];
 	rFil = new short[bufferSize];
 	clFil = new complex[bufferSize];
@@ -162,6 +164,20 @@ void Mixer3D::mix()
 	{
 		cbResult[2*i] = outputLeft[0][i].re();
 		cbResult[2 * i + 1] = outputRight[0][i].re();
+	}
+}
+
+
+void Mixer3D::mixDown()
+{
+	for (int i = 0; i < nObj; i++)
+	{
+		for (int j = 0; j < bufferSize; j++)
+		{
+			cbResultLeft[j] += 1 / nObj*outputLeft[i][j].re();
+			cbResultRight[j] += 1 / nObj*outputRight[i][j].re();
+
+		}
 	}
 }
 
