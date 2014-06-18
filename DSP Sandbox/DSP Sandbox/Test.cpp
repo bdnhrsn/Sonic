@@ -171,12 +171,13 @@ int main()
 	cout << "Attempting to load wav files..." << endl << endl;
 	complex* temp = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
 	int sampleRate = inp.sampleRate;
-	int bufferSize = inp.n;
+	int bufferSize = 1024;
 	int bitDepth = 16;
 	int diffuse = 1;
 	Player playerA = Player();
 	AudioObj AudioObjA = AudioObj();
 	World myWorld = World();
+	myWorld.addAudioObj();
 	Mixer3D myMixer = Mixer3D(bufferSize,sampleRate,bitDepth,&myWorld);
 
 	myMixer.mix();

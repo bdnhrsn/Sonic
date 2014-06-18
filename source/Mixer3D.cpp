@@ -27,17 +27,33 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	sampleRate = smpRate;
 	bitDepth = bitD;
 	nObj = w->getNumActiveObjects();
+	
+	
+	//this is just used for testing
+	nObj = 1;
+	//this is just used for testing
+
 	input = new complex*[World::MAX_OBJ];
+	inputTemp = new complex*[World::MAX_OBJ];
 	outputLeft = new complex*[World::MAX_OBJ];
 	outputRight = new complex*[World::MAX_OBJ];
 	
 	for (int i = 0; i < World::MAX_OBJ; i++)
 	{
-		input[i] = new complex[bufferSize];
+		input[i] = new complex[100000];
+		inputTemp[i] = new complex[bufferSize];
 		outputLeft[i] = new complex[bufferSize];
 		outputRight[i] = new complex[bufferSize];
 	}
 
+	/////This part is just for testing
+	string inFile = "assets\\input1mono.wav";
+	wavFileData inp;
+	//LOAD THE WAV FILES
+	cout << "Attempting to load wav files..." << endl << endl;
+	input[0] = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
+	cout << "Wav files loading complete!" << endl;
+	//////This part is just for testing
 
 	begin = new long[World::MAX_OBJ];
 	end = new long[World::MAX_OBJ];
@@ -149,21 +165,23 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 }
 void Mixer3D::mix()
 {
-	string inFile = "assets\\input1mono.wav";
-	wavFileData inp;
-	//LOAD THE WAV FILES
-	cout << "Attempting to load wav files..." << endl << endl;
-	input[0] = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
-	cout << "Wav files loading complete!" << endl;
-	int Azimuth = 50;
-	int elevation = 0;
-	nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
-	long size = 65536;
-	stereoConvolution(input[0], clFil,crFil, outputLeft[0], outputRight[0],size, nTaps, size);
-	for (int i = 0; i < bufferSize; i++)
+	for (begin[0] = 0; begin[0] < 65536; begin[0]+=bufferSize)
 	{
-		cbResult[2*i] = outputLeft[0][i].re();
-		cbResult[2 * i + 1] = outputRight[0][i].re();
+		for (int i = 0; i < bufferSize; i++)
+		{
+			inputTemp[0][i] = input[0][begin[0] + i];
+		}
+
+		int Azimuth = 50;
+		int elevation = 0;
+		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
+		stereoConvolution(inputTemp[0], clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, bufferSize);
+		
+		for (int i = 0; i < bufferSize; i++)
+		{
+			cbResult[2 * i] = outputLeft[0][i].re();
+			cbResult[2 * i + 1] = outputRight[0][i].re();
+		}
 	}
 }
 

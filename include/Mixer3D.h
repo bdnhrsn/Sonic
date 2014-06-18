@@ -38,7 +38,7 @@ public:
 private:
 	//It is named 
 	World *myWorld;
-	complex **input, **outputLeft,**outputRight,*result, *clFil, *crFil;
+	complex **input,**inputTemp, **outputLeft,**outputRight,*result, *clFil, *crFil;
 	AudioObj **AOList;
 	short *lFil, *rFil, *cbResult,*cbResultLeft,*cbResultRight;
 
