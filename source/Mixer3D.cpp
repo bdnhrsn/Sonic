@@ -56,6 +56,7 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	//////This part is just for testing
 
 	begin = new long[World::MAX_OBJ];
+	begin[0] = 0;
 	end = new long[World::MAX_OBJ];
 	result = new complex[bufferSize * 2];
 	cbResult = new short[bufferSize * 2];
@@ -163,16 +164,15 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 	convolution(input, rightFilter, rightOutput, NSIG, NFIL, NFFT);
 
 }
-void Mixer3D::mix()
+void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
 {
-	for (begin[0] = 0; begin[0] < 65536; begin[0]+=bufferSize)
-	{
+	
 		for (int i = 0; i < bufferSize; i++)
 		{
 			inputTemp[0][i] = input[0][begin[0] + i];
 		}
 
-		int Azimuth = 50;
+		int Azimuth = 60;
 		int elevation = 0;
 		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
 		stereoConvolution(inputTemp[0], clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, bufferSize);
@@ -180,9 +180,15 @@ void Mixer3D::mix()
 		for (int i = 0; i < bufferSize; i++)
 		{
 			cbResult[2 * i] = outputLeft[0][i].re();
+			cbResultLeft[i] = (short)outputLeft[0][i].re();
+			ioDataLeft[i] = (short)outputLeft[0][i].re();
+			ioDataRight[i] = (short)outputRight[0][i].re();
 			cbResult[2 * i + 1] = outputRight[0][i].re();
+			cbResultRight[i] = (short)outputRight[0][i].re();
 		}
-	}
+		//ioDataLeft = cbResultLeft;
+		//ioDataRight = cbResultRight;
+		begin[0] += bufferSize;
 }
 
 

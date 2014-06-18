@@ -16,7 +16,7 @@ class Mixer3D
 public:
 	Mixer3D(int bufSize, int smpRate, int bitD, World *w);
 
-	void mix();//doing everything but now just used for every progress.
+	void mix(short *ioDataLeft, short *ioDataRight);//doing everything but now just used for every progress.
 	int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter);//loading filters according to the azimuth and elevation values
 	
 	
@@ -32,7 +32,7 @@ public:
 	complex *getLeftFilter();
 	short *getTemp()
 	{
-		return cbResult;
+		return cbResultLeft;
 	}
 
 private:

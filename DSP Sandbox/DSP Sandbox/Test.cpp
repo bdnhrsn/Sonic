@@ -171,7 +171,7 @@ int main()
 	cout << "Attempting to load wav files..." << endl << endl;
 	complex* temp = utility::loadCmpWavData(inFile, &inp.n, &inp.sampleRate, &inp.bitDepth, &inp.channels);
 	int sampleRate = inp.sampleRate;
-	int bufferSize = 1024;
+	int bufferSize = 65536;
 	int bitDepth = 16;
 	int diffuse = 1;
 	Player playerA = Player();
@@ -179,13 +179,14 @@ int main()
 	World myWorld = World();
 	myWorld.addAudioObj();
 	Mixer3D myMixer = Mixer3D(bufferSize,sampleRate,bitDepth,&myWorld);
-
-	myMixer.mix();
+	short* left = new short[bufferSize], *right = new short[bufferSize];
+	
+	myMixer.mix(left,right);
 	temp = myMixer.getLeftFilter();
 	short *temp2;
 	temp2 = myMixer.getTemp();
 	string s = "output0e-45a.wav";
-	myMixer.writeWAVData(s.c_str(), temp2, bufferSize, inp.sampleRate, 2);
+	myMixer.writeWAVData(s.c_str(), left, bufferSize, inp.sampleRate, 2);
 	
 
 	//testing
