@@ -25,22 +25,23 @@ public:
 	template <typename SampleType>
 	void writeWAVData(const char* outFile, SampleType* buf, size_t bufSize, int sampleRate, short channels);
 
-	void convolution(complex *input, complex *filter, complex *output, long NSIG, long NFIL, long &NFFT);
-	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long NSIG, long NFIL, long &NFFT);
+	void convolution(complex *input, complex *filter, complex *output, long nSig, long nFil, long nFFT);
+	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSig, long nFil, long nFFT);
 	void mixDown();
 	void convoluionAll(); 
+	void stereoTest();
 	complex *getLeftFilter();
 	short *getTemp()
 	{
-		return cbResultLeft;
+		return cbResult;
 	}
 
 private:
 	//It is named 
 	World *myWorld;
-	complex **input,**inputTemp, **outputLeft,**outputRight,*result, *clFil, *crFil;
+	complex **input,**inputTemp, **outputLeft,**outputRight,*result, *clFil, *crFil,*inputTempTemp;
 	AudioObj **AOList;
-	short *lFil, *rFil, *cbResult,*cbResultLeft,*cbResultRight;
+	short *lFil, *rFil, *cbResult,*cbResultLeft,*cbResultRight,*testOutput;
 
 	long bufferSize, sampleRate, bitDepth,nTaps,*begin,*end;//nTaps represents the size of the filter data, *begin and *end are the arrays which store the beginning and ending point of the data which is read in every time. 
 	int nObj;

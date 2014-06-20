@@ -37,10 +37,11 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	inputTemp = new complex*[World::MAX_OBJ];
 	outputLeft = new complex*[World::MAX_OBJ];
 	outputRight = new complex*[World::MAX_OBJ];
-	
+	inputTempTemp = new complex[bufferSize];
 	for (int i = 0; i < World::MAX_OBJ; i++)
 	{
-		input[i] = new complex[100000];
+		
+		input[i] = new complex[bufferSize];
 		inputTemp[i] = new complex[bufferSize];
 		outputLeft[i] = new complex[bufferSize];
 		outputRight[i] = new complex[bufferSize];
@@ -58,8 +59,9 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	begin = new long[World::MAX_OBJ];
 	begin[0] = 0;
 	end = new long[World::MAX_OBJ];
-	result = new complex[bufferSize * 2];
-	cbResult = new short[bufferSize * 2];
+	testOutput = new short[18 * bufferSize];
+	result = new complex[bufferSize];
+	cbResult = new short[2*bufferSize];
 	cbResultLeft = new short[bufferSize];
 	cbResultRight = new short[bufferSize];
 	lFil = new short[bufferSize];
@@ -121,7 +123,7 @@ complex *Mixer3D::getLeftFilter()
 	return clFil;
 
 }
-void Mixer3D::convolution(complex *input, complex *filter,complex *output, long NSIG, long NFIL, long &NFFT)
+void Mixer3D::convolution(complex *input, complex *filter,complex *output, long nSig, long nFil, long nFFT)
 {
 	//Check for invalid inputs.
 	if (input == NULL || filter == NULL)
@@ -133,10 +135,10 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	bool NFFTChanged = false;
 	//If NFFT not a power of 2, or it is smaller than signal or filter, prompt for new.
 	
-	while (log2(NFFT) / log2(2) != (int)(log2(NFFT) / log2(2)) || NFFT < NSIG || NFFT < NFIL)
+	while (log2(nFFT) / log2(2) != (int)(log2(nFFT) / log2(2)) || nFFT < nSig || nFFT < nFil)
 	{
-		cout << "Please input a valid NFFT, which is >= NSIG(" << NSIG << ") and >= NFIL(" << NFIL << ") : ";
-		cin >> NFFT;
+		cout << "Please input a valid NFFT, which is >= nSig(" << nSig << ") and >= NFIL(" << nFil << ") : ";
+		cin >> nFFT;
 		NFFTChanged = true;
 	}
 
@@ -146,19 +148,19 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	
 	
 	//Perform FFT on both input and filter.
-	CFFT::Forward(fInput, NFFT);
-	CFFT::Forward(fFilter, NFFT);
+	CFFT::Forward(fInput, nFFT);
+	CFFT::Forward(fFilter, nFFT);
 
-	for (int i = 0; i < NFFT; i++)
+	for (int i = 0; i < nFFT; i++)
 		output[i] = fInput[i] * fFilter[i];
 
-	CFFT::Inverse(output, NFFT);
-	CFFT::Inverse(fInput, NFFT);
-	CFFT::Inverse(fFilter, NFFT);
+	CFFT::Inverse(output, nFFT);
+	CFFT::Inverse(fInput, nFFT);
+	CFFT::Inverse(fFilter, nFFT);
 
 
 }
-void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long NSIG, long NFIL, long &NFFT)
+void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long NSIG, long NFIL, long NFFT)
 {
 	convolution(input, leftFilter, leftOutput, NSIG, NFIL, NFFT);
 	convolution(input, rightFilter, rightOutput, NSIG, NFIL, NFFT);
@@ -172,7 +174,7 @@ void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
 			inputTemp[0][i] = input[0][begin[0] + i];
 		}
 
-		int Azimuth = 60;
+		int Azimuth = 0;
 		int elevation = 0;
 		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
 		stereoConvolution(inputTemp[0], clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, bufferSize);
@@ -180,16 +182,60 @@ void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
 		for (int i = 0; i < bufferSize; i++)
 		{
 			cbResult[2 * i] = outputLeft[0][i].re();
-			cbResultLeft[i] = (short)outputLeft[0][i].re();
+			cbResult[2 * i + 1] = outputRight[0][i].re();
+			
+			inputTemp[0][i] = outputLeft[0][i].re();
+			
+
+
 			ioDataLeft[i] = (short)outputLeft[0][i].re();
 			ioDataRight[i] = (short)outputRight[0][i].re();
-			cbResult[2 * i + 1] = outputRight[0][i].re();
+			cbResultLeft[i] = (short)outputLeft[0][i].re();
 			cbResultRight[i] = (short)outputRight[0][i].re();
+
 		}
 		//ioDataLeft = cbResultLeft;
 		//ioDataRight = cbResultRight;
 		begin[0] += bufferSize;
 }
+void Mixer3D::stereoTest()
+{
+	int step = bufferSize / 128;
+	for (int i = 0; i < bufferSize; i++)
+	{
+		inputTemp[0][i] = input[0][i % 65336];
+	}
+	int elevation = 0;
+	bool flag;
+	for (int Azimuth = -180; Azimuth < 180; Azimuth += 5)
+	{
+		if (Azimuth < 0)
+			flag = 1;
+		else
+			flag = 0;
+		int n = ((Azimuth+180) / 5)*(step);
+		for (int i = n; i < n + step; i++)
+		{
+			inputTempTemp[i % (step)] = inputTemp[0][i];
+		}
+
+		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
+		
+		if (flag)
+			Azimuth = -Azimuth;
+		
+		stereoConvolution(inputTempTemp, clFil, crFil, outputLeft[0], outputRight[0], step, nTaps, step);
+
+		for (int i = n; i < n+step; i++)
+		{
+			cbResult[2 * i] = outputLeft[0][i%step].re();
+			cbResult[2 * i + 1] = outputRight[0][i%step].re();
+		}
+		cout << endl;
+	}
+}
+
+	
 
 
 void Mixer3D::mixDown()
