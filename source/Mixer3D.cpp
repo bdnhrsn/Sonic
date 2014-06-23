@@ -184,7 +184,7 @@ void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
 			cbResult[2 * i] = outputLeft[0][i].re();
 			cbResult[2 * i + 1] = outputRight[0][i].re();
 			
-			inputTemp[0][i] = outputLeft[0][i].re();
+			testOutput[i] = pow(2,15)*inputTemp[0][i].re();
 			
 
 

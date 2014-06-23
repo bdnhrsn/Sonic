@@ -33,7 +33,7 @@ public:
 	complex *getLeftFilter();
 	short *getTemp()
 	{
-		return cbResult;
+		return testOutput;
 	}
 
 private:
