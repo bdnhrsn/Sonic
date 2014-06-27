@@ -27,7 +27,7 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	sampleRate = smpRate;
 	bitDepth = bitD;
 	nObj = w->getNumActiveObjects();
-	
+	dataSize = 65536;
 	
 	//this is just used for testing
 	nObj = 1;
@@ -37,14 +37,19 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	inputTemp = new complex*[World::MAX_OBJ];
 	outputLeft = new complex*[World::MAX_OBJ];
 	outputRight = new complex*[World::MAX_OBJ];
-	inputTempTemp = new complex[bufferSize];
+	overlapLeft = new complex*[World::MAX_OBJ];
+	overlapRight = new complex*[World::MAX_OBJ];
+	
+	inputTempTemp = new complex[2*bufferSize];//this is just a very temporary thing
+
 	for (int i = 0; i < World::MAX_OBJ; i++)
 	{
-		
-		input[i] = new complex[bufferSize];
-		inputTemp[i] = new complex[bufferSize];
-		outputLeft[i] = new complex[bufferSize];
-		outputRight[i] = new complex[bufferSize];
+		overlapLeft[i] = new complex[dataSize];
+		overlapRight[i] = new complex[dataSize];
+		input[i] = new complex[dataSize];
+		inputTemp[i] = new complex[dataSize*16];
+		outputLeft[i] = new complex[dataSize];
+		outputRight[i] = new complex[dataSize];
 	}
 
 	/////This part is just for testing
@@ -59,15 +64,18 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w)
 	begin = new long[World::MAX_OBJ];
 	begin[0] = 0;
 	end = new long[World::MAX_OBJ];
-	testOutput = new short[18 * bufferSize];
-	result = new complex[bufferSize];
-	cbResult = new short[2*bufferSize];
-	cbResultLeft = new short[bufferSize];
-	cbResultRight = new short[bufferSize];
-	lFil = new short[bufferSize];
-	rFil = new short[bufferSize];
-	clFil = new complex[bufferSize];
-	crFil = new complex[bufferSize];
+	testOutput = new short[18 * dataSize];
+	result = new complex[dataSize];
+	cbResult = new short[2*dataSize*16];
+	cbResultLeft = new short[dataSize*16];
+	cbResultRight = new short[dataSize*16];
+
+	cbResultSmall = new short[2 * bufferSize];
+
+	lFil = new short[dataSize];
+	rFil = new short[dataSize];
+	clFil = new complex[dataSize];
+	crFil = new complex[dataSize];
 }
 
 int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter)
@@ -78,8 +86,8 @@ int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate
 
 	for (int i = 0; i < size; i++)
 	{
-		leftFilter[i] = (lFil[i]) / 1.0;
-		rightFilter[i] = (rFil[i]) / 1.0;
+		leftFilter[i] = (double)(lFil[i]);
+		rightFilter[i] = (double)(rFil[i]);
 	}
 
 	return size;
@@ -113,11 +121,9 @@ void Mixer3D::writeWAVData(const char* outFile, SampleType* buf, size_t bufSize,
 
 	/* Data Chunk */
 	stream.write("data", 4);                                        // sGroupID (data)
-	stream.write((const char*)&bufSize, 4);                         // Chunk size (of Data, and thus of bufferSize)
+	stream.write((const char*)&bufSize, 4);                         // Chunk size (of Data, and thus of dataSize)
 	stream.write((const char*)buf, bufSize);                        // The samples DATA!!!
 }
-
-
 complex *Mixer3D::getLeftFilter()
 {
 	return clFil;
@@ -154,6 +160,8 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	for (int i = 0; i < nFFT; i++)
 		output[i] = fInput[i] * fFilter[i];
 
+	
+
 	CFFT::Inverse(output, nFFT);
 	CFFT::Inverse(fInput, nFFT);
 	CFFT::Inverse(fFilter, nFFT);
@@ -166,27 +174,27 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 	convolution(input, rightFilter, rightOutput, NSIG, NFIL, NFFT);
 
 }
-void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
+void Mixer3D::mix(short *ioDataLeft,short *ioDataRight) 
 {
 	
-		for (int i = 0; i < bufferSize; i++)
+		for (int i = 0; i < dataSize; i++)
 		{
 			inputTemp[0][i] = input[0][begin[0] + i];
 		}
 
 		int Azimuth = 0;
-		int elevation = 0;
+		int elevation = -10;
 		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
-		stereoConvolution(inputTemp[0], clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, bufferSize);
+		stereoConvolution(inputTemp[0], clFil, crFil, outputLeft[0], outputRight[0], dataSize, nTaps, dataSize);
 		
-		for (int i = 0; i < bufferSize; i++)
+		for (int i = 0; i < dataSize; i++)
 		{
 			cbResult[2 * i] = outputLeft[0][i].re();
 			cbResult[2 * i + 1] = outputRight[0][i].re();
 			
-			testOutput[i] = pow(2,15)*inputTemp[0][i].re();
+			testOutput[i] = outputLeft[0][i].re();
 			
-
+		
 //
 			ioDataLeft[i] = (short)outputLeft[0][i].re();
 			ioDataRight[i] = (short)outputRight[0][i].re();
@@ -196,41 +204,125 @@ void Mixer3D::mix(short *ioDataLeft,short *ioDataRight)
 		}
 		//ioDataLeft = cbResultLeft;
 		//ioDataRight = cbResultRight;
-		begin[0] += bufferSize;
+		begin[0] += dataSize;
 }
+
+void Mixer3D::overlapConvolution(complex *input, int Azimuth, int elevation)
+{
+	bool flag;
+	
+		if (Azimuth < 0)
+			flag = 1;
+		else
+			flag = 0;
+
+		
+		for (int i = 0; i < bufferSize; i++)
+		{
+			inputTempTemp[i % (bufferSize)] = input[i];
+		}
+
+		//fetch the filter
+		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
+
+		if (flag)
+			Azimuth = -Azimuth;
+		stereoConvolution(inputTempTemp, clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, 2 * bufferSize);
+
+
+		//applying the overlap adding
+		/*if (n == 0)
+		{
+			for (int i = n; i < n + bufferSize; i++)
+			{
+				cbResult[2 * i] = outputLeft[0][i%bufferSize].re();
+				cbResult[2 * i + 1] = outputRight[0][i%bufferSize].re();
+			}
+		}*/
+		//else
+		//{
+			for (int i = 0; i < bufferSize; i++)
+			{
+				cbResultSmall[2 * i] = outputLeft[0][i].re() + overlapLeft[0][i].re();
+				cbResultSmall[2 * i + 1] = outputRight[0][i].re() + overlapRight[0][i].re();
+			}
+		//}
+			
+			//
+
+
+		//updating the overlap part for the next iteration
+		for (int i = 0; i < bufferSize; i++)
+		{
+			overlapLeft[0][i] = outputLeft[0][i + bufferSize];
+			overlapRight[0][i] = outputRight[0][i + bufferSize];
+		}
+
+}
+
 void Mixer3D::stereoTest()
 {
-	int step = bufferSize / 128;
-	for (int i = 0; i < bufferSize; i++)
+	
+	int begin = -180;
+	int end = 180;
+	int step = 5;
+	int fullLength = (end-begin)/5 * bufferSize;//The whole length of the long file
+	//loading the data in
+	for (int i = 0; i < fullLength; i++)
 	{
-		inputTemp[0][i] = input[0][i % 65336];
+		inputTemp[0][i] = input[0][i % dataSize];
 	}
+
+
 	int elevation = 0;
 	bool flag;
-	for (int Azimuth = -180; Azimuth < 180; Azimuth += 5)
+	for (int Azimuth = begin; Azimuth < end; Azimuth += step)
 	{
 		if (Azimuth < 0)
 			flag = 1;
 		else
 			flag = 0;
-		int n = ((Azimuth+180) / 5)*(step);
-		for (int i = n; i < n + step; i++)
+
+		int n = ((Azimuth-begin) / 5)*(bufferSize);//the beginning index of the data in this iteration
+		for (int i = n; i < n + bufferSize; i++)
 		{
-			inputTempTemp[i % (step)] = inputTemp[0][i];
+			inputTempTemp[i % (bufferSize)] = inputTemp[0][i];
 		}
 
+		//fetch the filter
 		nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
 		
 		if (flag)
 			Azimuth = -Azimuth;
 		
-		stereoConvolution(inputTempTemp, clFil, crFil, outputLeft[0], outputRight[0], step, nTaps, step);
+		stereoConvolution(inputTempTemp, clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, 2*bufferSize);
 
-		for (int i = n; i < n+step; i++)
+		
+		//applying the overlap adding
+		if (n == 0)
 		{
-			cbResult[2 * i] = outputLeft[0][i%step].re();
-			cbResult[2 * i + 1] = outputRight[0][i%step].re();
+			for (int i = n; i < n + bufferSize; i++)
+			{
+				cbResult[2 * i] = outputLeft[0][i%bufferSize].re();
+				cbResult[2 * i + 1] = outputRight[0][i%bufferSize].re();
+			}
 		}
+		else
+		{
+			for (int i = n; i < n + bufferSize; i++)
+			{
+				cbResult[2 * i] = outputLeft[0][i%bufferSize].re() + overlapLeft[0][i%bufferSize].re();
+				cbResult[2 * i + 1] = outputRight[0][i%bufferSize].re() + overlapRight[0][i%bufferSize].re();
+			}
+		}
+
+		//updating the overlap part for the next iteration
+		for (int i = 0; i < bufferSize; i++)
+		{
+			overlapLeft[0][i] = outputLeft[0][i + bufferSize];
+			overlapRight[0][i] = outputRight[0][i + bufferSize];
+		}
+
 		cout << endl;
 	}
 }
@@ -242,7 +334,7 @@ void Mixer3D::mixDown()
 {
 	for (int i = 0; i < nObj; i++)
 	{
-		for (int j = 0; j < bufferSize; j++)
+		for (int j = 0; j < dataSize; j++)
 		{
 			cbResultLeft[j] += 1 / nObj*outputLeft[i][j].re();
 			cbResultRight[j] += 1 / nObj*outputRight[i][j].re();

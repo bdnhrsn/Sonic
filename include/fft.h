@@ -42,6 +42,7 @@ class CFFT
 		//   FORWARD FOURIER TRANSFORM, INPLACE VERSION
 		//     Data - both input data and output
 		//     N    - length of input data
+		//	 It doesn't do zero padding automatically
 		static bool Forward(complex *const Data, const unsigned int N);
 	
 		//   INVERSE FOURIER TRANSFORM
