@@ -90,27 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Demo/source/Mixer3D.cpp"
-            timestampString = "427418646.083606"
+            timestampString = "427425926.881092"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "205"
-            endingLineNumber = "205"
-            landmarkName = "Mixer3D::mix(short *ioDataLeft,short *ioDataRight)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Demo/source/Mixer3D.cpp"
-            timestampString = "427418646.083606"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
+            startingLineNumber = "126"
+            endingLineNumber = "126"
             landmarkName = "Mixer3D::convolution(complex *input, complex *filter,complex *output, long nSig, long nFil, long nFFT)"
             landmarkType = "5">
          </BreakpointContent>
