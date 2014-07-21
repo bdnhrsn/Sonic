@@ -146,7 +146,7 @@ void WavObject::extractWavHeader(const std::string fname) {
     try
     {
         
-        NSString *filename = [NSString stringWithCString:fname.c_str()];
+        NSString *filename = [NSString stringWithUTF8String:fname.c_str()];
         std::cout << "\nAttempting to load file: " << [filename fileSystemRepresentation] << std::endl;
         
         NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
