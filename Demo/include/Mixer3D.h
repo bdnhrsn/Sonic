@@ -54,6 +54,8 @@ private:
 	
 	//clFil stands for complex type left filter, left and right means the left and right channel
 	complex **outputLeft, **outputRight, *clFil, *crFil;
+    
+    
 	
 	complex	*inputTempTemp1;//just define it temporarily to store a small chunk of the input for processing
 	
@@ -67,6 +69,12 @@ private:
 	long bufferSize, sampleRate, bitDepth,nTaps, dataSize;
 	
 	long maxTemp=0;
+    
+    //The signFlag is used to indicate that whether the azimuth value is negative
+    //THe filterFlag is used to indicate
+    bool signFlag, filterFlag;
+    
+    int previousAzimuth;
 
 	int nObj;
 	

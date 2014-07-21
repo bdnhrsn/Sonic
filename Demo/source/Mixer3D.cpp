@@ -52,6 +52,10 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
 	//These are for storing filters for processing
 	clFil = new complex[2 * bufferSize];
 	crFil = new complex[2 * bufferSize];
+    
+    signFlag=0;//0 means the azimuth value is positive
+    filterFlag=0;//0 means the filters for the current consecutive iterations are the same
+    previousAzimuth = 190;//Used to store the azimuth value from the previous iteration
 }
 
 
@@ -147,13 +151,13 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 
 void Mixer3D::overlapConvolution(int Azimuth, int elevation, short *ioDataLeft,short *ioDataRight)
 {
-
-	bool flag;
-	
+    signFlag=0;
+    filterFlag=0;
+    
 		if (Azimuth < 0)
-			flag = 1;
+			signFlag = 1;
 		else
-			flag = 0;
+			signFlag = 0;
     myWorld->getAudioObj(0)->fillAudioData(inputTempTemp1, bufferSize);
     
 
@@ -162,35 +166,54 @@ void Mixer3D::overlapConvolution(int Azimuth, int elevation, short *ioDataLeft,s
         inputTempTemp1[i] = 0;
     }
     
-    //fetch the filter
-    nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
-    for (int i = nTaps; i < 2 * bufferSize; i++)
+   
+    
+    //judging whether the filter has changed
+    if((Azimuth/5)!=(previousAzimuth/5))
     {
-        clFil[i] = 0;
-        crFil[i] = 0;
+        filterFlag=1;
     }
     
-    if (flag)
-        Azimuth = -Azimuth;
-    stereoConvolution(overlapInput, clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, 2 * bufferSize);
+    if(filterFlag)
+    {
+       
+        //fetch the filter
+        nTaps = HRTFLoading(&Azimuth, &elevation, sampleRate, 1, clFil, crFil);
+       
+        for (int i = nTaps; i < 2 * bufferSize; i++)
+        {
+            clFil[i] = 0;
+            crFil[i] = 0;
+        }
+               if (signFlag)
+            Azimuth = -Azimuth;
+        stereoConvolution(overlapInput, clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, 2 * bufferSize);
     //updating the overlap part for the next iteration
-    for (int i = 0; i < bufferSize; i++)
-    {
-        overlapLeft[0][i] = outputLeft[0][i + bufferSize];
-        overlapRight[0][i] = outputRight[0][i + bufferSize];
+                for (int i = 0; i < bufferSize; i++)
+        {
+            overlapLeft[0][i] = outputLeft[0][i + bufferSize];
+            overlapRight[0][i] = outputRight[0][i + bufferSize];
+        }
+        
+
     }
     
-    
+        //doing convolution and get the main data for this iteration
     stereoConvolution(inputTempTemp1, clFil, crFil, outputLeft[0], outputRight[0], bufferSize, nTaps, 2 * bufferSize);
+  
+
     
-    
-    
+    //adding the overlap part with the main data
+   
+
     for (int i = 0; i < bufferSize; i++)
     {
        
-        ioDataLeft[i] =   short((outputLeft[0][i].re())/2+ (overlapLeft[0][i].re())/2);//overlapLeft[0][i].re();//
-        ioDataRight[i] = short((outputRight[0][i].re())/2 + (overlapRight[0][i].re())/2);//overlapRight[0]
+        ioDataLeft[i] =   short((outputLeft[0][i].re())/2+ (overlapLeft[0][i].re())/2);
+        ioDataRight[i] = short((outputRight[0][i].re())/2 + (overlapRight[0][i].re())/2);
     }
+   
+    //This is some unknown thing used for successful play of the ioData
     for (int i=0; i<0; i++){
         cout<<"In overlap function"<<endl;
     }
@@ -205,6 +228,14 @@ void Mixer3D::overlapConvolution(int Azimuth, int elevation, short *ioDataLeft,s
         overlapInput[i] = 0;
     }
     
+    for(int i = 0 ; i < bufferSize; i++)
+    {
+        overlapLeft[0][i]=outputLeft[0][i+bufferSize];
+        overlapRight[0][i]=outputRight[0][i+bufferSize];
+    }
+    
+    previousAzimuth=Azimuth;
+   
 }
 
 

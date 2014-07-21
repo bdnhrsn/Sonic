@@ -45,7 +45,9 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     //    std::cout<<"\naksjdhka " << ioData->mBuffers[i].mDataByteSize <<" i=" << i <<" "<<inBusNumber;
     //
     //}
-    mixer3D->overlapConvolution(-30, 0, (short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
+    
+        mixer3D->overlapConvolution(-30, 0, (short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
+   
     //mixer3D->mix((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
     return noErr;
 }
