@@ -30,7 +30,7 @@ public:
 
 	void convolution(complex *input, complex *filter, complex *output, long nSig, long nFil, long nFFT);
 	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSig, long nFil, long nFFT);
-	void overlapConvolution(int Azimuth, int elevation, short *ioDataLeft,short *ioDataRight);
+	void overlapConvolution(short *ioDataLeft,short *ioDataRight);
     
     
     ~Mixer3D()
@@ -45,7 +45,9 @@ public:
         delete [] overlapLeft;
         delete [] overlapRight;
         delete [] overlapInput;
-        
+        delete [] previousAzimuth;
+        delete [] Azimuth;
+        delete [] elevation;
     }
 
 private:
@@ -53,7 +55,7 @@ private:
 	World *myWorld;
 	
 	//clFil stands for complex type left filter, left and right means the left and right channel
-	complex **outputLeft, **outputRight, *clFil, *crFil;
+	complex **outputLeft, **outputRight, **clFil, **crFil;
     
     
 	
@@ -63,7 +65,8 @@ private:
 	//to fix the glitch problem
 	complex **overlapLeft,**overlapRight;//This is overlap result coming out of the filters
 	complex *overlapInput;//This is the input which is used for going through the filter for the overlap
-	
+    complex *fInput, *fFilter;
+    
     short *lFil, *rFil;//left and right filter
 	 
 	long bufferSize, sampleRate, bitDepth,nTaps, dataSize;
@@ -74,9 +77,9 @@ private:
     //THe filterFlag is used to indicate
     bool signFlag, filterFlag;
     
-    int previousAzimuth;
+    int *previousAzimuth,*Azimuth,*elevation;
 
-	int nObj;
+	//int nObj;
 	
 };
 

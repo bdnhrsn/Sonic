@@ -20,6 +20,8 @@ class AudioObj {
     bool repeat;
     CircBuff<complex> circBuff;
     WavObject wavObject;
+    int Azimuth;
+    int elevation;
 
     // Used for wav.mm, not needed anymore
 /*    complex* tempBufferWavFile;
@@ -51,6 +53,13 @@ public:
         circBuff.write(wavObject.complexTempData, 32768);
     }
     
+    AudioObj(const std::string wavFileName, int Azi, int ele):active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), Azimuth(Azi), elevation(ele)
+    {
+        wavObject.loadMoreData(32768, repeat);
+        circBuff.write(wavObject.complexTempData, 32768);
+        
+    }
+    
     ~AudioObj () { }//delete[] tempBufferWavFile;}
 	
 	//Returns the array of the object's location.
@@ -61,7 +70,14 @@ public:
 	void setLocation (VariableForLocation x, VariableForLocation y, VariableForLocation z);
     
     Velocity getVelocity() const;
-    
+    int getAzimuth()
+    {
+        return Azimuth;
+    }
+    int getElevation()
+    {
+        return elevation;
+    }
     void setVelocity (const Velocity& vel);
     void setVelocity (VariableForVelocity dx, VariableForVelocity dy, VariableForVelocity dz);
     

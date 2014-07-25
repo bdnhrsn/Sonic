@@ -52,10 +52,19 @@ class World {
 	// of the created object at the location specified 
 	// by the parameter.
     int addAudioObj(const Location& loc, const Velocity& vel, const std::string);
+    
+    
+    //Supplying the azimuth and elevation. Right now used for testing multiple audio objects
+    int addAudioObj(const std::string, int Azimuth, int elevation);
 
 	//Returns a reference to the audio object at the
 	// specified index.
 	AudioObj* getAudioObj(int index) const;
+    
+    int getNumObj()
+    {
+        return numObj;
+    }
     
     void createWriteThread (void) {
         if (!isWriteThreadCreated){

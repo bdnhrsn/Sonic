@@ -20,6 +20,13 @@ int World::addAudioObj(const Location& loc, const Velocity& vel, const std::stri
 	return numObj-1;
 }
 
+int World::addAudioObj(const std::string wavFileName, int Azimuth, int elevation)
+{
+    objList.push_back(new AudioObj(wavFileName, Azimuth, elevation));
+    numObj++;
+    return numObj-1;
+}
+
 AudioObj* World::getAudioObj (int index) const{
     return objList.at(index);
 }
@@ -32,7 +39,7 @@ void * World::writeAudioObjects (void* obj) {
         for (int i=0; i < size ; i++){
             (*objListCurrent)[i]->writeCircBuff();
         }
-        usleep(100000);
+        usleep(10000);
     }
     return NULL;
 }
