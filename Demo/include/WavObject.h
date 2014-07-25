@@ -25,6 +25,7 @@ class WavObject {
         int channels;
     }wavFileData;
     long startOfWavData;
+    long endOfWavData;
     
 public:
     
@@ -32,32 +33,36 @@ public:
     //RIFF data is meta data info that holds ID, size and format of WAVE file.
     struct RIFF_Header {
         char chunkID[4];
-        long chuckSize;
+        unsigned int chunkSize;
         char format[4];
     };
     
     //Struct that holds format subchunk data for WAVE file.
     struct WAVE_Format {
-        char subChunkID[4];
-        long subChunkSize;
+        unsigned int subChunkSize;
         short audioFormat;
         short numChannels;
-        long sampleRate;
-        long byteRate;
+        unsigned int sampleRate;
+        unsigned int byteRate;
         short blockAlign;
         short bitsPerSample;
     };
     
     //Struct that holds data of WAVE file.
     struct WAVE_Data {
-        char subChunkID[4];
         long subChunk2Size;
+    };
+    
+    //Struct to hold subchunkID
+    struct CHUNK_ID {
+        char chunkID[4];
     };
     
     
     WAVE_Format wave_format;
     RIFF_Header riff_header;
     WAVE_Data wave_data;
+    CHUNK_ID chunk_id;
     
     short *shortTempData;
     complex *complexTempData;
