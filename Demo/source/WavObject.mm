@@ -22,11 +22,16 @@ void WavObject::extractWavHeader(const std::string fname) {
         NSString *filename = [NSString stringWithUTF8String:fname.c_str()];
         std::cout << "\nAttempting to load file: " << [filename fileSystemRepresentation] << std::endl;
         
-        NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
-        NSString *docs_dir = [paths objectAtIndex:0];
-        NSString* aFile = [docs_dir stringByAppendingPathComponent: filename];
-        soundFile = fopen([aFile fileSystemRepresentation], "r");
-        std::cout<<[aFile fileSystemRepresentation]<<std::endl;
+        //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+        //NSString *docs_dir = [paths objectAtIndex:0];
+        //NSString* aFile = [docs_dir stringByAppendingPathComponent: filename];
+        //soundFile = fopen([aFile fileSystemRepresentation], "r");
+        //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
+        
+        //NSString *testPath = [[NSBundle mainBundle] pathForResource:@"3m40stest" ofType:@"wav"];
+        NSString *testPath = [[NSBundle mainBundle] pathForResource:filename ofType:@"wav"];
+        soundFile = fopen([testPath fileSystemRepresentation], "r");
+        //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
         
         //soundFile = fopen("/Users/philadelphiagamelab2/Deskop/Demo/Demo/InputData/input1mono.wav","r");
         //soundFile = fopen("~/test.txt","r");
