@@ -22,6 +22,8 @@ void WavObject::extractWavHeader(const std::string fname) {
         NSString *filename = [NSString stringWithUTF8String:fname.c_str()];
         std::cout << "\nAttempting to load file: " << [filename fileSystemRepresentation] << std::endl;
         
+        // Keep these commented lines for eventual file retrieval/opening in final library
+        
         //NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
         //NSString *docs_dir = [paths objectAtIndex:0];
         //NSString* aFile = [docs_dir stringByAppendingPathComponent: filename];
@@ -29,7 +31,7 @@ void WavObject::extractWavHeader(const std::string fname) {
         //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
         
         //NSString *testPath = [[NSBundle mainBundle] pathForResource:@"3m40stest" ofType:@"wav"];
-        NSString *testPath = [[NSBundle mainBundle] pathForResource:filename ofType:@"wav"];
+        NSString *testPath = [[NSBundle mainBundle] pathForResource:[filename stringByDeletingPathExtension] ofType:[filename pathExtension]];
         soundFile = fopen([testPath fileSystemRepresentation], "r");
         //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
         
