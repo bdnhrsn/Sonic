@@ -67,8 +67,8 @@ void CustomAudioUnit::init () {
     //myWorld.addAudioObj("catmeow.wav", 30, 0);
     //myWorld.addAudioObj("applauselight.wav", 30, 0);
     //myWorld.addAudioObj("catscreech.wav", 30, 0);
-    myWorld.addAudioObj("ghomono.wav", 90, 0);
-    myWorld.addAudioObj("zipper_1+2_mono.wav", 30, 0);
+    //myWorld.addAudioObj("ghomono.wav", 90, 0);
+    //myWorld.addAudioObj("zipper_1+2_mono.wav", 30, 0);
     
     
     int bufferSize = 512;

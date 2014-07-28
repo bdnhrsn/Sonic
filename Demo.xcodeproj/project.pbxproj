@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		981219801981B588006D402D /* beargrowl.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9812197C1981B588006D402D /* beargrowl.wav */; };
-		981219811981B588006D402D /* birdchirp.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9812197D1981B588006D402D /* birdchirp.wav */; };
 		981219821981B588006D402D /* catmeow.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9812197E1981B588006D402D /* catmeow.wav */; };
-		981219831981B588006D402D /* catscreech.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9812197F1981B588006D402D /* catscreech.wav */; };
 		981F074D1977120D00CED7BB /* Mixer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 981F074C1977120D00CED7BB /* Mixer3D.cpp */; };
 		981F07501979ADF500CED7BB /* 1minutetest.wav in Resources */ = {isa = PBXBuildFile; fileRef = 981F074E1979ADF500CED7BB /* 1minutetest.wav */; };
 		981F07511979ADF500CED7BB /* 3m40stest.wav in Resources */ = {isa = PBXBuildFile; fileRef = 981F074F1979ADF500CED7BB /* 3m40stest.wav */; };
@@ -54,10 +51,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		9812197C1981B588006D402D /* beargrowl.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = beargrowl.wav; sourceTree = "<group>"; };
-		9812197D1981B588006D402D /* birdchirp.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = birdchirp.wav; sourceTree = "<group>"; };
 		9812197E1981B588006D402D /* catmeow.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catmeow.wav; sourceTree = "<group>"; };
-		9812197F1981B588006D402D /* catscreech.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catscreech.wav; sourceTree = "<group>"; };
 		981F074C1977120D00CED7BB /* Mixer3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mixer3D.cpp; sourceTree = "<group>"; };
 		981F074E1979ADF500CED7BB /* 1minutetest.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 1minutetest.wav; sourceTree = "<group>"; };
 		981F074F1979ADF500CED7BB /* 3m40stest.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 3m40stest.wav; sourceTree = "<group>"; };
@@ -222,10 +216,7 @@
 		98447D6F19536DC5002630BF /* InputData */ = {
 			isa = PBXGroup;
 			children = (
-				9812197C1981B588006D402D /* beargrowl.wav */,
-				9812197D1981B588006D402D /* birdchirp.wav */,
 				9812197E1981B588006D402D /* catmeow.wav */,
-				9812197F1981B588006D402D /* catscreech.wav */,
 				981F074E1979ADF500CED7BB /* 1minutetest.wav */,
 				981F074F1979ADF500CED7BB /* 3m40stest.wav */,
 				98447D73195372FB002630BF /* input1mono.wav */,
@@ -403,9 +394,6 @@
 				98E872FB1947B8BD00DD214A /* Images.xcassets in Resources */,
 				98E872F31947B8BD00DD214A /* Main_iPhone.storyboard in Resources */,
 				98447D74195372FB002630BF /* input1mono.wav in Resources */,
-				981219801981B588006D402D /* beargrowl.wav in Resources */,
-				981219811981B588006D402D /* birdchirp.wav in Resources */,
-				981219831981B588006D402D /* catscreech.wav in Resources */,
 				98E872EA1947B8BD00DD214A /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
