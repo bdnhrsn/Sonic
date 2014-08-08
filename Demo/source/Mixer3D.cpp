@@ -266,6 +266,29 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 }
 
 
+int Mixer3D::getAzimuth(Location *audioObj, Location *player)
+{
+    int xPlayer, yPlayer, zPlayer;
+    int xObj, yObj, zObj;
+    int xTemp, yTemp, zTemp;
+    xPlayer=player->getX();
+    yPlayer=player->getY();
+    zPlayer=player->getZ();
+    xObj=audioObj->getX();
+    yObj=audioObj->getY();
+    zObj=audioObj->getZ();
+    xTemp=xObj-xPlayer;
+    yTemp=yObj-yPlayer;
+    zTemp=zObj-zPlayer;
+    
+    int Azimuth;
+    Azimuth=atan(abs(xTemp/yTemp));
+    if(xTemp<0)Azimuth=-Azimuth;
+    if(yTemp<0)Azimuth=180-Azimuth;
+    
+    return Azimuth;
+    
+}
 
 //template void Mixer3D::write< short >(std::ofstream& stream, const short& t);
 //template void Mixer3D::write< int >(std::ofstream& stream, const int& t);
