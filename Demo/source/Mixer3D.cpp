@@ -163,6 +163,35 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 
 }
 
+int Mixer3D::getAzimuth(Location audioObj, Location player)
+{
+    int xPlayer, yPlayer, zPlayer;
+    int xObj, yObj, zObj;
+    double xTemp, yTemp, zTemp;
+    xPlayer=player.getX();
+    yPlayer=player.getY();
+    zPlayer=player.getZ();
+    xObj=audioObj.getX();
+    yObj=audioObj.getY();
+    zObj=audioObj.getZ();
+    xTemp=xObj-xPlayer;
+    yTemp=yObj-yPlayer;
+    zTemp=zObj-zPlayer;
+    
+    if(xTemp==0)xTemp=0.000001;
+    if(yTemp==0)yTemp=0.000001;
+    if(zTemp==0)zTemp=0.000001;
+    
+    int Azimuth;
+    Azimuth=atan(abs(int((xTemp/yTemp))))*180/3.14159;
+    
+    if(xTemp<0)Azimuth=-Azimuth;
+    if(yTemp<0)Azimuth=180-Azimuth;
+    
+    return Azimuth;
+    
+}
+
 void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 {
     for(int i = 0; i < bufferSize; i++)
@@ -174,7 +203,11 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
     for(int j = 0; j < myWorld->getNumObj(); j++)
     {
         
-        Azimuth[j] = myWorld->getAudioObj(j)->getAzimuth();
+        //Azimuth[j] = myWorld->getAudioObj(j)->getAzimuth();
+        
+        
+        int temp=getAzimuth(myWorld->getAudioObj(j)->getLocation(),myWorld->getPlayer()->getLocation());
+        Azimuth[j]=temp;
         elevation[j] = myWorld->getAudioObj(j)->getElevation();
         signFlag = 0;
         filterFlag = 0;
@@ -264,6 +297,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
        
     }
 }
+
 
 
 

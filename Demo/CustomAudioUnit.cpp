@@ -59,10 +59,13 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
 }
 
 void CustomAudioUnit::init () {
-	
+    Location loc = Location(1,0,0);
+    Velocity vel = Velocity();
 	//myWorld.addAudioObj("1minutetest.wav", 150, 0);
-    myWorld.addAudioObj("3m40stest.wav", -90, 0);
-    myWorld.addAudioObj("input1mono.wav", 90, 0);
+    myWorld.addAudioObj( loc, vel,"3m40stest.wav");
+    //myWorld.addAudioObj("3m40stest.wav", -90, 0);
+    //myWorld.addAudioObj("input1mono.wav", 90, 0);
+    
     //myWorld.addAudioObj("beargrowl.wav", 30, 0);
     //myWorld.addAudioObj("catmeow.wav", 30, 0);
     //myWorld.addAudioObj("applauselight.wav", 30, 0);
