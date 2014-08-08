@@ -32,7 +32,7 @@ public:
 	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSig, long nFil, long nFFT);
 	void overlapConvolution(short *ioDataLeft,short *ioDataRight);
     
-    int getAzimuth(Location *audioObj, Location *player);
+    int getAzimuth(Location audioObj, Location player);
     
     ~Mixer3D()
     {
