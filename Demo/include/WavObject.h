@@ -27,6 +27,7 @@ class WavObject {
     long startOfWavData;
     long endOfWavData;
     
+    
 public:
     
     //Struct that holds RIFF data of Wave File.
@@ -66,6 +67,7 @@ public:
     
     short *shortTempData;
     complex *complexTempData;
+    float volume;
     
     
     WavObject (unsigned int size,const std::string wavFileName) : shortTempData(new short[size]), complexTempData(new complex[size]) {

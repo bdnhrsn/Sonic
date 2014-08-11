@@ -175,7 +175,7 @@ void WavObject::loadMoreData(unsigned int size, bool repeat) {
         short *shortData = (short *) shortTempData;
         for(int i = 0; i < sizeRead/channels ; i++)
         {
-            complexTempData[i] = shortData[i*channels] / (pow(2, 16) / 2.0);
+            complexTempData[i] = volume*shortData[i*channels] / (pow(2, 16) / 2.0);
         }
     }
     }
@@ -193,7 +193,7 @@ void WavObject::loadMoreData(unsigned int size, bool repeat) {
             short *shortData = (short *) shortTempData;
             for(int i = 0; i < sizeRead/channels ; i++)
             {
-                complexTempData[i] = shortData[i*channels] / (pow(2, 16) / 2.0);
+                complexTempData[i] = volume*shortData[i*channels] / (pow(2, 16) / 2.0);
             }
         }
 

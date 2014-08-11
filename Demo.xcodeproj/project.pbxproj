@@ -21,6 +21,7 @@
 		984CA32019639C0E00614FDB /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 984CA31C19639C0E00614FDB /* Player.cpp */; };
 		984CA32119639C0E00614FDB /* World.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 984CA31D19639C0E00614FDB /* World.cpp */; };
 		986024D9196B514F003DAEF6 /* WavObject.mm in Sources */ = {isa = PBXBuildFile; fileRef = 986024D8196B514F003DAEF6 /* WavObject.mm */; };
+		98C8DA9519955A8D0082D69B /* Sonic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 98C8DA9419955A8D0082D69B /* Sonic.cpp */; };
 		98E872E01947B8BD00DD214A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E872DF1947B8BD00DD214A /* Foundation.framework */; };
 		98E872E21947B8BD00DD214A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E872E11947B8BD00DD214A /* CoreGraphics.framework */; };
 		98E872E41947B8BD00DD214A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E872E31947B8BD00DD214A /* UIKit.framework */; };
@@ -38,6 +39,8 @@
 		98E8730E1947B8BE00DD214A /* DemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 98E8730D1947B8BE00DD214A /* DemoTests.m */; };
 		98E8731D1949042F00DD214A /* CustomAudioUnit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 98E8731B1949042F00DD214A /* CustomAudioUnit.cpp */; };
 		98E87325194A2B3600DD214A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 98E87320194A298F00DD214A /* AudioToolbox.framework */; };
+		98E941C0198833500082664B /* ghomono.wav in Resources */ = {isa = PBXBuildFile; fileRef = 98E941BE198833500082664B /* ghomono.wav */; };
+		98E941C1198833500082664B /* zipper_1+2_mono.wav in Resources */ = {isa = PBXBuildFile; fileRef = 98E941BF198833500082664B /* zipper_1+2_mono.wav */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +88,8 @@
 		986024D7196B50BD003DAEF6 /* WavObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WavObject.h; sourceTree = "<group>"; };
 		986024D8196B514F003DAEF6 /* WavObject.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = WavObject.mm; sourceTree = "<group>"; };
 		98B409861965E8BB009E9A82 /* CircBuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CircBuff.h; sourceTree = "<group>"; };
+		98C8DA93199556600082D69B /* Sonic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sonic.h; sourceTree = "<group>"; };
+		98C8DA9419955A8D0082D69B /* Sonic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sonic.cpp; sourceTree = "<group>"; };
 		98E872DC1947B8BD00DD214A /* Demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Demo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		98E872DF1947B8BD00DD214A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		98E872E11947B8BD00DD214A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -111,6 +116,8 @@
 		98E8731E1949240400DD214A /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		98E87320194A298F00DD214A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		98E87322194A299E00DD214A /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		98E941BE198833500082664B /* ghomono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = ghomono.wav; sourceTree = "<group>"; };
+		98E941BF198833500082664B /* zipper_1+2_mono.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "zipper_1+2_mono.wav"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,6 +160,7 @@
 				98447C9E195269DA002630BF /* mit_hrtf_lib.h */,
 				98447C9F195269DA002630BF /* Mixer3D.h */,
 				986024D7196B50BD003DAEF6 /* WavObject.h */,
+				98C8DA93199556600082D69B /* Sonic.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -209,6 +217,7 @@
 				98447CC2195269DB002630BF /* complex.cpp */,
 				98447CC4195269DB002630BF /* fft.cpp */,
 				986024D8196B514F003DAEF6 /* WavObject.mm */,
+				98C8DA9419955A8D0082D69B /* Sonic.cpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -216,6 +225,8 @@
 		98447D6F19536DC5002630BF /* InputData */ = {
 			isa = PBXGroup;
 			children = (
+				98E941BE198833500082664B /* ghomono.wav */,
+				98E941BF198833500082664B /* zipper_1+2_mono.wav */,
 				9812197E1981B588006D402D /* catmeow.wav */,
 				981F074E1979ADF500CED7BB /* 1minutetest.wav */,
 				981F074F1979ADF500CED7BB /* 3m40stest.wav */,
@@ -387,9 +398,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				98E941C1198833500082664B /* zipper_1+2_mono.wav in Resources */,
 				981F07511979ADF500CED7BB /* 3m40stest.wav in Resources */,
 				981219821981B588006D402D /* catmeow.wav in Resources */,
 				981F07501979ADF500CED7BB /* 1minutetest.wav in Resources */,
+				98E941C0198833500082664B /* ghomono.wav in Resources */,
 				98E872F61947B8BD00DD214A /* Main_iPad.storyboard in Resources */,
 				98E872FB1947B8BD00DD214A /* Images.xcassets in Resources */,
 				98E872F31947B8BD00DD214A /* Main_iPhone.storyboard in Resources */,
@@ -424,6 +437,7 @@
 				984CA31919639A4C00614FDB /* velocity.cpp in Sources */,
 				984CA32119639C0E00614FDB /* World.cpp in Sources */,
 				984CA32019639C0E00614FDB /* Player.cpp in Sources */,
+				98C8DA9519955A8D0082D69B /* Sonic.cpp in Sources */,
 				98447CFE195269DB002630BF /* complex.cpp in Sources */,
 				984CA31F19639C0E00614FDB /* location.cpp in Sources */,
 				98E872EC1947B8BD00DD214A /* main.m in Sources */,

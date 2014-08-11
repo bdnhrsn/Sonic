@@ -21,7 +21,10 @@
 	// Do any additional setup after loading the view, typically from a nib.
     self.Result.text = @"Just Loaded";
     self.count =0;
-    self.customAudioUnitInstance = new CustomAudioUnit();
+    //self.sonic.createWorld();
+    Sonic::createWorld();
+    Sonic::addAudioObject("3m40stest.wav");
+    //self.customAudioUnitInstance = new CustomAudioUnit();
 }
 
 - (void)didReceiveMemoryWarning
@@ -33,12 +36,17 @@
 - (IBAction)click:(id)sender {
     self.count++;
     self.Result.text = [NSString stringWithFormat:@"Clicked %d",self.count];
-    self.customAudioUnitInstance->play();
+    //self.customAudioUnitInstance->play();
+    Sonic::startPlaying();
 }
 
 - (IBAction)click2:(id)sender {
     self.count+= 2;
     self.Result.text = [NSString stringWithFormat:@"Clicked %d",self.count];
-    self.customAudioUnitInstance->stop();
+    //self.customAudioUnitInstance->stop();
+    Sonic::stopPlaying();
 }
+
+CustomAudioUnit* Sonic::cau = nullptr;
+
 @end
