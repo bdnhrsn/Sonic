@@ -28,8 +28,8 @@ static OSStatus recordingCallback (void *inRefCon, AudioUnitRenderActionFlags *i
     return noErr;
 }
 
-
-
+Mixer3D *mixer3D;
+World myWorld;
 
 
 static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
@@ -47,28 +47,29 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     //}
     //memset(ioData->mBuffers[0].mData, 0, 512);
     //memset(ioData->mBuffers[1].mData, 0, 512);
-    //lock_t t1,t2;
-    //t1=clock();
+    clock_t t1,t2;
+    t1=clock();
     
     mixer3D->overlapConvolution((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
-    //t2=clock();
-    //cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
+    t2=clock();
+    cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
 
     //mixer3D->mix((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
     return noErr;
 }
 
 void CustomAudioUnit::init () {
-    
-    //addAudioObjectInWorld("3m40stest.wav");
+	
 	//myWorld.addAudioObj("1minutetest.wav", 150, 0);
+    myWorld.addAudioObj("3m40stest.wav", -90, 0);
+    myWorld.addAudioObj("input1mono.wav", 90, 0);
     //myWorld.addAudioObj("beargrowl.wav", 30, 0);
     //myWorld.addAudioObj("catmeow.wav", 30, 0);
     //myWorld.addAudioObj("applauselight.wav", 30, 0);
     //myWorld.addAudioObj("catscreech.wav", 30, 0);
-    //myWorld.addAudioObj("ghomono.wav", -30, 0);
+    //myWorld.addAudioObj("ghomono.wav", 90, 0);
     //myWorld.addAudioObj("zipper_1+2_mono.wav", 30, 0);
-    //myWorld.getAudioObj(0)->setRandomVolume();
+    
     
     int bufferSize = 512;
     int bitDepth = 16;
@@ -179,13 +180,6 @@ void CustomAudioUnit::stop() {
     //AudioUnitUninitialize(audioUnitInstance);
     //AudioComponentInstanceDispose(audioUnitInstance);
     std::cout<<"\nStop";
-}
-
-void CustomAudioUnit::addAudioObjectInWorld(string wavFile)
-{
-    myWorld.addAudioObj(wavFile, -90, 0);
-    //myWorld.addAudioObj("input1mono.wav", 90, 0);
-    
 }
 
 

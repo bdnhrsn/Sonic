@@ -8,14 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #include "CustomAudioUnit.h"
-#include "include/Sonic.h"
 
 @interface ViewController : UIViewController
 
 @property (weak, nonatomic) IBOutlet UILabel *Result;
 @property int count;
-//@property CustomAudioUnit *customAudioUnitInstance;
-//@property Sonic sonic;
+@property CustomAudioUnit *customAudioUnitInstance;
 - (IBAction)click:(id)sender;
 - (IBAction)click2:(id)sender;
 

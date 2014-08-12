@@ -20,7 +20,7 @@ class AudioObj {
     bool repeat;
     CircBuff<complex> circBuff;
     WavObject wavObject;
-    int Azimuth = 5;
+    int Azimuth;
     int elevation;
 
     // Used for wav.mm, not needed anymore
@@ -55,7 +55,6 @@ public:
     
     AudioObj(const std::string wavFileName, int Azi, int ele):active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), Azimuth(Azi), elevation(ele)
     {
-        wavObject.volume = this->volume;
         wavObject.loadMoreData(32768, repeat);
         circBuff.write(wavObject.complexTempData, 32768);
         
@@ -88,8 +87,6 @@ public:
     
     //Sets the volume of the audio object. This will only accept values from 0 to 1.
 	void setVolume(float vol);
-    
-    void setRandomVolume();
 
 	//Returns whether or not the object is active
 	bool isActive() const;
@@ -100,8 +97,6 @@ public:
     void fillAudioData(complex *, unsigned int);
     
     void writeCircBuff (void);
-    
-    
     
 };
 
