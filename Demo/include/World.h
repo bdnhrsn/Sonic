@@ -28,7 +28,7 @@ class World {
 	static const int MAX_OBJ = 20;
 	//This default contrustor creates a player at
 	// the world's origin, {0,0,0}.
-    World() : numObj(0), threshold(0.05), player(Location(),Velocity(),0),isWriteThreadCreated(false) {}
+    World() : numObj(0), threshold(0.05), isWriteThreadCreated(false) {}
 
 	//This constructor creates a player at the
 	// location specified by the first parameter,
