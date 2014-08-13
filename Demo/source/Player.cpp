@@ -46,33 +46,26 @@ float Player::getZenith (AudioObj* obj) const {
 }
 
 float Player::getAzimuth (AudioObj* obj) const {
-    float dx = obj->getLocation().getX() - location.getX();
-	float dz = obj->getLocation().getZ() - location.getZ();
-	float angle;
-	if (dx == 0) {
-		if (dz > 0)
-			angle = 90;
-		else if (dz < 0)
-			angle = 270;
-		else
-			angle = 0;
-	} else if (dz == 0) {
-		if (dx < 0)
-			angle = 180;
-		else
-			angle = 0;
-	} else {
-		angle = (float)(atan(dz/dx) * R2D);
-		if (dx < 0)
-			angle = 180 + angle;
-		else if (dz < 0 && dx > 0)
-			angle = 360 + angle;
-	}
-	return fmod(angle - this->bearing + 450,360);
-}
+    float Azimuth;
+    
+    float xTemp=obj->getLocation().getX() - location.getX();
+    float yTemp=obj->getLocation().getY() - location.getY();;
+    
+    
+    if(xTemp==0)xTemp=0.000001;
+    if(yTemp==0)yTemp=0.000001;
+    
+    
 
-//template <class T, class V>
-//float *Player<T,V>::getOrientation(AudioObj<T,V> * obj) const;
+    Azimuth=atan(abs(int((xTemp/yTemp))))*180/3.14159;
+    
+    if(yTemp<0)Azimuth=180-Azimuth;
+    if(xTemp<0)Azimuth=-Azimuth;
+    
+    return Azimuth;
+
+    
+}
 
 float Player::getRelativeVolume (AudioObj* obj) const{
     return obj->getVolume() * (1.0 / pow(this->getRadius(obj), 2)) ;

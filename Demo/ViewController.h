@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #include "CustomAudioUnit.h"
+#include "include/Sonic.h"
 
 @interface ViewController : UIViewController
 

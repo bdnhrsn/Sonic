@@ -63,13 +63,11 @@ size_t CircBuff<T>::write(T *dataPtr, size_t samples)
 {
     size_t capacity = _capacity;
     size_t samples_to_write = std::min(samples, capacity-_size);
-    //size_t samples_to_write = samples;
     
     _size += samples_to_write;
     //writing to buffer
     
     if (samples_to_write <= capacity - _endIndex) {
-        //size_t num = sf_read_int(sf, _data + _endIndex, samples_to_write);
         for(int i = 0; i < samples_to_write; i++) {
             _data[_endIndex+i] = dataPtr[i];
         }
@@ -79,12 +77,10 @@ size_t CircBuff<T>::write(T *dataPtr, size_t samples)
         }
     } else {
         size_t size1 = capacity - _endIndex;
-        //size_t num = sf_read_int(sf, _data + _endIndex, size1);
         for(int i = 0; i < size1; i++) {
             _data[_endIndex+i] = dataPtr[i];
         }
         size_t size2 = samples_to_write - size1;
-        //size_t num2 = sf_read_int(sf, _data, size2);
         for(int i = 0; i < size2; i++) {
             _data[i] = dataPtr[i+size1];
         }
@@ -114,7 +110,6 @@ size_t CircBuff<T>::read(V *dataPtr, size_t samples)
     }
     size_t capacity = _capacity;
     size_t samples_to_read;
-    //size_t samples_to_read = std::min(samples, _size);
     if (samples >= _size){
         samples_to_read = _size;
     }else{
@@ -143,7 +138,6 @@ size_t CircBuff<T>::read(V *dataPtr, size_t samples)
         _begIndex = size_2;
     }
     _size -= samples_to_read;
-    // std::cout << "Size after reading: " << _size << "\n";
     return samples_to_read;
 }
 

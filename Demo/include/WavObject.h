@@ -74,7 +74,7 @@ public:
     
     complex *loadCmpWavData(const std::string fname, long *size, int *smpFreq, int *bitDepth, int *channels);
     void extractWavHeader (const std::string fname);
-    void loadMoreData (unsigned int, bool);
+    bool loadMoreData (unsigned int, bool);
     
     ~WavObject () {
         delete[] shortTempData;

@@ -45,56 +45,28 @@ void AudioObj::setActive(bool active){
 }
 
 
-/*
-void AudioObj::loadWavFile() {
-	const string inFile = "input1mono.wav";
-	tempBufferWavFile = utility::loadCmpWavData(inFile, &(wavFileData.n), &(wavFileData.sampleRate), &(wavFileData.bitDepth), &(wavFileData.channels));
-    currentTrackerPosition =0;
-}*/
-
-/*
-void AudioObj::fillAudioData (complex* target, unsigned int length) {
-    if (currentTrackerPosition + length < wavFileData.n){
-        for (unsigned int i=0; i<length; i++){
-            target[i] = tempBufferWavFile[i+currentTrackerPosition];
-        }
-        currentTrackerPosition += length;
-    }else if (currentTrackerPosition < wavFileData.n) {
-        for (unsigned int i=0; i< wavFileData.n-currentTrackerPosition; i++){
-            target[i] = tempBufferWavFile[i+currentTrackerPosition];
-        }
-        for (unsigned int i=0; i< length - (wavFileData.n-currentTrackerPosition); i++){
-            target[i] = 0;
-        }
-        currentTrackerPosition += length;
-    }else {
-        if (repeat) {
-            currentTrackerPosition =0;
-            fillAudioData(target, length);
-            return;
-        }else {
-            for (unsigned int i=0; i<length; i++){
-                target[i] = 0;
-            }
-        }
+bool AudioObj::fillAudioData (complex* target, unsigned int length) {
+    
+    if(circBuff.readSizeRemaining() < length) {
+                return false;
     }
-}*/
-
-void AudioObj::fillAudioData (complex* target, unsigned int length) {
-    //cout<<"read size remaining, length"<<circBuff.readSizeRemaining()<<","<<length<<endl;
-    //std::cout<< "In fillAudioData"<<endl;
     circBuff.read(target, length);
+    return true;
 }
 
 void AudioObj::writeCircBuff() {
-    
+    if(!toLoadMoreData){
+        //return;
+    }
     unsigned int length = circBuff.writeSizeRemaining();
     if(length>16384) {
         //cout<<"In write circ Buff : "<<length<<endl;
-        wavObject.loadMoreData(length, repeat);
+        if(!(wavObject.loadMoreData(length, repeat))) {
+            toLoadMoreData = false;
+            return;
+        }
+        
         circBuff.write(wavObject.complexTempData, length);
     }
     
-    //circBuff.write(tempBufferWavFile+currentTrackerPosition+8192, length);
-    //currentTrackerPosition += length;
 }

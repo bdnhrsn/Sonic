@@ -22,45 +22,31 @@ class AudioObj {
     WavObject wavObject;
     int Azimuth;
     int elevation;
+    bool toLoadMoreData;
 
-    // Used for wav.mm, not needed anymore
-/*    complex* tempBufferWavFile;
-    struct
-    {
-        long n;
-        int sampleRate;
-        int bitDepth;
-        int channels;
-    }wavFileData;
-    unsigned int currentTrackerPosition;
-    void loadWavFile (void);
- */
     
 public:
 
 	//Creates a new audio object at the world's origin, {0,0,0}.
-    AudioObj(const std::string wavFileName) : active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName) {
+    AudioObj(const std::string wavFileName) : active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), toLoadMoreData(true) {
         wavObject.loadMoreData(32768, repeat);
         circBuff.write(wavObject.complexTempData, 32768);
-        /*tempBufferWavFile = new complex[100000]; if(!tempBufferWavFile) throw bad_alloc ();*/
-        //loadWavFile();
-        //circBuff.write(tempBufferWavFile, 65536);
-    }
+        }
 
 	//Creates a new audio object at the location specified by the parameter.
-    AudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName) : location(loc), velocity(vel), active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName) {
+    AudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName) : location(loc), velocity(vel), active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), toLoadMoreData(true) {
         wavObject.loadMoreData(32768, repeat);
         circBuff.write(wavObject.complexTempData, 32768);
     }
     
-    AudioObj(const std::string wavFileName, int Azi, int ele):active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), Azimuth(Azi), elevation(ele)
+    AudioObj(const std::string wavFileName, int Azi, int ele):active(false), volume(1), repeat(true), circBuff(BUFFER_CAPACITY), wavObject(BUFFER_CAPACITY, wavFileName), Azimuth(Azi), elevation(ele), toLoadMoreData(true)
     {
         wavObject.loadMoreData(32768, repeat);
         circBuff.write(wavObject.complexTempData, 32768);
         
     }
     
-    ~AudioObj () { }//delete[] tempBufferWavFile;}
+    ~AudioObj () { }
 	
 	//Returns the array of the object's location.
 	Location getLocation() const;
@@ -94,7 +80,7 @@ public:
 	//Changes whether or not the object is active
 	void setActive(bool active);
     
-    void fillAudioData(complex *, unsigned int);
+    bool fillAudioData(complex *, unsigned int);
     
     void writeCircBuff (void);
     

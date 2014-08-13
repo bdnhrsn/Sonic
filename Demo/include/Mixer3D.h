@@ -12,9 +12,6 @@ using namespace std;
 #define MIXER3D_H
 
 
-//Run the Test.cpp for tesing
-//Also, remove the convolutionBox before running the Test.cpp
-
 class Mixer3D
 {
 public:
@@ -23,11 +20,6 @@ public:
 	int HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter);//loading filters according to the azimuth and elevation values
 	
 	
-	//template <typename T>
-	//void write(std::ofstream& stream, const T& t);
-	//template <typename SampleType>
-	//void writeWAVData(const char* outFile, SampleType* buf, size_t bufSize, int sampleRate, short channels);
-
 	void convolution(complex *input, complex *filter, complex *output, long nSig, long nFil, long nFFT);
 	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSig, long nFil, long nFFT);
 	void overlapConvolution(short *ioDataLeft,short *ioDataRight);

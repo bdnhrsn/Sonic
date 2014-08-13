@@ -10,35 +10,31 @@
 
 static OSStatus recordingCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
     
+    //Please dont remove the following commented code
+    //The following code will be used if we use recording callback
+    
     //TODO: Use inRefCon to access our interface object to do stuff
     //Then use inNumberFrames to figure out how much data is available and make that much space available in buffers in AudioBufferList
-    /*
-    AudioBufferList list;
     
-    list.mNumberBuffers = 1;
-    list.mBuffers[0].mData = sampleBuffer;
-    list.mBuffers[0].mDataByteSize = 2* inNumberFrames;
-    list.mBuffers[0].mNumberChannels = 1;
+    //AudioBufferList list;
+    //list.mNumberBuffers = 1;
+    //list.mBuffers[0].mData = sampleBuffer;
+    //list.mBuffers[0].mDataByteSize = 2* inNumberFrames;
+    //list.mBuffers[0].mNumberChannels = 1;
+    //AudioUnitRender([audioInterface audioUnitInstance], ioActionFlags, inTimeStamp, 1, inNumberFrames, &list);
     
-    AudioUnitRender([audioInterface audioUnitInstance], ioActionFlags, inTimeStamp, 1, inNumberFrames, &list);
-    */
-    
-    //std::cout<<"\naksjdhka " ;
-
     return noErr;
 }
 
-Mixer3D *mixer3D;
-World myWorld;
-
-
 static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
+    
+    //Please dont remove the following commented code
+    //The following code will be used for immediate debugging
     
     //Notes: ioData contains buffers (may be more than one)
     //Fill them up as much as you can. Remember to set the size value in each buffer to match how much data is in each buffer.
     
     //ioData->mBuffers[i].mNumberChannels is no. of channels per buffer
-    
     //*ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
     //for (UInt32 i=0; i<ioData->mNumberBuffers; ++i) {
     //    memset(ioData->mBuffers[i].mData, 10000, ioData->mBuffers[i].mDataByteSize);
@@ -47,34 +43,19 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     //}
     //memset(ioData->mBuffers[0].mData, 0, 512);
     //memset(ioData->mBuffers[1].mData, 0, 512);
-    clock_t t1,t2;
-    t1=clock();
     
     mixer3D->overlapConvolution((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
-    t2=clock();
-    cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
-
-    //mixer3D->mix((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
     return noErr;
 }
 
 void CustomAudioUnit::init () {
-	
-	//myWorld.addAudioObj("1minutetest.wav", 150, 0);
-    myWorld.addAudioObj("3m40stest.wav", -90, 0);
-    myWorld.addAudioObj("input1mono.wav", 90, 0);
-    //myWorld.addAudioObj("beargrowl.wav", 30, 0);
-    //myWorld.addAudioObj("catmeow.wav", 30, 0);
-    //myWorld.addAudioObj("applauselight.wav", 30, 0);
-    //myWorld.addAudioObj("catscreech.wav", 30, 0);
-    //myWorld.addAudioObj("ghomono.wav", 90, 0);
-    //myWorld.addAudioObj("zipper_1+2_mono.wav", 30, 0);
     
+    
+	
     
     int bufferSize = 512;
     int bitDepth = 16;
     mixer3D = new Mixer3D(bufferSize, 44100, bitDepth, &myWorld);
-    
     
     AudioComponentDescription desc;
     
@@ -90,7 +71,6 @@ void CustomAudioUnit::init () {
     UInt32 enableIO;
     AudioUnitElement inputBus = 1;
     AudioUnitElement outputBus = 0;
-    //sampleBuffer = malloc(4*1024);
     
     //Disabling IO for recording
     enableIO = 0;
@@ -100,36 +80,13 @@ void CustomAudioUnit::init () {
     enableIO = 1;
     AudioUnitSetProperty(audioUnitInstance, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, outputBus, &enableIO, sizeof(enableIO));
     
-    //UInt32 shouldAllocateBuffer = 1;
-    //AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_ShouldAllocateBuffer, kAudioUnitScope_Global, 1, &shouldAllocateBuffer, sizeof(shouldAllocateBuffer));
     
-    //// MonoStream with each sample only 16bits
-    //AudioStreamBasicDescription monoStreamFormat;
-    //monoStreamFormat.mBitsPerChannel = 16;
-    //monoStreamFormat.mBytesPerFrame = 2;
-    //monoStreamFormat.mBytesPerPacket = 2;
-    //monoStreamFormat.mChannelsPerFrame = 1;
-    //monoStreamFormat.mFormatFlags = kAudioFormatFlagIsPacked | kAudioFormatFlagIsSignedInteger;
-    //monoStreamFormat.mFormatID = kAudioFormatLinearPCM;
-    //monoStreamFormat.mFramesPerPacket = 1;
-    //monoStreamFormat.mReserved = 0;
-    //monoStreamFormat.mSampleRate = 44100.0;
-    
-    size_t bytesPerSample = sizeof(short) ;  //sizeof(AudioUnitSampleType);
+    UInt32 bytesPerSample = sizeof(short) ;  //sizeof(AudioUnitSampleType);
     AudioStreamBasicDescription stereoStreamFormat = {0};
     stereoStreamFormat.mBitsPerChannel = 8 * bytesPerSample;
     stereoStreamFormat.mBytesPerFrame = bytesPerSample;
     stereoStreamFormat.mBytesPerPacket = bytesPerSample;
     stereoStreamFormat.mChannelsPerFrame = 2;   // 2 incdicates stereo
-    // kAudioFormatFlagsCanonical | kAudioFormatFlagIsNonInterleaved = kAudioFormatFlagsAudioUnitCanonical
-    // If interleaved, mBytesPerFrame = no.ofChannels * bytesPerSample
-    // If interleaved, there is only one buffer in AudioBufferList
-        /*kAudioFormatFlagIsSignedInteger |
-         kAudioFormatFlagsNativeEndian |
-         kAudioFormatFlagIsPacked |
-         kAudioFormatFlagIsNonInterleaved |
-         (kAudioUnitSampleFractionBits <<
-         kLinearPCMFormatFlagsSampleFractionShift)*/
     stereoStreamFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger |
     kAudioFormatFlagsNativeEndian |
     kAudioFormatFlagIsPacked |
@@ -180,6 +137,14 @@ void CustomAudioUnit::stop() {
     //AudioUnitUninitialize(audioUnitInstance);
     //AudioComponentInstanceDispose(audioUnitInstance);
     std::cout<<"\nStop";
+}
+
+void CustomAudioUnit::addAudioObjectInWorld(string wavFile, int x, int y, int z)
+{
+    Location loc = Location(x, y, z);
+    Velocity vel = Velocity();
+    myWorld.addAudioObj(loc,vel,wavFile);
+    
 }
 
 
