@@ -24,7 +24,7 @@ public:
     
 	//Creates a player at the world's origin, {0,0,0}, and
 	// facing forward, at a bearing of 90.
-    Player () : bearing(90) {}
+    Player () : location(Location()),bearing(90) {}
     
 	//Creates a player at the location specified by the
 	// parameter, and facing forward, at a bearing of 90.

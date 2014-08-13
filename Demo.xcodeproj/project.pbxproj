@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		96C61C71199C01A700602CD2 /* Sonic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 96C61C70199C01A700602CD2 /* Sonic.cpp */; };
 		981219821981B588006D402D /* catmeow.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9812197E1981B588006D402D /* catmeow.wav */; };
 		981F074D1977120D00CED7BB /* Mixer3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 981F074C1977120D00CED7BB /* Mixer3D.cpp */; };
 		981F07501979ADF500CED7BB /* 1minutetest.wav in Resources */ = {isa = PBXBuildFile; fileRef = 981F074E1979ADF500CED7BB /* 1minutetest.wav */; };
@@ -51,6 +52,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		96C61C6F199C016700602CD2 /* Sonic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sonic.h; sourceTree = "<group>"; };
+		96C61C70199C01A700602CD2 /* Sonic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sonic.cpp; sourceTree = "<group>"; };
 		9812197E1981B588006D402D /* catmeow.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catmeow.wav; sourceTree = "<group>"; };
 		981F074C1977120D00CED7BB /* Mixer3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mixer3D.cpp; sourceTree = "<group>"; };
 		981F074E1979ADF500CED7BB /* 1minutetest.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = 1minutetest.wav; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 				98447C9E195269DA002630BF /* mit_hrtf_lib.h */,
 				98447C9F195269DA002630BF /* Mixer3D.h */,
 				986024D7196B50BD003DAEF6 /* WavObject.h */,
+				96C61C6F199C016700602CD2 /* Sonic.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -209,6 +213,7 @@
 				98447CC2195269DB002630BF /* complex.cpp */,
 				98447CC4195269DB002630BF /* fft.cpp */,
 				986024D8196B514F003DAEF6 /* WavObject.mm */,
+				96C61C70199C01A700602CD2 /* Sonic.cpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -424,6 +429,7 @@
 				984CA31919639A4C00614FDB /* velocity.cpp in Sources */,
 				984CA32119639C0E00614FDB /* World.cpp in Sources */,
 				984CA32019639C0E00614FDB /* Player.cpp in Sources */,
+				96C61C71199C01A700602CD2 /* Sonic.cpp in Sources */,
 				98447CFE195269DB002630BF /* complex.cpp in Sources */,
 				984CA31F19639C0E00614FDB /* location.cpp in Sources */,
 				98E872EC1947B8BD00DD214A /* main.m in Sources */,

@@ -23,14 +23,17 @@ class CustomAudioUnit {
     void init();
     //static OSStatus recordingCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
     //static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData);
-
+    World myWorld;
 public:
     CustomAudioUnit();
     ~CustomAudioUnit();
     void play();
     void stop();
+    void addAudioObjectInWorld(string, int, int, int);
     
     
 };
+
+static Mixer3D *mixer3D;
 
 #endif /* defined(__Demo__CustomAudioUnit__) */
