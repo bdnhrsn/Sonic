@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Philadelphia Game Lab. All rights reserved.
 //
 
-#include "../include/Sonic.h"
+#include "Sonic.h"
 
 void Sonic::createWorld()
 {
     Sonic::cau = new CustomAudioUnit();
 }
 
-void Sonic::addAudioObject(string wavFileName, int x, int y, int z)
+void Sonic::addAudioObject(string wavFileName, VariableForLocation x, VariableForLocation y, VariableForLocation z)
 {
     Sonic::cau->addAudioObjectInWorld(wavFileName, x, y, z);
 }

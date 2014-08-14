@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-typedef int VariableForLocation;
+typedef float VariableForLocation;
 using namespace std;
 
 class Location {

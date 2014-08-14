@@ -47,8 +47,8 @@ complex* CFFT::convolutionF(const complex *input,const complex *filter, long nSI
 	complex *output = new complex[NFFT];
 	
 	//Perform FFT on both input and filter.
-	CFFT::Forward(fInput, NFFT);
-	CFFT::Forward(fFilter, NFFT);
+	CFFT::Forward(fInput, (unsigned int)NFFT);
+	CFFT::Forward(fFilter, (unsigned int)NFFT);
 
 	for(int i = 0; i < NFFT; i++)
 		output[i] = fInput[i] * fFilter[i];
@@ -64,7 +64,7 @@ complex* CFFT::convolutionT(const complex *input,const complex *filter, long nSI
 	complex *output = convolutionF(input, filter, nSIG, NFIL, NFFT);
 	
 	//Perform IFFT on the ouput.
-	CFFT::Inverse(output, NFFT);
+	CFFT::Inverse(output, (unsigned int)NFFT);
 	
 	return output;
 }
@@ -72,7 +72,7 @@ complex* CFFT::convolutionT(const complex *input,const complex *filter, long nSI
 complex* CFFT::stereoConvMonoInputF(const complex *input,const complex *filterLeft,const complex *filterRight, long nSIG, long NFILL, long NFILR, long &NFFT)
 {
 	complex *result = stereoConvMonoInputT(input, filterLeft, filterRight, nSIG, NFILL, NFILR, NFFT);
-	CFFT::Forward(result, NFFT);
+	CFFT::Forward(result, (unsigned int)NFFT);
 	return result;
 }
 

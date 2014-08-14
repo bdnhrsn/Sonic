@@ -80,10 +80,8 @@ public:
 	//// DOES NOT WORK WITH HEAD TRACKING
 	//V *getOrientation(AudioObj<T,V> * obj) const;
 
-	//Returns a float between 0 and 1 that describes how loud
-	// the object is in relation to the player. This is 
-	// calculated using the inverse square law. Math.
-	float getRelativeVolume(AudioObj* obj) const;
+	//Achieve the distance difference between the targetted audioObject and player
+	float getDistance(AudioObj* obj) const;
 };
 
 #endif

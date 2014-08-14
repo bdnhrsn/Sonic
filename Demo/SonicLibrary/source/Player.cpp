@@ -49,15 +49,15 @@ float Player::getAzimuth (AudioObj* obj) const {
     float Azimuth;
     
     float xTemp=obj->getLocation().getX() - location.getX();
-    float yTemp=obj->getLocation().getY() - location.getY();;
+    float yTemp=obj->getLocation().getY() - location.getY();
     
+    if(xTemp==0){
+        return (yTemp>=0)?0:180;
+    }if(yTemp==0){
+        return (xTemp>0)?90:-90;
+    }
     
-    if(xTemp==0)xTemp=0.000001;
-    if(yTemp==0)yTemp=0.000001;
-    
-    
-
-    Azimuth=atan(abs(int((xTemp/yTemp))))*180/3.14159;
+    Azimuth=atan(fabs(xTemp/yTemp))*180/3.14159;
     
     if(yTemp<0)Azimuth=180-Azimuth;
     if(xTemp<0)Azimuth=-Azimuth;
@@ -67,6 +67,17 @@ float Player::getAzimuth (AudioObj* obj) const {
     
 }
 
-float Player::getRelativeVolume (AudioObj* obj) const{
-    return obj->getVolume() * (1.0 / pow(this->getRadius(obj), 2)) ;
+float Player::getDistance (AudioObj* obj) const{
+    
+    float distance;
+    
+    float xTemp=obj->getLocation().getX() - location.getX();
+    float yTemp=obj->getLocation().getY() - location.getY();
+    float zTemp=obj->getLocation().getZ() - location.getZ();
+    
+    distance =pow(xTemp,2)+ pow(yTemp,2) + pow(zTemp,2);
+    distance = sqrt(distance);
+                    
+    return distance;
+    
 }

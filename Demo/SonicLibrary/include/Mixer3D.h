@@ -61,7 +61,7 @@ private:
     
     short *lFil, *rFil;//left and right filter
 	 
-	long bufferSize, sampleRate, bitDepth,nTaps, dataSize;
+	unsigned int bufferSize, sampleRate, bitDepth,nTaps, dataSize;
 	
 	long maxTemp=0;
     

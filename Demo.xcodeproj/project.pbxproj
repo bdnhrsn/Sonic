@@ -141,6 +141,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		96C61C73199C3B3400602CD2 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				98E8731C1949042F00DD214A /* CustomAudioUnit.h */,
+				98E8731B1949042F00DD214A /* CustomAudioUnit.cpp */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		96C61C74199C3BF600602CD2 /* SonicLibrary */ = {
+			isa = PBXGroup;
+			children = (
+				96C61C73199C3B3400602CD2 /* iOS */,
+				98447D6F19536DC5002630BF /* InputData */,
+				98447C97195269DA002630BF /* include */,
+				98447CA3195269DA002630BF /* MIT_HRTF_Library */,
+				98447CC0195269DB002630BF /* source */,
+				96C61C6F199C016700602CD2 /* Sonic.h */,
+				96C61C70199C01A700602CD2 /* Sonic.cpp */,
+			);
+			path = SonicLibrary;
+			sourceTree = "<group>";
+		};
 		98447C97195269DA002630BF /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,7 +179,6 @@
 				98447C9E195269DA002630BF /* mit_hrtf_lib.h */,
 				98447C9F195269DA002630BF /* Mixer3D.h */,
 				986024D7196B50BD003DAEF6 /* WavObject.h */,
-				96C61C6F199C016700602CD2 /* Sonic.h */,
 			);
 			path = include;
 			sourceTree = "<group>";
@@ -213,7 +235,6 @@
 				98447CC2195269DB002630BF /* complex.cpp */,
 				98447CC4195269DB002630BF /* fft.cpp */,
 				986024D8196B514F003DAEF6 /* WavObject.mm */,
-				96C61C70199C01A700602CD2 /* Sonic.cpp */,
 			);
 			path = source;
 			sourceTree = "<group>";
@@ -266,18 +287,13 @@
 		98E872E51947B8BD00DD214A /* Demo */ = {
 			isa = PBXGroup;
 			children = (
-				98447D6F19536DC5002630BF /* InputData */,
-				98447C97195269DA002630BF /* include */,
-				98447CA3195269DA002630BF /* MIT_HRTF_Library */,
-				98447CC0195269DB002630BF /* source */,
+				96C61C74199C3BF600602CD2 /* SonicLibrary */,
 				98E872EE1947B8BD00DD214A /* AppDelegate.h */,
 				98E872EF1947B8BD00DD214A /* AppDelegate.m */,
 				98E872F11947B8BD00DD214A /* Main_iPhone.storyboard */,
 				98E872F41947B8BD00DD214A /* Main_iPad.storyboard */,
-				98E872F71947B8BD00DD214A /* ViewController.h */,
 				98E872F81947B8BD00DD214A /* ViewController.mm */,
-				98E8731B1949042F00DD214A /* CustomAudioUnit.cpp */,
-				98E8731C1949042F00DD214A /* CustomAudioUnit.h */,
+				98E872F71947B8BD00DD214A /* ViewController.h */,
 				98E872FA1947B8BD00DD214A /* Images.xcassets */,
 				98E872E61947B8BD00DD214A /* Supporting Files */,
 			);

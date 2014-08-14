@@ -23,7 +23,7 @@
     self.count = 0;
     //self.customAudioUnitInstance = new CustomAudioUnit();
     Sonic::createWorld();
-    Sonic::addAudioObject("3m40stest.wav", 1, 0, 0);
+    Sonic::addAudioObject("3m40stest.wav", -1.732, -1, 0);
     //myWorld.addAudioObj("1minutetest.wav", 150, 0);
     //myWorld.addAudioObj(loc1,vel,"3m40stest.wav");
     //addAudioObj("input1mono.wav", 90, 0);
