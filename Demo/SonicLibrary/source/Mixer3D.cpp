@@ -143,8 +143,14 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 		else
 			signFlag = 0;
     
-       if(!(myWorld->getAudioObj(j)->fillAudioData(inputTempTemp1, bufferSize))) {
+       if(!(myWorld->getAudioObj(j)->fillAudioData(inputTempTemp1, bufferSize)))
+       {
             continue;
+       }
+        
+        for(int i = 0; i < bufferSize ; i++)
+        {
+            inputTempTemp1[i]/=myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j));
         }
         
         for (int i = bufferSize; i < 2 * bufferSize; i++)
