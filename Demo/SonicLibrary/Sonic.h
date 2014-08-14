@@ -20,7 +20,7 @@ public:
     
     
     static void createWorld();
-    static void addAudioObject(string, int, int, int);
+    static void addAudioObject(string, VariableForLocation, VariableForLocation, VariableForLocation);
     //void updatePosition();
     static void startPlaying();
     //void pausePlaying();

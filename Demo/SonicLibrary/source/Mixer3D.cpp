@@ -106,13 +106,13 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	
 
 	//Perform FFT on both input and filter.
-	CFFT::Forward(input,fInput, nFFT);
-	CFFT::Forward(filter,fFilter, nFFT);
+	CFFT::Forward(input,fInput, (unsigned int)nFFT);
+	CFFT::Forward(filter,fFilter, (unsigned int)nFFT);
 
 	for (int i = 0; i < nFFT; i++)
 		output[i] = fInput[i] * fFilter[i];
 
-	CFFT::Inverse(output, nFFT);
+	CFFT::Inverse(output, (unsigned int)nFFT);
 	
 }
 void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSIG, long nFIL, long nFFT)

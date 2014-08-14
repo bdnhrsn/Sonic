@@ -58,7 +58,7 @@ void AudioObj::writeCircBuff() {
     if(!toLoadMoreData){
         //return;
     }
-    unsigned int length = circBuff.writeSizeRemaining();
+    unsigned int length = (unsigned int)circBuff.writeSizeRemaining();
     if(length>16384) {
         //cout<<"In write circ Buff : "<<length<<endl;
         if(!(wavObject.loadMoreData(length, repeat))) {

@@ -14,7 +14,8 @@
 #include <AudioToolbox/AudioToolbox.h>
 #include <iostream>
 
-#include "include/Mixer3D.h"
+#include "../include/Mixer3D.h"
+
 
 class CustomAudioUnit {
     
@@ -29,7 +30,7 @@ public:
     ~CustomAudioUnit();
     void play();
     void stop();
-    void addAudioObjectInWorld(string, int, int, int);
+    void addAudioObjectInWorld(string, VariableForLocation, VariableForLocation, VariableForLocation);
     
     
 };

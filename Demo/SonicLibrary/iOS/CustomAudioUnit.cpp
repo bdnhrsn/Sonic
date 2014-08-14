@@ -139,7 +139,7 @@ void CustomAudioUnit::stop() {
     std::cout<<"\nStop";
 }
 
-void CustomAudioUnit::addAudioObjectInWorld(string wavFile, int x, int y, int z)
+void CustomAudioUnit::addAudioObjectInWorld(string wavFile, VariableForLocation x, VariableForLocation y, VariableForLocation z)
 {
     Location loc = Location(x, y, z);
     Velocity vel = Velocity();

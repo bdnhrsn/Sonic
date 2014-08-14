@@ -35,7 +35,7 @@ void * World::writeAudioObjects (void* obj) {
     cout<<"in thread write audio objects" <<endl;
     vector<AudioObj *> *objListCurrent = static_cast<vector<AudioObj *>*>(obj);
     while (1){
-        int size = objListCurrent->size();
+        size_t size = objListCurrent->size();
         for (int i=0; i < size ; i++){
             (*objListCurrent)[i]->writeCircBuff();
         }
