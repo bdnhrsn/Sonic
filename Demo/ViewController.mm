@@ -23,11 +23,11 @@
     self.count = 0;
     //self.customAudioUnitInstance = new CustomAudioUnit();
     Sonic::createWorld();
-    audioObj1 = Sonic::addAudioObject("input1mono.wav", -1, 2, 0);
+    audioObj1 = Sonic::addAudioObject("input1mono.wav", 0, 1, 0);
     audioObj2 = Sonic::addAudioObject("3m40stest.wav", 0, -1, 0);
     audioObj3 = Sonic::addAudioObject("1minutetest.wav", 2, 0, 0);
     audioObj4 = Sonic::addAudioObject("1minutetest.wav", 2, 0, 0);
-    audioObj5 = Sonic::addAudioObject("input1mono.wav", 2, 0, 0);
+    audioObj5 = Sonic::addAudioObject("input1mono.wav", 0, 1, 0);
     //audioObj1->setRepeat(true);
     //audioObj1->setActive(true);
     //Sonic::setPlayerLocation(-2, 0, 0);

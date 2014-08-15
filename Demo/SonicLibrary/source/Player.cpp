@@ -78,6 +78,6 @@ float Player::getDistance (AudioObj* obj) const{
     distance =pow(xTemp,2)+ pow(yTemp,2) + pow(zTemp,2);
     distance = sqrt(distance);
                     
-    return distance;
+    return (distance<1) ? 1: distance;
     
 }

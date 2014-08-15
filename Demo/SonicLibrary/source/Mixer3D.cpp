@@ -148,8 +148,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             continue;
        }
         
-        int amplitudeFactor = myWorld->getAudioObj(j)->getVolume()/myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j)) ;
-        
+        float amplitudeFactor = myWorld->getAudioObj(j)->getVolume()/myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j)) ;
         for(int i = 0; i < bufferSize ; i++)
         {
             inputTempTemp1[i] *= amplitudeFactor;
