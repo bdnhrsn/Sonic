@@ -13,9 +13,9 @@ void Sonic::createWorld()
     Sonic::cau = new CustomAudioUnit();
 }
 
-void Sonic::addAudioObject(string wavFileName, VariableForLocation x, VariableForLocation y, VariableForLocation z)
+AudioObj* Sonic::addAudioObject(string wavFileName, VariableForLocation x, VariableForLocation y, VariableForLocation z)
 {
-    Sonic::cau->addAudioObjectInWorld(wavFileName, x, y, z);
+    return(Sonic::cau->addAudioObjectInWorld(wavFileName, x, y, z));
 }
 
 void Sonic::startPlaying()
@@ -26,4 +26,9 @@ void Sonic::startPlaying()
 void Sonic::stopPlaying()
 {
     Sonic::cau->stop();
+}
+
+void Sonic::setPlayerLocation(VariableForLocation x, VariableForLocation y, VariableForLocation z)
+{
+    Sonic::cau->setPlayerPosition(x, y, z);
 }

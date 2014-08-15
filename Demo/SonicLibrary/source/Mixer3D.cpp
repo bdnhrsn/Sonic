@@ -131,7 +131,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
         ioDataRight[i] = 0;
     }
     
-    for(int j = 0; j < myWorld->getNumObj(); j++)
+    for(int j = 0; j < myWorld->getNumObj() && myWorld->getAudioObj(j)->isActive() == true; j++)
     {
         
         Azimuth[j] = myWorld->getPlayer()->getAzimuth(myWorld->getAudioObj(j));
@@ -148,9 +148,11 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             continue;
        }
         
+        int amplitudeFactor = myWorld->getAudioObj(j)->getVolume()/myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j)) ;
+        
         for(int i = 0; i < bufferSize ; i++)
         {
-            inputTempTemp1[i]/=myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j));
+            inputTempTemp1[i] *= amplitudeFactor;
         }
         
         for (int i = bufferSize; i < 2 * bufferSize; i++)
@@ -165,7 +167,8 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
         {
             filterFlag=1;
         }
-    
+       
+
         if(filterFlag)
         {
        
@@ -198,9 +201,10 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 
         for (int i = 0; i < bufferSize; i++)
         {
-       
-            ioDataLeft[i] +=   (short((outputLeft[j][i].re())/2+ (overlapLeft[j][i].re())/2))/myWorld->getNumObj();
+            
+            ioDataLeft[i] +=  (short((outputLeft[j][i].re())/2+ (overlapLeft[j][i].re())/2))/myWorld->getNumObj();
             ioDataRight[i] += (short((outputRight[j][i].re())/2 + (overlapRight[j][i].re())/2))/myWorld->getNumObj();
+            
             
         }
         

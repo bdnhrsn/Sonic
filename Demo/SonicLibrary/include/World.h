@@ -17,7 +17,7 @@ class World {
 
 	Player player;
     vector<AudioObj *> objList;
-	int numObj;
+	//int numObj;
 	float threshold;
     pthread_t writeThread;
     bool isWriteThreadCreated;
@@ -28,13 +28,13 @@ class World {
 	static const int MAX_OBJ = 20;
 	//This default contrustor creates a player at
 	// the world's origin, {0,0,0}.
-    World() : numObj(0), threshold(0.05), isWriteThreadCreated(false) {}
+    World() : /*numObj(0),*/ threshold(0.05), isWriteThreadCreated(false) {}
 
 	//This constructor creates a player at the
 	// location specified by the first parameter,
 	// and sets the player's bearing specified by
 	// the second parameter.
-	World(const Location& loc, const Velocity& vel, float bear) : player(loc,vel,bear), numObj(0), threshold(0.05), isWriteThreadCreated(false) {}
+	World(const Location& loc, const Velocity& vel, float bear) : player(loc,vel,bear), /*numObj(0),*/ threshold(0.05), isWriteThreadCreated(false) {}
 
 	//Returns a reference to the player.
 	Player* getPlayer() ;
@@ -45,25 +45,30 @@ class World {
 	//Adds an audio object to the world. Returns the
 	// index of the created object. Sets the location
 	// of the created object at the world's origin, {0,0,0}.
-    int addAudioObj(const std::string);
+    AudioObj* addAudioObj(const std::string);
 
 	//Adds an audio object to the world. Returns the
 	// index of the created object. Sets the location
 	// of the created object at the location specified 
 	// by the parameter.
-    int addAudioObj(const Location& loc, const Velocity& vel, const std::string);
+    AudioObj* addAudioObj(const Location& loc, const Velocity& vel, const std::string);
     
     
     //Supplying the azimuth and elevation. Right now used for testing multiple audio objects
-    int addAudioObj(const std::string, int Azimuth, int elevation);
+    AudioObj* addAudioObj(const std::string, int Azimuth, int elevation);
 
 	//Returns a reference to the audio object at the
 	// specified index.
-	AudioObj* getAudioObj(int index) const;
+	AudioObj* getAudioObj(size_t index) const;
     
-    int getNumObj()
+    void setPlayerPosition(VariableForLocation x, VariableForLocation y, VariableForLocation z)
     {
-        return numObj;
+        player.setLocation(x, y, z);
+    }
+    
+    int  getNumObj()
+    {
+        return (int)objList.size();
     }
     
     void createWriteThread (void) {
