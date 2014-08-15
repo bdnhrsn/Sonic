@@ -14,13 +14,14 @@
 class Sonic
 {
     static CustomAudioUnit *cau;
-    
+   
     
 public:
     
     
     static void createWorld();
-    static void addAudioObject(string, VariableForLocation, VariableForLocation, VariableForLocation);
+    static AudioObj* addAudioObject(string, VariableForLocation, VariableForLocation, VariableForLocation);
+    static void setPlayerLocation(VariableForLocation, VariableForLocation, VariableForLocation);
     //void updatePosition();
     static void startPlaying();
     //void pausePlaying();

@@ -8,26 +8,20 @@ Location World::getPlayerLocation() const{
     return this->player.getLocation();
 }
 
-int World::addAudioObj(const std::string wavFileName){
+AudioObj* World::addAudioObj(const std::string wavFileName){
     objList.push_back(new AudioObj(wavFileName));
-	numObj++;
-	return numObj-1;
+	return(getAudioObj(objList.size()-1));
+	//return numObj-1;
 }
 
-int World::addAudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName) {
+AudioObj* World::addAudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName) {
     objList.push_back(new AudioObj(loc,vel, wavFileName));
-	numObj++;
-	return numObj-1;
+	return(getAudioObj(objList.size()-1));
+	//return numObj-1;
 }
 
-int World::addAudioObj(const std::string wavFileName, int Azimuth, int elevation)
-{
-    objList.push_back(new AudioObj(wavFileName, Azimuth, elevation));
-    numObj++;
-    return numObj-1;
-}
 
-AudioObj* World::getAudioObj (int index) const{
+AudioObj* World::getAudioObj (size_t index) const{
     return objList.at(index);
 }
 

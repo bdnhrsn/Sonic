@@ -41,10 +41,13 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     //    std::cout<<"\naksjdhka " << ioData->mBuffers[i].mDataByteSize <<" i=" << i <<" "<<inBusNumber;
     //
     //}
-    //memset(ioData->mBuffers[0].mData, 0, 512);
-    //memset(ioData->mBuffers[1].mData, 0, 512);
     
+    //clock_t t1, t2;
+    //t1 = clock();
     mixer3D->overlapConvolution((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
+    //t2 = clock();
+    //cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
+
     return noErr;
 }
 
@@ -55,7 +58,7 @@ void CustomAudioUnit::init () {
     
     int bufferSize = 512;
     int bitDepth = 16;
-    mixer3D = new Mixer3D(bufferSize, 44100, bitDepth, &myWorld);
+    mixer3D = new Mixer3D(bufferSize, 44100, bitDepth, myWorld);
     
     AudioComponentDescription desc;
     
@@ -115,6 +118,7 @@ void CustomAudioUnit::init () {
 }
  
 CustomAudioUnit::CustomAudioUnit() {
+    myWorld = new World;
     init();
     std::cout<<"\nConstructor";
 }
@@ -127,7 +131,7 @@ CustomAudioUnit::~CustomAudioUnit() {
 
 void CustomAudioUnit::play() {
     //init();
-    myWorld.createWriteThread();
+    myWorld->createWriteThread();
     AudioOutputUnitStart(audioUnitInstance);
     std::cout<<"\nPlay";
 }
@@ -139,13 +143,29 @@ void CustomAudioUnit::stop() {
     std::cout<<"\nStop";
 }
 
-void CustomAudioUnit::addAudioObjectInWorld(string wavFile, VariableForLocation x, VariableForLocation y, VariableForLocation z)
+AudioObj* CustomAudioUnit::addAudioObjectInWorld(string wavFile, VariableForLocation x, VariableForLocation y, VariableForLocation z)
 {
-    Location loc = Location(x, y, z);
-    Velocity vel = Velocity();
-    myWorld.addAudioObj(loc,vel,wavFile);
+    if(myWorld != nullptr)
+    {
+        Location loc = Location(x, y, z);
+        Velocity vel = Velocity();
+        return myWorld->addAudioObj(loc,vel,wavFile);
+    }
+    else
+    {
+        throw("World has to be created before adding audio objects");
+        return nullptr;
+    }
     
 }
+
+void CustomAudioUnit::setPlayerPosition(VariableForLocation x, VariableForLocation y, VariableForLocation z)
+{
+    myWorld->setPlayerPosition(x, y, z);
+}
+
+
+
 
 
 
