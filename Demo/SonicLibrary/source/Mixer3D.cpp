@@ -125,35 +125,45 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 
 void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 {
+    //Clearing the left and right channels
     for(int i = 0; i < bufferSize; i++)
     {
         ioDataLeft[i] = 0;
         ioDataRight[i] = 0;
     }
     
+    //looping through the audioObjetives and do the mixing one sequentially
     for(int j = 0; j < myWorld->getNumObj() && myWorld->getAudioObj(j)->isActive() == true; j++)
     {
-        
+        //dynamically calculating the Azimuth between every object and the player
         Azimuth[j] = myWorld->getPlayer()->getAzimuth(myWorld->getAudioObj(j));
+        
+        //indicating whether the Azimuth value is negative or not because the HRTFLoading function will change the sign of Azimuth if it is negative
         signFlag = 0;
+        
+        //indicating whether the filter has been changed for this coming iteration from the previous one
         filterFlag = 0;
+    
     
 		if (Azimuth[j] < 0)
 			signFlag = 1;
 		else
 			signFlag = 0;
     
+        //loading in input data for the iteration accordingly
        if(!(myWorld->getAudioObj(j)->fillAudioData(inputTempTemp1, bufferSize)))
        {
             continue;
        }
         
+        //applying the distance factor and decrease the volumne if the object is far away from the player
         float amplitudeFactor = myWorld->getAudioObj(j)->getVolume()/myWorld->getPlayer()->getDistance(myWorld->getAudioObj(j)) ;
         for(int i = 0; i < bufferSize ; i++)
         {
             inputTempTemp1[i] *= amplitudeFactor;
         }
         
+        //zero padding the input for this iteration for the proper fft size
         for (int i = bufferSize; i < 2 * bufferSize; i++)
         {
             inputTempTemp1[i] = 0;
@@ -167,21 +177,27 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             filterFlag=1;
         }
        
-
+        
+        //if the filter has changed
         if(filterFlag)
         {
        
-            //fetch the filter
+            //fetch the new filter
             nTaps = HRTFLoading(&Azimuth[j], &elevation[j], sampleRate, 1, clFil[j], crFil[j]);
-       
+            
+            //zeroing padding it
             for (int i = nTaps; i < 2 * bufferSize; i++)
             {
                 clFil[j][i] = 0;
                 crFil[j][i] = 0;
             }
+                //judging whether the Azimuth value is negative
                if (signFlag)
                    Azimuth[j] = -Azimuth[j];
-            stereoConvolution(overlapInput, clFil[j], crFil[j], outputLeft[j], outputRight[j], bufferSize, nTaps, 2 * bufferSize);
+            
+                //recalculating the overlap part since the filter has been changed
+                stereoConvolution(overlapInput, clFil[j], crFil[j], outputLeft[j], outputRight[j], bufferSize, nTaps, 2 * bufferSize);
+            
                 //updating the overlap part for the next iteration
                 for (int i = 0; i < bufferSize; i++)
                 {
@@ -192,12 +208,13 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
 
         }
     
-            //doing convolution and get the main data for this iteration
+        
+        //things needed to be done no matter whether the filter has been changed or not
+        //doing convolution and get the main data for this iteration
         stereoConvolution(inputTempTemp1, clFil[j], crFil[j], outputLeft[j], outputRight[j], bufferSize, nTaps, 2 * bufferSize);
   
+        
         //adding the overlap part with the main data
-   
-
         for (int i = 0; i < bufferSize; i++)
         {
             
@@ -207,6 +224,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             
         }
         
+        //updating the overlapInput for the next iteration for the correpsonding obejct
         for (int i = 0; i < bufferSize; i++)
         {
             overlapInput[i] = inputTempTemp1[i];
@@ -216,12 +234,15 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             overlapInput[i] = 0;
         }
     
+        //updating the default overlap information for the next iteration if the filter won't be changed
         for(int i = 0 ; i < bufferSize; i++)
         {
             overlapLeft[j][i]=outputLeft[j][i+bufferSize];
             overlapRight[j][i]=outputRight[j][i+bufferSize];
         }
     
+        //storing the Azimuth value in this iteration for the comparison for the next iteration so that
+        //we can know that whether the filter needs to be changed in the next iteration.
         previousAzimuth[j]=Azimuth[j];
        
     }
