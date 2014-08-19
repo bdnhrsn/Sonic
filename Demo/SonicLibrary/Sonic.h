@@ -22,6 +22,7 @@ public:
     static void createWorld();
     static AudioObj* addAudioObject(string, VariableForLocation, VariableForLocation, VariableForLocation);
     static void setPlayerLocation(VariableForLocation, VariableForLocation, VariableForLocation);
+    static void setPlayerBearing(float);
     //void updatePosition();
     static void startPlaying();
     //void pausePlaying();

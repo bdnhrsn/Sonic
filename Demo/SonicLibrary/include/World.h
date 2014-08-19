@@ -26,7 +26,7 @@ class World {
 
   public:
 	static const int MAX_OBJ = 20;
-	//This default contrustor creates a player at
+	//This default constructor creates a player at
 	// the world's origin, {0,0,0}.
     World() : /*numObj(0),*/ threshold(0.05), isWriteThreadCreated(false) {}
 
@@ -64,6 +64,11 @@ class World {
     void setPlayerPosition(VariableForLocation x, VariableForLocation y, VariableForLocation z)
     {
         player.setLocation(x, y, z);
+    }
+    
+    void setPlayerBearing(float bearing)
+    {
+        player.setBearing(bearing);
     }
     
     int  getNumObj()

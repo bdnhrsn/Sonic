@@ -34,7 +34,7 @@ public:
     void stop();
     AudioObj* addAudioObjectInWorld(string, VariableForLocation, VariableForLocation, VariableForLocation);
     void setPlayerPosition(VariableForLocation, VariableForLocation, VariableForLocation);
-    
+    void setPlayerBearing(float);
 };
 
 static Mixer3D *mixer3D;
