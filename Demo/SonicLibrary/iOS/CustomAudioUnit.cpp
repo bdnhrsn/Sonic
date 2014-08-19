@@ -164,6 +164,11 @@ void CustomAudioUnit::setPlayerPosition(VariableForLocation x, VariableForLocati
     myWorld->setPlayerPosition(x, y, z);
 }
 
+void CustomAudioUnit::setPlayerBearing(float bearing)
+{
+    myWorld->setPlayerBearing(bearing);
+}
+
 
 
 

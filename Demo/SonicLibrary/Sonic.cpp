@@ -32,3 +32,8 @@ void Sonic::setPlayerLocation(VariableForLocation x, VariableForLocation y, Vari
 {
     Sonic::cau->setPlayerPosition(x, y, z);
 }
+
+void Sonic::setPlayerBearing(float bearing)
+{
+    Sonic::cau->setPlayerBearing(bearing);
+}
