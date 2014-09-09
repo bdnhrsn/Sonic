@@ -52,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5E32DF6E19BF46EB00B61580 /* Demo-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Demo-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		96C61C6F199C016700602CD2 /* Sonic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Sonic.h; sourceTree = "<group>"; };
 		96C61C70199C01A700602CD2 /* Sonic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sonic.cpp; sourceTree = "<group>"; };
 		9812197E1981B588006D402D /* catmeow.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = catmeow.wav; sourceTree = "<group>"; };
@@ -95,7 +96,6 @@
 		98E872E71947B8BD00DD214A /* Demo-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Demo-Info.plist"; sourceTree = "<group>"; };
 		98E872E91947B8BD00DD214A /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		98E872EB1947B8BD00DD214A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		98E872ED1947B8BD00DD214A /* Demo-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Demo-Prefix.pch"; sourceTree = "<group>"; };
 		98E872EE1947B8BD00DD214A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		98E872EF1947B8BD00DD214A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		98E872F21947B8BD00DD214A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
@@ -303,10 +303,10 @@
 		98E872E61947B8BD00DD214A /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5E32DF6E19BF46EB00B61580 /* Demo-Prefix.pch */,
 				98E872E71947B8BD00DD214A /* Demo-Info.plist */,
 				98E872E81947B8BD00DD214A /* InfoPlist.strings */,
 				98E872EB1947B8BD00DD214A /* main.m */,
-				98E872ED1947B8BD00DD214A /* Demo-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
