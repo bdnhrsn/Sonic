@@ -44,6 +44,10 @@ void AudioObj::setActive(bool active){
     this->active = active;
 }
 
+void AudioObj::setRepeat(bool rep) {
+    this->repeat = rep;
+}
+
 
 bool AudioObj::fillAudioData (complex* target, unsigned int length) {
     

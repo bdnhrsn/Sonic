@@ -12,20 +12,20 @@
 @end
 
 @implementation ViewController
-@synthesize Result;
-@synthesize count, audioObj1, audioObj2, audioObj3, audioObj4, audioObj5;
+@synthesize audioObj1, audioObj2, audioObj3, audioObj4, audioObj5;
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-    self.Result.text = @"Just Loaded";
-    self.count = 0;
-    //self.customAudioUnitInstance = new CustomAudioUnit();
+
+    self.customAudioUnitInstance = new CustomAudioUnit();
     Sonic::createWorld();
-    audioObj1 = Sonic::addAudioObject("input1mono.wav", 1, 0, 0);
-    Sonic::setPlayerBearing(180);
-    Sonic::setPlayerLocation(-2, 0, 0);
+    // TODO: Fails for locations (0, x, 0) for all x
+    audioObj1 = Sonic::addAudioObject("3m40stest.wav", 4, 3, 1);
+    // audioObj1 = Sonic::addAudioObject("input1mono.wav", 0, 0, 0);
+    Sonic::setPlayerBearing(0);
+    Sonic::setPlayerLocation(4, 0, 1);
+    
 
     //audioObj2 = Sonic::addAudioObject("3m40stest.wav", 0, -1, 0);
     //audioObj3 = Sonic::addAudioObject("1minutetest.wav", 2, 0, 0);
@@ -35,7 +35,7 @@
     //audioObj1->setActive(true);
     //audioObj1->setVolume(0.1);
     //audioObj1->setLocation(1, 0, 0);
-    //cout << "Azimuth = " << audioObj1->getAzimuth() << endl;
+    //cout << "Azimuth = " << audioObj1->computeAzimuth() << endl;
     //myWorld.addAudioObj("1minutetest.wav", 150, 0);
     //myWorld.addAudioObj(loc1,vel,"3m40stest.wav");
     //addAudioObj("input1mono.wav", 90, 0);
@@ -55,15 +55,11 @@
 }
 
 - (IBAction)click:(id)sender {
-    self.count++;
-    self.Result.text = [NSString stringWithFormat:@"Clicked %d",self.count];
     //self.customAudioUnitInstance->play();
     Sonic::startPlaying();
 }
 
 - (IBAction)click2:(id)sender {
-    self.count+= 2;
-    self.Result.text = [NSString stringWithFormat:@"Clicked %d",self.count];
     //self.customAudioUnitInstance->stop();
     Sonic::stopPlaying();
 }
