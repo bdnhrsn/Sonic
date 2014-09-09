@@ -20,6 +20,7 @@ class AudioObj {
     bool repeat;
     CircBuff<complex> circBuff;
     WavObject wavObject;
+    // TODO: Delete Azimuth and elevation? These are stored in the Mixer instead.
     //int Azimuth;
     //int elevation;
     bool toLoadMoreData;

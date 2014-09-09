@@ -172,7 +172,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
    
     
         //judging whether the filter has changed
-        if((Azimuth[j]/5)!=(previousAzimuth[j]/5))
+        if((Azimuth[j]/5) != (previousAzimuth[j]/5))
         {
             filterFlag=1;
         }
