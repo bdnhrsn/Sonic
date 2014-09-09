@@ -32,7 +32,7 @@ public:
     {
         delete [] inputTempTemp1;
         delete [] outputLeft;
-        delete [] outputLeft;
+        delete [] outputRight;
         delete [] lFil;
         delete [] rFil;
         delete [] clFil;
@@ -40,9 +40,9 @@ public:
         delete [] overlapLeft;
         delete [] overlapRight;
         delete [] overlapInput;
-        delete [] prevAzimuths;
         delete [] Azimuths;
         delete [] elevations;
+        delete [] prevAzimuths;
         delete [] prevElevations;
     }
 

@@ -81,8 +81,7 @@ int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate
     int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, lFil, rFil);
 
 
-	for (int i = 0; i < size; i++)
-	{
+	for (int i = 0; i < size; i++) {
 		leftFilter[i] = (double)(lFil[i]);
 		rightFilter[i] = (double)(rFil[i]);
 	}
@@ -111,9 +110,9 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	CFFT::Forward(input,fInput, (unsigned int)nFFT);
 	CFFT::Forward(filter,fFilter, (unsigned int)nFFT);
 
-	for (int i = 0; i < nFFT; i++)
+	for (int i = 0; i < nFFT; i++) {
 		output[i] = fInput[i] * fFilter[i];
-
+    }
 	CFFT::Inverse(output, (unsigned int)nFFT);
 }
 
@@ -153,7 +152,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             inputTempTemp1[j] *= iAmplitudeFactor;
         }
         
-        //zero padding the input for this iteration for the proper fft size
+        // zero padding the input for this iteration for the proper fft size
         for (int j = bufferSize; j < 2 * bufferSize; j++) {
             inputTempTemp1[j] = 0;
         }
@@ -163,7 +162,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             // object location relative to player has changed, so fetch a new filter
             nTaps = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, clFil[i], crFil[i]);
             
-            //zeroing padding it
+            // zero pad
             for (int j = nTaps; j < 2 * bufferSize; j++) {
                 clFil[i][j] = 0;
                 crFil[i][j] = 0;
