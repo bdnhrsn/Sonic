@@ -18,7 +18,7 @@
 {
     [super viewDidLoad];
 
-    self.customAudioUnitInstance = new CustomAudioUnit();
+    // self.customAudioUnitInstance = new CustomAudioUnit();
     Sonic::createWorld();
     // TODO: Fails for locations (0, x, 0) for all x
     audioObj1 = Sonic::addAudioObject("3m40stest.wav", 4, 3, 1);

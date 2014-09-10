@@ -11,6 +11,8 @@ using namespace std;
 #ifndef MIXER3D_H
 #define MIXER3D_H
 
+#define INVALID_ANGLE 9999
+
 
 class Mixer3D
 {
@@ -30,13 +32,13 @@ public:
     
     ~Mixer3D()
     {
-        delete [] inputTempTemp1;
+        delete [] input;
         delete [] outputLeft;
         delete [] outputRight;
-        delete [] lFil;
-        delete [] rFil;
-        delete [] clFil;
-        delete [] crFil;
+        delete [] leftFilter;
+        delete [] rightFilter;
+        delete [] complexLeftFilter;
+        delete [] complexRightFilter;
         delete [] overlapLeft;
         delete [] overlapRight;
         delete [] overlapInput;
@@ -49,10 +51,10 @@ public:
 private:
 	World *myWorld;
 	
-	// clFil stands for complex type left filter
-	complex **outputLeft, **outputRight, **clFil, **crFil;
+	// complexLeftFilter stands for complex type left filter
+	complex **outputLeft, **outputRight, **complexLeftFilter, **complexRightFilter;
 	
-	complex	*inputTempTemp1; // just define it temporarily to store a small chunk of the input for processing
+	complex	*input; // just define it temporarily to store a small chunk of the input for processing
 	
 	// overlap stores the data chunk which needs to add up with the next chunk of data
 	// to fix the glitch problem
@@ -60,11 +62,16 @@ private:
 	complex *overlapInput; // This is the input which is used for going through the filter for the overlap
     complex *fInput, *fFilter;
     
-    short *lFil, *rFil; // left and right filter
+    short * leftFilter, *rightFilter; // left and right filter
 	 
-	unsigned int bufferSize, sampleRate, bitDepth, nTaps, dataSize;
+	unsigned int bufferSize, sampleRate, bitDepth, filterLength, dataSize;
 	
 	long maxTemp = 0;
+    
+    /**
+     Returns true if x is a power of two, false otherwise
+     */
+    bool isPowerOfTwo(int x);
     
     int *prevAzimuths, *Azimuths, *elevations, *prevElevations;
 };

@@ -8,6 +8,7 @@
 #include "../include/World.h"
 #include "../include/fft.h"
 #include "../include/mit_hrtf_lib.h"
+
 using namespace std;
 
 
@@ -19,39 +20,32 @@ struct wavFileData
 	int channels;
 };
 
-Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD)
-{
+Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD) {
 	outputLeft = new complex*[World::MAX_OBJ];
 	outputRight = new complex*[World::MAX_OBJ];
 	overlapLeft = new complex*[World::MAX_OBJ];
 	overlapRight = new complex*[World::MAX_OBJ];
 	
 	//This is the variable used to store the data gotten from the world
-	inputTempTemp1 = new complex[2*bufferSize];
+	input = new complex[2*bufferSize];
 
-	for (int i = 0; i < World::MAX_OBJ; i++)
-	{
+	for (int i = 0; i < World::MAX_OBJ; i++) {
 		overlapLeft[i] = new complex[bufferSize];
 		overlapRight[i] = new complex[bufferSize];
 		outputLeft[i] = new complex[2*bufferSize];
 		outputRight[i] = new complex[2*bufferSize];
 	}
 
-	//This is for testing
+	// for testing
 	overlapInput = new complex[2 * bufferSize];
 
-	//These are for filter fetch
-	lFil = new short[2 * bufferSize];
-	rFil = new short[2 * bufferSize];
+	// These are for filter fetch
+	leftFilter = new short[2 * bufferSize];
+	rightFilter = new short[2 * bufferSize];
 
-	//These are for storing filters for processing
-    clFil = new complex*[World::MAX_OBJ];
-    crFil = new complex*[World::MAX_OBJ];
-    for(int i = 0; i < World::MAX_OBJ; i++)
-    {
-        clFil[i] = new complex[2*bufferSize];
-        crFil[i] = new complex[2*bufferSize];
-    }
+	// These are for storing filters for processing
+    complexLeftFilter = new complex*[World::MAX_OBJ];
+    complexRightFilter = new complex*[World::MAX_OBJ];
     
     fInput = new complex[2 * bufferSize];
     fFilter = new complex[2 * bufferSize];
@@ -61,8 +55,23 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
     prevAzimuths = new int[World::MAX_OBJ];
     prevElevations = new int[World::MAX_OBJ];
     
-    updateAngles();
+    updateAngles(); // initalize Azimuths and elevations
     
+    for(int i = 0; i < World::MAX_OBJ; i++) {
+        // TODO: Should we initialize the filter values?
+        complexLeftFilter[i] = new complex[2*bufferSize];
+        complexRightFilter[i] = new complex[2*bufferSize];
+
+        prevAzimuths[i] = INVALID_ANGLE;
+        prevElevations[i] = INVALID_ANGLE;
+    }
+    
+    /*
+    // get first filters
+    for (int i= 0; i < myWorld->getNumObj(); i++) {
+        filterLength = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, complexLeftFilter[i], complexRightFilter[i]);
+    }
+    */
 }
 
 void Mixer3D::updateAngles() {
@@ -76,32 +85,33 @@ void Mixer3D::updateAngles() {
     }
 }
 
-int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter)
-{
-    int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, lFil, rFil);
+bool Mixer3D::isPowerOfTwo(int x) {
+    return !(x == 0) && !(x & (x - 1));
+}
 
+int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilterIn, complex *&rightFilterIn) {
+    int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, leftFilter, rightFilter);
 
+    // TODO: Since cl(r)Fil is passed as left(right)Filter, How do cl(r)Fil and l(r)Fil differ?
+    // Also, if leftFilter and rightFilter are complex**, why are we adding doubles to them?
 	for (int i = 0; i < size; i++) {
-		leftFilter[i] = (double)(lFil[i]);
-		rightFilter[i] = (double)(rFil[i]);
+		leftFilterIn[i] = (double)(leftFilter[i]);
+		rightFilterIn[i] = (double)(rightFilter[i]);
 	}
 
 	return size;
 }
 
 
-void Mixer3D::convolution(complex *input, complex *filter,complex *output, long nSig, long nFil, long nFFT)
-{
+void Mixer3D::convolution(complex *input, complex *filter,complex *output, long nSig, long nFil, long nFFT) {
 	//Check for invalid inputs.
-	if (input == NULL || filter == NULL)
-	{
+	if (input == NULL || filter == NULL) {
 		cout << "Could not perform convolution on empty aaaa arrays!" << endl;
 		return;
 	}
 
 	// If NFFT not a power of 2, or it is smaller than signal or filter, prompt for new.
-	while (log2(nFFT) / log2(2) != (int)(log2(nFFT) / log2(2)) || nFFT < nSig || nFFT < nFil)
-	{
+	while (!isPowerOfTwo(nFFT) || nFFT < nSig || nFFT < nFil) {
 		cout << "Please input a valid NFFT, which is >= nSig(" << nSig << ") and >= NFIL(" << nFil << ") : ";
 		cin >> nFFT;
 	}
@@ -116,14 +126,12 @@ void Mixer3D::convolution(complex *input, complex *filter,complex *output, long 
 	CFFT::Inverse(output, (unsigned int)nFFT);
 }
 
-void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSIG, long nFIL, long nFFT)
-{
+void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSIG, long nFIL, long nFFT) {
 	convolution(input, leftFilter, leftOutput, nSIG, nFIL, nFFT);
 	convolution(input, rightFilter, rightOutput, nSIG, nFIL, nFFT);
 }
 
-void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
-{
+void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
     // Clearing the left and right channels
     for(int i = 0; i < bufferSize; i++) {
         ioDataLeft[i] = 0;
@@ -139,7 +147,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
         AudioObj* iAudioObj = myWorld->getAudioObj(i);
         
         // loading in input data for the iteration accordingly
-       if (!(iAudioObj->fillAudioData(inputTempTemp1, bufferSize))) {
+       if (!(iAudioObj->fillAudioData(input, bufferSize))) {
             continue;
        }
         
@@ -149,23 +157,23 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
         float iDistance = myWorld->getPlayer()->computeDistanceFrom(iAudioObj) ;
         float iAmplitudeFactor = iVolume / iDistance;
         for(int j = 0; j < bufferSize ; j++) {
-            inputTempTemp1[j] *= iAmplitudeFactor;
+            input[j] *= iAmplitudeFactor;
         }
         
         // zero padding the input for this iteration for the proper fft size
         for (int j = bufferSize; j < 2 * bufferSize; j++) {
-            inputTempTemp1[j] = 0;
+            input[j] = 0;
         }
 
         if (Azimuths[i] != prevAzimuths[i] ||
            elevations[i] != prevElevations[i]) {
             // object location relative to player has changed, so fetch a new filter
-            nTaps = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, clFil[i], crFil[i]);
+            filterLength = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, complexLeftFilter[i], complexRightFilter[i]);
             
             // zero pad
-            for (int j = nTaps; j < 2 * bufferSize; j++) {
-                clFil[i][j] = 0;
-                crFil[i][j] = 0;
+            for (int j = filterLength; j < 2 * bufferSize; j++) {
+                complexLeftFilter[i][j] = 0;
+                complexRightFilter[i][j] = 0;
             }
             
             if (Azimuths[i] < 0) {
@@ -173,7 +181,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             }
             
             // recalculate the overlap part since the filter has been changed
-            stereoConvolution(overlapInput, clFil[i], crFil[i], outputLeft[i], outputRight[i], bufferSize, nTaps, 2 * bufferSize);
+            stereoConvolution(overlapInput, complexLeftFilter[i], complexRightFilter[i], outputLeft[i], outputRight[i], bufferSize, filterLength, 2 * bufferSize);
         
             // update the overlap part for the next iteration
             for (int j = 0; j < bufferSize; j++) {
@@ -184,7 +192,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
     
         //things needed to be done no matter whether the filter has been changed or not
         //doing convolution and get the main data for this iteration
-        stereoConvolution(inputTempTemp1, clFil[i], crFil[i], outputLeft[i], outputRight[i], bufferSize, nTaps, 2 * bufferSize);
+        stereoConvolution(input, complexLeftFilter[i], complexRightFilter[i], outputLeft[i], outputRight[i], bufferSize, filterLength, 2 * bufferSize);
   
         //adding the overlap part with the main data
         for (int j = 0; j < bufferSize; j++) {
@@ -197,7 +205,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight)
             if (j >= bufferSize) {
                 overlapInput[j] = 0;
             } else {
-                overlapInput[j] = inputTempTemp1[j];
+                overlapInput[j] = input[j];
             }
         }
 
