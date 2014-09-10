@@ -95,7 +95,7 @@ float Player::computeElevation (AudioObj* obj) const {
     }
 }
 
-float Player::computeDistanceFrom (AudioObj* obj) const{
+float Player::computeDistanceFrom(AudioObj* obj) const{
     
     float distance;
     

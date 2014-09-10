@@ -12,8 +12,7 @@
 using namespace std;
 
 
-struct wavFileData
-{
+struct wavFileData {
 	long n;
 	int sampleRate;
 	int bitDepth;
@@ -50,12 +49,12 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
     fInput = new complex[2 * bufferSize];
     fFilter = new complex[2 * bufferSize];
     
-    Azimuths = new int[World::MAX_OBJ];
+    azimuths = new int[World::MAX_OBJ];
     elevations = new int[World::MAX_OBJ];
     prevAzimuths = new int[World::MAX_OBJ];
     prevElevations = new int[World::MAX_OBJ];
     
-    updateAngles(); // initalize Azimuths and elevations
+    updateAngles(); // initalize azimuths and elevations
     
     for(int i = 0; i < World::MAX_OBJ; i++) {
         // TODO: Should we initialize the filter values?
@@ -65,22 +64,15 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
         prevAzimuths[i] = INVALID_ANGLE;
         prevElevations[i] = INVALID_ANGLE;
     }
-    
-    /*
-    // get first filters
-    for (int i= 0; i < myWorld->getNumObj(); i++) {
-        filterLength = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, complexLeftFilter[i], complexRightFilter[i]);
-    }
-    */
 }
 
 void Mixer3D::updateAngles() {
     Player *p1 = myWorld->getPlayer();
     for (int i = 0; i < myWorld->getNumObj(); i++) {
         AudioObj* iAudioObj = myWorld->getAudioObj(i);
-        Azimuths[i] = p1->computeAzimuth(iAudioObj);
+        azimuths[i] = p1->computeAzimuth(iAudioObj);
         elevations[i] = p1->computeElevation(iAudioObj);
-        printf("Azimuths[%d]: %d\n", i, Azimuths[i]);
+        printf("azimuths[%d]: %d\n", i, azimuths[i]);
         printf("elevations[%d]: %d\n", i, elevations[i]);
     }
 }
@@ -103,22 +95,20 @@ int Mixer3D::HRTFLoading(int* pAzimuth, int* pElevation, unsigned int samplerate
 }
 
 
-void Mixer3D::convolution(complex *input, complex *filter,complex *output, long nSig, long nFil, long nFFT) {
-	//Check for invalid inputs.
+void Mixer3D::convolution(complex *input, complex *filter, complex *output, long nSig, long nFil, long nFFT) {
+
 	if (input == NULL || filter == NULL) {
-		cout << "Could not perform convolution on empty aaaa arrays!" << endl;
-		return;
+		throw invalid_argument("Input and Filter must be non-NULL.");
 	}
 
-	// If NFFT not a power of 2, or it is smaller than signal or filter, prompt for new.
-	while (!isPowerOfTwo(nFFT) || nFFT < nSig || nFFT < nFil) {
-		cout << "Please input a valid NFFT, which is >= nSig(" << nSig << ") and >= NFIL(" << nFil << ") : ";
-		cin >> nFFT;
+	if (!isPowerOfTwo(nFFT) || nFFT < nSig || nFFT < nFil) {
+        throw invalid_argument("NFFT must be a power of two, bigger than the signal length, and bigger than the filter length.");
 	}
 
-	//Perform FFT on both input and filter.
-	CFFT::Forward(input,fInput, (unsigned int)nFFT);
-	CFFT::Forward(filter,fFilter, (unsigned int)nFFT);
+	// Perform FFT on both input and filter.
+    // TODO: "Streamline" CFFT class?
+	CFFT::Forward(input, fInput, (unsigned int)nFFT);
+	CFFT::Forward(filter, fFilter, (unsigned int)nFFT);
 
 	for (int i = 0; i < nFFT; i++) {
 		output[i] = fInput[i] * fFilter[i];
@@ -132,13 +122,13 @@ void Mixer3D::stereoConvolution(complex *input, complex *leftFilter, complex *ri
 }
 
 void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
-    // Clearing the left and right channels
+    // Clear the left and right channels
     for(int i = 0; i < bufferSize; i++) {
         ioDataLeft[i] = 0;
         ioDataRight[i] = 0;
     }
     
-    //looping through the audioObjects and do the mixing one sequentially
+    // Loop through the audioObjects and do the mixing one sequentially
     
     // TODO: Possible bug? Cuts short if one audioObj is inactive?
     for (int i = 0; i < myWorld->getNumObj() && myWorld->getAudioObj(i)->isActive() == true; i++) {
@@ -160,15 +150,15 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
             input[j] *= iAmplitudeFactor;
         }
         
-        // zero padding the input for this iteration for the proper fft size
+        // zero pad
         for (int j = bufferSize; j < 2 * bufferSize; j++) {
             input[j] = 0;
         }
 
-        if (Azimuths[i] != prevAzimuths[i] ||
+        if (azimuths[i] != prevAzimuths[i] ||
            elevations[i] != prevElevations[i]) {
             // object location relative to player has changed, so fetch a new filter
-            filterLength = HRTFLoading(&Azimuths[i], &elevations[i], sampleRate, 1, complexLeftFilter[i], complexRightFilter[i]);
+            filterLength = HRTFLoading(&azimuths[i], &elevations[i], sampleRate, 1, complexLeftFilter[i], complexRightFilter[i]);
             
             // zero pad
             for (int j = filterLength; j < 2 * bufferSize; j++) {
@@ -176,8 +166,8 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
                 complexRightFilter[i][j] = 0;
             }
             
-            if (Azimuths[i] < 0) {
-                   Azimuths[i] = -Azimuths[i];
+            if (azimuths[i] < 0) {
+                   azimuths[i] = -azimuths[i];
             }
             
             // recalculate the overlap part since the filter has been changed
@@ -190,7 +180,6 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
             }
         }
     
-        //things needed to be done no matter whether the filter has been changed or not
         //doing convolution and get the main data for this iteration
         stereoConvolution(input, complexLeftFilter[i], complexRightFilter[i], outputLeft[i], outputRight[i], bufferSize, filterLength, 2 * bufferSize);
   
@@ -218,7 +207,7 @@ void Mixer3D::overlapConvolution( short *ioDataLeft,short *ioDataRight) {
     
         //storing the Azimuth value in this iteration for the comparison for the next iteration so that
         //we can know that whether the filter needs to be changed in the next iteration.
-        prevAzimuths[i]=Azimuths[i];
+        prevAzimuths[i]=azimuths[i];
        
     }
 }

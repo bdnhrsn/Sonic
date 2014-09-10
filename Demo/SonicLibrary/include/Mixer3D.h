@@ -42,7 +42,7 @@ public:
         delete [] overlapLeft;
         delete [] overlapRight;
         delete [] overlapInput;
-        delete [] Azimuths;
+        delete [] azimuths;
         delete [] elevations;
         delete [] prevAzimuths;
         delete [] prevElevations;
@@ -73,7 +73,7 @@ private:
      */
     bool isPowerOfTwo(int x);
     
-    int *prevAzimuths, *Azimuths, *elevations, *prevElevations;
+    int *prevAzimuths, *azimuths, *elevations, *prevElevations;
 };
 
 #endif
