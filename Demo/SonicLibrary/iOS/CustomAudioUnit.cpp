@@ -44,7 +44,7 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     
     //clock_t t1, t2;
     //t1 = clock();
-    mixer3D->overlapConvolution((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
+    mixer3D->performMix((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
     //t2 = clock();
     //cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
 
