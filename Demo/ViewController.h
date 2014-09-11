@@ -11,8 +11,6 @@
 
 @interface ViewController : UIViewController
 
-@property (weak, nonatomic) IBOutlet UILabel *Result;
-@property int count;
 - (IBAction)click:(id)sender;
 - (IBAction)click2:(id)sender;
 @property AudioObj *audioObj1;
@@ -20,5 +18,6 @@
 @property AudioObj *audioObj3;
 @property AudioObj *audioObj4;
 @property AudioObj *audioObj5;
+@property CustomAudioUnit *customAudioUnitInstance;
 
 @end

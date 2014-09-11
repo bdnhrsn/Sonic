@@ -3,7 +3,7 @@
 
 #include <stdexcept>
 
-typedef float VariableForLocation;
+typedef float VariableForLocation; // TODO: Why are we typedefing coordinates?
 using namespace std;
 
 class Location {

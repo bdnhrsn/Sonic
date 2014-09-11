@@ -11,13 +11,11 @@ Location World::getPlayerLocation() const{
 AudioObj* World::addAudioObj(const std::string wavFileName){
     objList.push_back(new AudioObj(wavFileName));
 	return(getAudioObj(objList.size()-1));
-	//return numObj-1;
 }
 
 AudioObj* World::addAudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName) {
     objList.push_back(new AudioObj(loc,vel, wavFileName));
 	return(getAudioObj(objList.size()-1));
-	//return numObj-1;
 }
 
 

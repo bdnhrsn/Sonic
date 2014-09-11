@@ -24,7 +24,6 @@
 #include "../MIT_HRTF_Library/source/diffuse/mit_hrtf_diffuse_96000.h"
 
 
-
 /*	Internal functions for handling the indexing of the -/+40 degree elevation 
 	data which has irregular azimuth positions. */
 int mit_hrtf_findAzimuthFor40Elev(int azimuth);

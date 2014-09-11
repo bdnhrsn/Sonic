@@ -19,6 +19,8 @@ members of the 3D Mixer or make sure they comply with the size restrictions
 of the 3D mixing code.
 */
 
+#define INVALID_ANGLE 9999
+
 class Mixer3D
 {
 public:
@@ -62,7 +64,18 @@ private:
 	*/
 	void stereoConvolution(complex *input, complex *leftFilter, complex *rightFilter, complex *leftOutput, complex *rightOutput, long nSig, long nFil, long nFFT);
 	
-	//Data members
+    /* 
+    Re-computes and stores elevation and azimuth angles for all
+    audioObjects in this->myWorld
+    */
+    void updateAngles();
+
+    /**
+     Returns true if x is a power of two, false otherwise
+     */
+    bool isPowerOfTwo(int x);
+    
+    //Data members
 
 	unsigned int bufferSize, 				//The size of the audio frames.
 				 sampleRate, 				//The sample rate of the audio.
@@ -73,8 +86,8 @@ private:
 	Player &player; 						//A reference variable that will be initialized to refer to the world's player.
     short *lFil, *rFil; 					//Arrays for retrieving the integer formatted filter data from the MIT KEMAR HRTF Database.
     bool signFlag, filterFlag;				//Flags for the sign of the angle and whether the filter has changed.
-    int *previousAzimuth,						 
-    	*azimuth, *elevation;	
+    int *prevAzimuths, *prevElevations,						 
+    	*azimuths, *elevations;	
     
 	complex	*inputAO, 					 	//Holds the current input of each audio object.
 			*overlapInput,					//Holds the input of the last iteration in case the filter changed and the tail needs recalculation.

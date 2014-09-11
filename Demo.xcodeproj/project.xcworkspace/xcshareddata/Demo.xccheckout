@@ -5,34 +5,34 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>E17BFBAF-025F-451C-ABA3-FC650E2EAA15</string>
+	<string>9490D2A8-10BE-46DF-B44A-A2AB6F7F45E5</string>
 	<key>IDESourceControlProjectName</key>
 	<string>Demo</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>04D4B705-EF9C-44BE-9442-3F6799F181D2</key>
-		<string>ssh://github.com/PhiladelphiaGameLab/Sonic.git</string>
+		<key>0C40C3E4-7648-44A8-B2EF-38724BB8B4A5</key>
+		<string>https://github.com/acannon828/Sonic.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>Demo.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>04D4B705-EF9C-44BE-9442-3F6799F181D2</key>
+		<key>0C40C3E4-7648-44A8-B2EF-38724BB8B4A5</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>ssh://github.com/PhiladelphiaGameLab/Sonic.git</string>
+	<string>https://github.com/acannon828/Sonic.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>04D4B705-EF9C-44BE-9442-3F6799F181D2</string>
+	<string>0C40C3E4-7648-44A8-B2EF-38724BB8B4A5</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>04D4B705-EF9C-44BE-9442-3F6799F181D2</string>
+			<string>0C40C3E4-7648-44A8-B2EF-38724BB8B4A5</string>
 			<key>IDESourceControlWCCName</key>
 			<string>Sonic</string>
 		</dict>

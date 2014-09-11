@@ -30,6 +30,7 @@ class CustomAudioUnit {
 public:
     CustomAudioUnit();
     ~CustomAudioUnit();
+    // TOOD: CustomAudioUnit::play(), stop() needed?
     void play();
     void stop();
     AudioObj* addAudioObjectInWorld(string, VariableForLocation, VariableForLocation, VariableForLocation);

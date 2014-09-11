@@ -8,6 +8,10 @@
 
 #include "CustomAudioUnit.h"
 
+#define BUF_SIZE 512
+#define BIT_DEPTH 16
+#define SAMPLE_RATE 44100
+
 static OSStatus recordingCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
     
     //Please dont remove the following commented code
@@ -52,13 +56,7 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
 }
 
 void CustomAudioUnit::init () {
-    
-    
-	
-    
-    int bufferSize = 512;
-    int bitDepth = 16;
-    mixer3D = new Mixer3D(bufferSize, 44100, bitDepth, myWorld);
+    mixer3D = new Mixer3D(BUF_SIZE, SAMPLE_RATE, BIT_DEPTH, myWorld);
     
     AudioComponentDescription desc;
     

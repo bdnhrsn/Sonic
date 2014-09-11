@@ -31,7 +31,7 @@ float AudioObj::getVolume() const {
 
 void AudioObj::setVolume(float vol) {
     if (vol > 1 || vol < 0){
-        throw invalid_argument ("volume out of range(0-1)");
+        throw invalid_argument("Volume not in range (0-1)");
     }
     this->volume = vol;
 }
@@ -42,6 +42,10 @@ bool AudioObj::isActive() const {
 
 void AudioObj::setActive(bool active){
     this->active = active;
+}
+
+void AudioObj::setRepeat(bool rep) {
+    this->repeat = rep;
 }
 
 
