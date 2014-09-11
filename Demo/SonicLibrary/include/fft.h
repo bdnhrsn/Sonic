@@ -9,9 +9,7 @@
 #define _FFT_H_
 
 #include "complex.h"
-#include "string.h"
-
-using namespace std;
+#include <string>
 
 class CFFT
 {

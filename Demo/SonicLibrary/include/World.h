@@ -37,7 +37,8 @@ class World {
 	World(const Location& loc, const Velocity& vel, float bear) : player(loc,vel,bear), /*numObj(0),*/ threshold(0.05), isWriteThreadCreated(false) {}
 
 	//Returns a reference to the player.
-	Player* getPlayer() ;
+    //TODO: Fix this
+	Player* getPlayer();
 
 	//Returns the array of the player's location.
 	Location getPlayerLocation() const;

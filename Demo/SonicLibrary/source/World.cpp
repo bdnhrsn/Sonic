@@ -1,7 +1,11 @@
 #include "../include/World.h"
 
+//Player*& World::getPlayer() {
 Player* World::getPlayer() {
-    return &(this->player);
+    // TODO: Fix this
+    //const Player * const &playerRef = &player;
+    //return playerRef;
+    return &player;
 }
 
 Location World::getPlayerLocation() const{

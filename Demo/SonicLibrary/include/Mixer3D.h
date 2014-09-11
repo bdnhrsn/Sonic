@@ -83,10 +83,14 @@ private:
 				 filterLength; 					//The MIT KEMAR Filter Size.
 	
 	World *myWorld; 						//A pointer to the world.
-	Player &player; 						//A reference variable that will be initialized to refer to the world's player.
+
+    Player *player;
+    //TODO: Fix thix
+    //const Player * const &player;                  //A reference to myWorld's player
     short *leftFilter, *rightFilter; 					//Arrays for retrieving the integer formatted filter data from the MIT KEMAR HRTF Database.
     int *prevAzimuths, *prevElevations,
-    	*azimuths, *elevations;	
+    	*azimuths, *elevations;
+    
     
 	complex	*inputAO, 					 	//Holds the current input of each audio object.
 			*overlapInput,					//Holds the input of the last iteration in case the filter changed and the tail needs recalculation.

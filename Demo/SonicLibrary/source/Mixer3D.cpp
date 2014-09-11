@@ -4,9 +4,11 @@
 #include "../include/fft.h"
 #include "../include/mit_hrtf_lib.h"
 
-Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD)
+Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w) :
+myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD)
+//myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD), player(w->getPlayer())
 {
-    Player &player = myWorld->getPlayer();
+    player = myWorld->getPlayer();
     inputAO = new complex[2*bufferSize];
     overlapInput = new complex[2 * bufferSize];
     fInput = new complex[2 * bufferSize];
