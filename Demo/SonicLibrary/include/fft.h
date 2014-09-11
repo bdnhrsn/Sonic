@@ -31,7 +31,7 @@ class CFFT
 		//storing the an array into a text file
 		//filename is the file name you want to store the data into
 		//datatype represents the data you wanna store: real/real+imag/amplitude
-		static void storingData(complex *data, int NFFT, string temp,char datatype);
+    static void storingData(complex *data, int NFFT, std::string temp, char datatype);
 		
 		//   FORWARD FOURIER TRANSFORM
 		//     Input  - input data

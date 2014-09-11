@@ -80,19 +80,18 @@ private:
 	unsigned int bufferSize, 				//The size of the audio frames.
 				 sampleRate, 				//The sample rate of the audio.
 				 bitDepth, 					//The bit depth of the audio.
-				 nTaps; 					//The MIT KEMAR Filter Size.
+				 filterLength; 					//The MIT KEMAR Filter Size.
 	
 	World *myWorld; 						//A pointer to the world.
 	Player &player; 						//A reference variable that will be initialized to refer to the world's player.
-    short *lFil, *rFil; 					//Arrays for retrieving the integer formatted filter data from the MIT KEMAR HRTF Database.
-    bool signFlag, filterFlag;				//Flags for the sign of the angle and whether the filter has changed.
-    int *prevAzimuths, *prevElevations,						 
+    short *leftFilter, *rightFilter; 					//Arrays for retrieving the integer formatted filter data from the MIT KEMAR HRTF Database.
+    int *prevAzimuths, *prevElevations,
     	*azimuths, *elevations;	
     
 	complex	*inputAO, 					 	//Holds the current input of each audio object.
 			*overlapInput,					//Holds the input of the last iteration in case the filter changed and the tail needs recalculation.
-    		*fInput, *fFilter;				//Data arrays to hold frequency domain representation of an input and filter. Used in convolution().
-			**clFil, **crFil,			 	//Holds the complex datatype versions of the current filter.
+    		*fInput, *fFilter,				//Data arrays to hold frequency domain representation of an input and filter. Used in convolution().
+			**complexLeftFilter, **complexRightFilter,			 	//Holds the complex datatype versions of the current filter.
 			**outputLeft, **outputRight, 	//Holds the output of each current input with the current filter.
 			**overlapLeft,**overlapRight;   //Holds the second half of each 2*bufferSize convolution for next iteration.
 };

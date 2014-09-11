@@ -48,7 +48,7 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
     }    
 }
 
-~Mixer3D()
+Mixer3D::~Mixer3D()
 {
     delete [] inputAO;
     delete [] outputLeft;
@@ -60,9 +60,10 @@ Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w):myWorld(w), buffe
     delete [] overlapLeft;
     delete [] overlapRight;
     delete [] overlapInput;
-    delete [] previousAzimuth;
-    delete [] azimuth;
-    delete [] elevation;
+    delete [] prevAzimuths;
+    delete [] prevElevations;
+    delete [] azimuths;
+    delete [] elevations;
 }
 
 void Mixer3D::updateAngles() {
@@ -80,14 +81,14 @@ bool Mixer3D::isPowerOfTwo(int x) {
     return !(x == 0) && !(x & (x - 1));
 }
 
-int Mixer3D::loadHRTF(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilter, complex *&rightFilter)
+int Mixer3D::loadHRTF(int* pAzimuth, int* pElevation, unsigned int samplerate, unsigned int diffused, complex *&leftFilterIn, complex *&rightFilterIn)
 {
     int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, leftFilter, rightFilter);
 
     for (int i = 0; i < size; i++)
     {
-        leftFilter[i] = (double)(leftFilter[i]);
-        rightFilter[i] = (double)(rightFilter[i]);
+        leftFilterIn[i] = (double)(leftFilter[i]);
+        rightFilterIn[i] = (double)(rightFilter[i]);
     }
 
     return size;
@@ -136,11 +137,8 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         updateAngles();
         AudioObj* iAudioObj = myWorld->getAudioObj(i);
    
-        signFlag = azimuth[j] < 0;
-        filterFlag = azimuth[j] / 5 != previousAzimuth[j] / 5;
-         
         // loading in input data for the iteration accordingly
-        if (!(iAudioObj->fillAudioData(input, bufferSize))) {
+        if (!(iAudioObj->fillAudioData(inputAO, bufferSize))) {
             continue;
         }        
        
@@ -152,9 +150,9 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         for(int j = 0; j < bufferSize * 2; j++) {
             if ( j >= bufferSize ) {
                 // zero pad
-                input[j] = 0;
+                inputAO[j] = 0;
             } else {
-                input[j] *= iAmplitudeFactor;
+                inputAO[j] *= iAmplitudeFactor;
             }
         }
        
@@ -185,7 +183,7 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         }
         
         //Perform the convolution of the current input and current filter.
-        stereoConvolution(input, complexLeftFilter[i], complexRightFilter[i], outputLeft[i], outputRight[i], bufferSize, filterLength, 2 * bufferSize);
+        stereoConvolution(inputAO, complexLeftFilter[i], complexRightFilter[i], outputLeft[i], outputRight[i], bufferSize, filterLength, 2 * bufferSize);
         
         
         for (int j = 0; j < bufferSize; j++) {
@@ -208,7 +206,7 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
             if (j >= bufferSize) {
                 overlapInput[j] = 0;
             } else {
-                overlapInput[j] = input[j];
+                overlapInput[j] = inputAO[j];
             }
         }
 
