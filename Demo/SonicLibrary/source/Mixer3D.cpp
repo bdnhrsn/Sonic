@@ -67,12 +67,11 @@ Mixer3D::~Mixer3D()
 }
 
 void Mixer3D::updateAngles() {
+    AudioObj* iAudioObj;
     for (int i = 0; i < myWorld->getNumObj(); i++) {
-        AudioObj* iAudioObj = myWorld->getAudioObj(i);
+        iAudioObj = myWorld->getAudioObj(i);
         azimuths[i] = player.computeAzimuth(iAudioObj);
         elevations[i] = player.computeElevation(iAudioObj);
-        printf("azimuths[%d]: %d\n", i, azimuths[i]);
-        printf("elevations[%d]: %d\n", i, elevations[i]);
     }
 }
 
@@ -131,10 +130,12 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
     
     //Iterate through all audio objects, obtain input data and calculate resulting audio data for each object.
     // TODO: Possible bug? Cuts short if one audioObj is inactive?
+    AudioObj* iAudioObj;
+    float iVolume, iDistance, iAmplitudeFactor;
     for (int i = 0; i < myWorld->getNumObj() && myWorld->getAudioObj(i)->isActive(); i++) {
         // dynamically calculate the Azimuth and Elevation between every object and the player
         updateAngles();
-        AudioObj* iAudioObj = myWorld->getAudioObj(i);
+        iAudioObj = myWorld->getAudioObj(i);
    
         // loading in input data for the iteration accordingly
         if (!(iAudioObj->fillAudioData(inputAO, bufferSize))) {
@@ -143,9 +144,10 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
        
         // scale volume according to distance of object from player
         // TODO: Is this realistic?
-        float iVolume = iAudioObj->getVolume();
-        float iDistance = player.computeDistanceFrom(iAudioObj) ;
-        float iAmplitudeFactor = iVolume / iDistance;
+        iVolume = iAudioObj->getVolume();
+        iDistance = player.computeDistanceFrom(iAudioObj) ;
+        iAmplitudeFactor = iVolume / iDistance;
+        
         for(int j = 0; j < bufferSize * 2; j++) {
             if ( j >= bufferSize ) {
                 // zero pad
@@ -212,12 +214,12 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         // TODO: If the filter has been changed, didn't we already do this?
         //Updating the default overlap information for the next iteration if the filter won't be changed
         for (int j = 0 ; j < bufferSize; j++) {
-            overlapLeft[i][j]=outputLeft[i][j + bufferSize];
-            overlapRight[i][j]=outputRight[i][j + bufferSize];
+            overlapLeft[i][j] = outputLeft[i][j + bufferSize];
+            overlapRight[i][j] = outputRight[i][j + bufferSize];
         }
     
         //storing the Azimuth value in this iteration for the comparison for the next iteration so that
         //we can know that whether the filter needs to be changed in the next iteration.
-        prevAzimuths[i]=azimuths[i];
+        prevAzimuths[i] = azimuths[i];
     }
 }

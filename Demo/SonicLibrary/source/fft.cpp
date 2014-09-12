@@ -24,13 +24,11 @@ complex* CFFT::convolutionF(const complex *input,const complex *filter, long nSI
 	}
 
     //TODO: Do we need this error checking? We're already doing this in Mixer3D::convolution.
-	bool NFFTChanged = false; //TODO: This variable is irrelevant
 	//If NFFT not a power of 2, or it is smaller than signal or filter, prompt for new.
 	while (log(NFFT) / log(2) != (int)(log(NFFT) / log(2)) || NFFT < nSIG || NFFT < NFIL)
 	{
 		cout << "Please input a valid NFFT, which is >= nSIG(" << nSIG << ") and >= NFIL(" << NFIL <<") : ";
 		cin >> NFFT;
-		NFFTChanged = true;
 	}
 
 	//Perform zero padding.
