@@ -5,10 +5,8 @@
 #include "../include/mit_hrtf_lib.h"
 
 Mixer3D::Mixer3D(int bufSize, int smpRate, int bitD, World *w) :
-myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD)
-//myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD), player(w->getPlayer())
+myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD), player(myWorld->getPlayer())
 {
-    player = myWorld->getPlayer();
     inputAO = new complex[2*bufferSize];
     overlapInput = new complex[2 * bufferSize];
     fInput = new complex[2 * bufferSize];
@@ -69,11 +67,10 @@ Mixer3D::~Mixer3D()
 }
 
 void Mixer3D::updateAngles() {
-    Player *p1 = myWorld->getPlayer();
     for (int i = 0; i < myWorld->getNumObj(); i++) {
         AudioObj* iAudioObj = myWorld->getAudioObj(i);
-        azimuths[i] = p1->computeAzimuth(iAudioObj);
-        elevations[i] = p1->computeElevation(iAudioObj);
+        azimuths[i] = player.computeAzimuth(iAudioObj);
+        elevations[i] = player.computeElevation(iAudioObj);
         printf("azimuths[%d]: %d\n", i, azimuths[i]);
         printf("elevations[%d]: %d\n", i, elevations[i]);
     }
@@ -147,7 +144,7 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         // scale volume according to distance of object from player
         // TODO: Is this realistic?
         float iVolume = iAudioObj->getVolume();
-        float iDistance = myWorld->getPlayer()->computeDistanceFrom(iAudioObj) ;
+        float iDistance = player.computeDistanceFrom(iAudioObj) ;
         float iAmplitudeFactor = iVolume / iDistance;
         for(int j = 0; j < bufferSize * 2; j++) {
             if ( j >= bufferSize ) {
