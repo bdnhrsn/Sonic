@@ -9,7 +9,7 @@
 ### The solution: Github + Git submodules
 
 - Problem 1 is easily solved with Github hosting. Anyone working on the Sonic project who plans to modify source code directly should be familiar with the basics of Git.
-- Problem 2 and 3 are somewhat related. To resolve these issues, use the Sonic Library as a Git submodule within the demo app's repository. If you're lazy, you can just fork [the SonicDemo repository](https://github.com/philadelphiagamelab/SonicDemo.git) that already has this setup and use that as a starting point. If you want to import Sonic into an existing iOS app, or if you want a little more freedom in how you set things up, follow the [Setup steps](#Setup)
+- Problem 2 and 3 are somewhat related. To resolve these issues, use the Sonic Library as a Git submodule within the demo app's repository. If you're lazy, you can just fork [the SonicDemo repository](https://github.com/philadelphiagamelab/SonicDemo.git) that already has this setup and use that as a starting point. If you want to import Sonic into an existing iOS app, or if you want a little more freedom in how you set things up, follow the Setup instructions.
 
 #### Setup 
 
@@ -29,7 +29,13 @@
 		
 3. To use the Sonic library from within your app, you'll need to add these files to your XCode project. To do this, open the project and click the (+) in the bottom right, then navigate to the Sonic directory and click "Add".
 
-4. The iOS version of the Sonic Library uses certain Audio frameworks that aren't included by default, so you'll need to add them manually. In Xcode, click on the project file, then under "Build Phases" select "Link Binary with Libraries". Add the "AudioToolbox" and "CoreAudio" frameworks. Then your project should build. 
+4. The iOS version of the Sonic Library uses certain Audio frameworks that aren't included by default, so you'll need to add them manually. In Xcode, click on the project file, then under "Build Phases" select "Link Binary with Libraries". Add the "AudioToolbox" and "CoreAudio" frameworks.
+
+5. In your `ViewController.h` file, be sure to import the Sonic library via `#import "Sonic.h`. Also include the following line of code in your `ViewController.m` file, which you should rename to `ViewController.mm` ([here's why](http://stackoverflow.com/a/4562280/1402368)):
+
+		CustomAudioUnit* Sonic::cau = nullptr;
+
+	If you don't do these things and try to build, you will get library linking errors.
 
 #### Modifying the Sonic library
         
