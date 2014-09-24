@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Philadelphia Game Lab. All rights reserved.
 //
 #include "../include/WavObject.h"
-
+#import <Foundation/Foundation.h>
 /*
     void extractWavHeader(string fname)
     Parses RIFF header from given WAV file
