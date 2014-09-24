@@ -63,7 +63,7 @@ If your so thrilled with the changes you've made on your branch that you'd like 
 		# do some merge edits if needed, commit the result
 		Sonic$> git push
 		
-Remember that any git operations you wish to perform on the Sonic library (e.g. checking out a new branch, pull/pushing changes, etc.) need to be down from within the Sonic directory, not your app's base directory.
+Remember that any git operations you wish to perform on the Sonic library (e.g. checking out a new branch, pull/pushing changes, etc.) need to be done from within the Sonic directory, not your app's base directory.
     	
     	 
     
