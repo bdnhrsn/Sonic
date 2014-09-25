@@ -17,6 +17,8 @@ processing on mobile devices. The current version supports only iOS devices.
     
 ### Demo applications
 
+[SonicDemo](https://github.com/philadelphiagamelab/SonicDemo): A starting point for your Sonic app.
+
 [SteerAudio](https://github.com/philadelphiagamelab/SteerAudio): Use gyroscope input to shape sounds
 
 [Knobs](https://github.com/philadelphiagamelab/knobs): Turn knobs to move an audio object around in 3D space.
