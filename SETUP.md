@@ -20,8 +20,7 @@ If you're just starting your application, consider using the [SonicDemo project]
 	
 2. The Sonic Library now has its own Github repository independent of any demo app, so add it as a submodule to your app's repo:
 
-		MyDemoApp $> git submodule add https://github.com/philadelphiagamelab/Sonic.git Sonic
-		
+		MyDemoApp $> git submodule add https://github.com/philadelphiagamelab/Sonic.git 
 3. To use the Sonic library from within your app, you'll need to add these files to your XCode project. To do this, open the project and click the (+) in the bottom right, then navigate to the Sonic directory and click "Add".
 
 4. The iOS version of the Sonic Library uses certain Audio frameworks that aren't included by default, so you'll need to add them manually. In Xcode, click on the project file, then under "Build Phases" select "Link Binary with Libraries". Add the "AudioToolbox" and "CoreAudio" frameworks.
