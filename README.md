@@ -23,7 +23,7 @@ processing on mobile devices. The current version supports only iOS devices.
 
 [Knobs](https://github.com/philadelphiagamelab/knobs): Turn knobs to move an audio object around in 3D space.
 
-### Including Sonic your own iOS app
+### Including Sonic in your own iOS app
 
 We are currently working on compiling Sonic into a static library. In the meantime, if you would like to import the source into your iOS project, consult the [Sonic Setup Guide](SETUP.md).
 
