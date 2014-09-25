@@ -4,6 +4,10 @@ This is Sonic, 0.1 originally built by members of [The Philadelphia Game Lab](ht
 Sonic is a library of C++ routines for performing real-time binaural audio
 processing on mobile devices. The current version supports only iOS devices.
 
+### PGL Contributors
+
+If you are a member of the PGL Sonic team, please consult [the Sonic workflow guide](WORKFLOW.md) before modifying code.
+
 ### Layout
 
 `include/`	Header files for the source code.
