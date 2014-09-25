@@ -11,7 +11,6 @@
 - Problem 1 is easily solved with Github hosting. Anyone working on the Sonic project who plans to modify source code directly should be familiar with the basics of Git.
 - Problem 2 and 3 are somewhat related. To resolve these issues, use the Sonic Library as a Git submodule within the demo app's repository. If you're lazy, you can just fork or clone [the SonicDemo repository](https://github.com/philadelphiagamelab/SonicDemo.git) that already has this setup and use that as a starting point. If you want to import Sonic into an existing iOS app, or if you want a little more freedom in how you set things up, follow the [Setup instructions](SETUP.md).
 
-
 #### Modifying the Sonic library
         
 To make changes to the Sonic library that you'd like to track with git, but that you may not want to merge into the master library yet, create your own branch of the Sonic repo from within the Sonic Library directory:
