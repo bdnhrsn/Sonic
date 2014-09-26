@@ -27,6 +27,7 @@ public:
     static void startPlaying();
     //void pausePlaying();
     static void stopPlaying();
+    static void reset();
     
     ~Sonic()
     {
