@@ -37,3 +37,10 @@ void Sonic::setPlayerBearing(float bearing)
 {
     Sonic::cau->setPlayerBearing(bearing);
 }
+
+void Sonic::reset()
+{
+    Sonic::stopPlaying();
+    delete cau;
+    Sonic::cau = new CustomAudioUnit();
+}
