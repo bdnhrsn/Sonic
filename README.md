@@ -4,10 +4,6 @@ This is Sonic, 0.1 originally built by members of [The Philadelphia Game Lab](ht
 Sonic is a library of C++ routines for performing real-time binaural audio
 processing on mobile devices. The current version supports only iOS devices.
 
-### PGL Contributors
-
-If you are a member of the PGL Sonic team, please consult [the Sonic workflow guide](WORKFLOW.md) before modifying code.
-
 ### Layout
 
 `include/`	Header files for the source code.
@@ -29,7 +25,19 @@ If you are a member of the PGL Sonic team, please consult [the Sonic workflow gu
 
 ### Including Sonic in your own iOS app
 
-We are currently working on compiling Sonic into a static library. In the meantime, if you would like to import the source into your iOS project, consult the [Sonic Setup Guide](SETUP.md).
+We are currently working on compiling Sonic into a static library. In the meantime, if you would like to import the source into your iOS project, either fork [SonicDemo](https://github.com/philadelphiagamelab/SonicDemo) or consult the [Sonic Setup Guide](SETUP.md) for manual setup instructions.
+
+### Contributing to Sonic
+
+If you would like to make changes to the Sonic library, first fork it. Then you can either build your own testing application around that fork or use one of our existing demo apps. If you prefer to do the latter, fork one the demo apps of your choice then change its Sonic submodule to point to your Sonic fork rather than to the master repo:
+
+		$> git clone --recursive https://github.com/<path/to/demoapp/fork>.git
+		$> cd YourFork
+		YourFork$> vim .gitmodules
+		# replace the Sonic url with your Sonic fork's url
+		YorkFork$> git submodule sync
+		
+Now you can modify both the Sonic library and the application its included in and push changes to their respective forks. For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
 
 ### More info
 
