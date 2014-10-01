@@ -36,16 +36,9 @@ If you would like to make changes to the Sonic library, first fork it. Then you 
 		YourDemoAppFork$> vim .gitmodules
 		# replace the Sonic url with your Sonic fork's url
 		YourDemoAppFork$> git submodule sync
-		
-**Note that the above method should work, in theory, but some have been having issues updating their submodule. Stay tuned. In the meantime you can completely remove the submodule and add a different one:**
+		YourDemoAppFork$> git submodule foreach git pull --rebase
 
-		$> git clone --recursive https://github.com/path/to/your/demoapp/fork.git
-		$> cd YourDemoAppFork
-		YourDemoAppFork$> git submodule deinit Sonic
-		YourDemoAppFork$> git rm Sonic
-		YourDemoAppFork$> git submodule add https://github.com/path/to/your/sonic/fork.git
-
-Now you can modify both the Sonic library and the application its included in and push changes to their respective forks. Note the difference between your demo app fork--which is your editable copy of one of the Sonic demo apps--and your Sonic fork--which is your editable copy of the Sonic library itself. For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
+Now you can modify both the Sonic library and the application it's included in and push changes to their respective forks. Note the difference between your demo app fork--which is your editable copy of one of the Sonic demo apps--and your Sonic fork--which is your editable copy of the Sonic library itself. For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
 
 ### More info
 
