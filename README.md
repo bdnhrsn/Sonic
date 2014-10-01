@@ -29,20 +29,21 @@ We are currently working on compiling Sonic into a static library. In the meanti
 
 ### Contributing to Sonic
 
-If you would like to make changes to the Sonic library, first fork it. Then you can either build your own testing application around that fork or use one of our existing demo apps. If you prefer to do the latter, fork the demo app of your choice then change its Sonic submodule to point to your Sonic fork rather than to the master repo:
-
+If you would like to make changes to the Sonic library, first fork it. Then you can either build your own testing application around that fork using [the setup instructions](SETUP.md) or use one of our existing demo apps. If you prefer to do the latter, first fork [the demo app of your choice](https://github.com/PhiladelphiaGameLab/) then change its Sonic submodule to point to your Sonic fork rather than to the master copy:
+		
 		$> git clone --recursive https://github.com/<path/to/demoapp/fork>.git
 		$> cd YourDemoAppFork
 		YourDemoAppFork$> vim .gitmodules
-		# replace the Sonic url with your Sonic fork's url
-		YourDemoAppFork$> git submodule sync
-		YourDemoAppFork$> git submodule foreach git pull --rebase
-
+		# replace https://github.com/PhiladelphiaGameLab/Sonic.git with https://github.com/path/to/your/sonic/fork.git		YourDemoAppFork$> git submodule sync
+		YourDemoAppFork$> cd Sonic
+		YourDemoAppFork/Sonic$> git checkout master
+		YourDemoAppFork/Sonic$> git pull --rebase origin master
+		
 Now you can modify both the Sonic library and the application it's included in and push changes to their respective forks. Note the difference between your demo app fork--which is your editable copy of one of the Sonic demo apps--and your Sonic fork--which is your editable copy of the Sonic library itself. For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
 
 ### More info
 
-For more information, check out [the Sonic project webpage](http://sonic.philadelphiagamelab.org/).
+For more information, including project updates, check out [the Sonic project webpage](http://sonic.philadelphiagamelab.org/).
 
 
 
