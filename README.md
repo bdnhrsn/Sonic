@@ -34,7 +34,8 @@ If you would like to make changes to the Sonic library, first fork it. Then you 
 		$> git clone --recursive https://github.com/<path/to/demoapp/fork>.git
 		$> cd YourDemoAppFork
 		YourDemoAppFork$> vim .gitmodules
-		# replace https://github.com/PhiladelphiaGameLab/Sonic.git with https://github.com/path/to/your/sonic/fork.git		YourDemoAppFork$> git submodule sync
+		# replace https://github.com/PhiladelphiaGameLab/Sonic.git with https://github.com/path/to/your/sonic/fork.git
+        YourDemoAppFork$> git submodule sync
 		YourDemoAppFork$> cd Sonic
 		YourDemoAppFork/Sonic$> git checkout master
 		YourDemoAppFork/Sonic$> git pull --rebase origin master
