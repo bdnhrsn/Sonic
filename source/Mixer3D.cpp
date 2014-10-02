@@ -221,5 +221,6 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         //storing the Azimuth value in this iteration for the comparison for the next iteration so that
         //we can know that whether the filter needs to be changed in the next iteration.
         prevAzimuths[i] = azimuths[i];
+        prevElevations[i] = elevations[i];
     }
 }
