@@ -68,7 +68,7 @@ public:
 	// Returns the azimuth angle between the player and the
 	// object specified in the parameter. The azimuth angle is
 	// the angle between the positive x axis and the line between 
-	// the player and the object's projection onto the xz plane.
+	// the player and the object's projection onto the xy plane.
 	// 0 indicates the object is directly to the player's right.
 	// 90 indicates the object is directly in front of the player.
 	// 180 indicates the object is directly to the player's left.
