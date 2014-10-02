@@ -55,9 +55,10 @@ public:
 	// the distance between the player and the object.
 	float computeRadius(AudioObj* obj) const;
 
+    // TODO: remove computeZenith??
 	// Returns the zenith angle between the player and the
 	// object specified in the parameter. The zenith angle is
-	// the angle between the xz plane and the line between the
+	// the angle between the xy plane and the line between the
 	// player and the object. It is the elevation angle.
 	// 90 indicates the object is directly above the player.
 	// -90 indicates the object is directly below the player.
@@ -67,26 +68,27 @@ public:
 
 	// Returns the azimuth angle between the player and the
 	// object specified in the parameter. The azimuth angle is
-	// the angle between the positive x axis and the line between 
-	// the player and the object's projection onto the xz plane.
-	// 0 indicates the object is directly to the player's right.
-	// 90 indicates the object is directly in front of the player.
-	// 180 indicates the object is directly to the player's left.
-	// 270 indicates the object is directly behind the player.
+	// the angle between the vector in the direction of the player's
+    // bearing and the vector connecting the player to the object's
+    // projection onto the xy plane. So as to be consistent with the MIT
+    // HRTF library, 0 indicates the object is directly in front of the
+    // player, values in the range (0, 180) indicate the object is
+    // to the right of the player, and values in the range (0, -180)
+    // indicate that the object is to the left of the player.
 	// DOES NOT WORK WITH HEAD TRACKING
 	float computeAzimuth(AudioObj* obj) const;
     
     // Returns the elevation angle between the player and the given
-    // AudioObject.
+    // AudioObject, where the elevation angle is that between the xy plane
+    // and the vector connecting the player and the object.
     float computeElevation(AudioObj* obj) const;
     
-
 	////Returns an array containing the radius, zenith angle, and
 	//// azimuth angle in the order.
 	//// DOES NOT WORK WITH HEAD TRACKING
 	//V *getOrientation(AudioObj<T,V> * obj) const;
 
-	// Achieve the distance difference between the targetted audioObject and player
+	// Computes the euclidean distance of an object from the player
 	float computeDistanceFrom(AudioObj* obj) const;
 };
 
