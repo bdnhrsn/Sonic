@@ -15,6 +15,8 @@ processing on mobile devices. The current version supports only iOS devices.
 `MIT\_HRTF\_Library/` Files and functions for audio processing. This code is available under the MIT license as specified [here](
     http://opensource.org/licenses/MIT).
     
+`soundFiles/` Sound files for testing. File are arranged in subdirectories by file type. Files are named with the convention `<bit-depth>-<sample-rate>-<description>.<extension>`.
+
 ### Demo iOS applications
 
 [SonicDemo](https://github.com/philadelphiagamelab/SonicDemo): A starting point for your Sonic app.
