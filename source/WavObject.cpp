@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 Philadelphia Game Lab. All rights reserved.
 //
 #include "../include/WavObject.h"
-#import <Foundation/Foundation.h>
+//#import <Foundation/Foundation.h>
 /*
     void extractWavHeader(string fname)
     Parses RIFF header from given WAV file
@@ -19,8 +19,8 @@ void WavObject::extractWavHeader(const std::string fname) {
     {
         bool fmt = false;
         bool data = false;
-        NSString *filename = [NSString stringWithUTF8String:fname.c_str()];
-        std::cout << "\nAttempting to load file: " << [filename fileSystemRepresentation] << std::endl;
+        //NSString *filename = [NSString stringWithUTF8String:fname.c_str()];
+        std::cout << "\nAttempting to load file: " << fname << std::endl;
         
         // Keep these commented lines for eventual file retrieval/opening in final library
         
@@ -31,8 +31,8 @@ void WavObject::extractWavHeader(const std::string fname) {
         //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
         
         //NSString *testPath = [[NSBundle mainBundle] pathForResource:@"3m40stest" ofType:@"wav"];
-        NSString *testPath = [[NSBundle mainBundle] pathForResource:[filename stringByDeletingPathExtension] ofType:[filename pathExtension]];
-        soundFile = fopen([testPath fileSystemRepresentation], "r");
+        //NSString *testPath = [[NSBundle mainBundle] pathForResource:[filename stringByDeletingPathExtension] ofType:[filename pathExtension]];
+        soundFile = fopen(fname.c_str(), "r");
         //std::cout<<[aFile fileSystemRepresentation]<<std::endl;
         
         //soundFile = fopen("/Users/philadelphiagamelab2/Deskop/Demo/Demo/InputData/input1mono.wav","r");
