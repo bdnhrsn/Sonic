@@ -36,12 +36,15 @@ If you would like to make changes to the Sonic library, first fork it. Then you 
 	$> git clone --recursive https://github.com/<path/to/demoapp/fork>.git
 	$> cd YourDemoAppFork
 	YourDemoAppFork$> vim .gitmodules
-	# replace https://github.com/PhiladelphiaGameLab/Sonic.git with https://github.com/path/to/your/sonic/fork.git		YourDemoAppFork$> git submodule sync
+	# replace https://github.com/PhiladelphiaGameLab/Sonic.git with https://github.com/path/to/your/sonic/fork.git
+    YourDemoAppFork$> git submodule sync
 	YourDemoAppFork$> cd Sonic
 	YourDemoAppFork/Sonic$> git checkout master
 	YourDemoAppFork/Sonic$> git pull --rebase origin master
 		
-Now you can modify both the Sonic library and the application it's included in and push changes to their respective forks. Note the difference between your demo app fork--which is your editable copy of one of the Sonic demo apps--and your Sonic fork--which is your editable copy of the Sonic library itself. For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
+Now you can modify both the Sonic library and the application it's included in and push changes to their respective forks. Note the difference between your demo app fork--which is your editable copy of one of the Sonic demo apps--and your Sonic fork--which is your editable copy of the Sonic library itself. Also be aware that forks, unlike branching, don't stay in sync with their upstream repos (in this case the master Sonic repo) [unless you explicitly pull changes from them](http://stackoverflow.com/questions/7244321/how-to-update-github-forked-repository). 
+
+For more help on working with git submodules, consult the [submodule documentation](http://git-scm.com/book/en/Git-Tools-Submodules).
 
 ### More info
 
