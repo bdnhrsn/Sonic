@@ -143,7 +143,7 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         }        
        
         // scale volume according to distance of object from player
-        // TODO: Is this realistic?
+        // TODO: Is linear decay by distance realistic?
         iVolume = iAudioObj->getVolume();
         iDistance = player.computeDistanceFrom(iAudioObj) ;
         iAmplitudeFactor = iVolume / iDistance;
