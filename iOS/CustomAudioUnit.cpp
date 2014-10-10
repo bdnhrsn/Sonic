@@ -92,7 +92,7 @@ void CustomAudioUnit::init () {
     stereoStreamFormat.mFormatID = kAudioFormatLinearPCM;
     stereoStreamFormat.mFramesPerPacket = 1;
     stereoStreamFormat.mReserved = 0;
-    stereoStreamFormat.mSampleRate = 44100.0;
+    stereoStreamFormat.mSampleRate = SAMPLE_RATE;
     
     AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, inputBus, &stereoStreamFormat, sizeof(AudioStreamBasicDescription));
     AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, outputBus, &stereoStreamFormat, sizeof(AudioStreamBasicDescription));

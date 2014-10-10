@@ -16,7 +16,7 @@
 
 #include "../include/Mixer3D.h"
 
-#define BUF_SIZE 512
+#define BUF_SIZE 1024
 #define BIT_DEPTH 16
 #define SAMPLE_RATE 44100
 
