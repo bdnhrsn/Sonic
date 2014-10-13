@@ -16,6 +16,8 @@
 
 #include "../include/Mixer3D.h"
 
+// NOTE: a BUF_SIZE of 1024 will sound bad in the simulator but good on the device.
+// the opposite is true for a BUF_SIZE of 512
 #define BUF_SIZE 1024
 #define BIT_DEPTH 16
 #define SAMPLE_RATE 44100
