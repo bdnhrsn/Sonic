@@ -12,7 +12,7 @@ using namespace std;
 
 // math.h works in radians; we want degrees. Multiply a radian
 // value by this number (180/pi) to calculate the degree value.
-#define PI 3.14159;
+#define PI 3.14159
 #define R2D 180/PI
 
 class Player {

@@ -13,6 +13,7 @@
 
 using namespace std;
 
+// TODO: finish documenting World class
 class World {
 
 	Player player;
@@ -43,7 +44,6 @@ class World {
 
     //Getters
     
-    // TODO: Should we be using pointers or references?
 	/**
      Returns a reference to the player.
      */

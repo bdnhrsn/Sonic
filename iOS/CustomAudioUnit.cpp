@@ -8,10 +8,6 @@
 
 #include "CustomAudioUnit.h"
 
-#define BUF_SIZE 512
-#define BIT_DEPTH 16
-#define SAMPLE_RATE 44100
-
 static OSStatus recordingCallback (void *inRefCon, AudioUnitRenderActionFlags *ioActionFlags, const AudioTimeStamp *inTimeStamp, UInt32 inBusNumber, UInt32 inNumberFrames, AudioBufferList *ioData) {
     
     //Please dont remove the following commented code
@@ -95,7 +91,7 @@ void CustomAudioUnit::init () {
     stereoStreamFormat.mFormatID = kAudioFormatLinearPCM;
     stereoStreamFormat.mFramesPerPacket = 1;
     stereoStreamFormat.mReserved = 0;
-    stereoStreamFormat.mSampleRate = 44100.0;
+    stereoStreamFormat.mSampleRate = SAMPLE_RATE;
     
     AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, inputBus, &stereoStreamFormat, sizeof(AudioStreamBasicDescription));
     AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, outputBus, &stereoStreamFormat, sizeof(AudioStreamBasicDescription));
