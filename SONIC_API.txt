@@ -1,0 +1,718 @@
+SonicLibrary->Sonic.h/Sonic.cpp
+	This is the main header file that contains references to all the functions
+	that are in use for the library to function. This file itself consists of simple functions that are required to get a basic app up and running. The functions are declared in Sonic.h, but defined in Sonic.cpp.
+
+	-- static void createWorld();
+	This function is used to create a CustomAudioUnit, which is an object that is used to interface between user-created audio files and he iOS audio system. This is necessary to setup the communication between iOS system callbacks and Sonic's audio processing functions. Within it, it creates an instance of World class and performs init operations to setup communication with the iOS system.
+
+	We will see CustomAudioUnit and World class later in detail.
+
+	This function takes no arguments.
+
+
+	-- static AudioObj* addAudioObject(string, VariableForLocation, VariableForLocation, VariableForLocation);
+	This function is used to create an AudioObj instance in the game world created by the function above. The AudioObj instance is created as a list object in a vector list. The vector list is maintained within the World object that is created in the CustomAudioUnit.
+
+	We will see AudioObj later in detail.
+
+	This function takes four arguments.
+		-> String variable for the filename of the wav object that will be stored in the AudioObj.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the AudioObj in the game world coordinate system.
+
+
+	-- static void setPlayerLocation(VariableForLocation, VariableForLocation, VariableForLocation);
+	This function is used to assign a location to the Player object in the game world. Again, Player instances are part of the World class.
+
+	This function takes three arguments.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the Player object in the game world coordinate system.
+
+
+	-- static void startPlaying();
+	This function begins the basic operation of the audio processing unit. The thread for writing audio data into a circular buffer is invoked here. The iOS system call to start playing the audio being fed to its buffers is also invoked here.
+
+	This function takes no arguments.
+
+
+	-- static void stopPlaying();
+	This function is used to stop playing the audio on the app.
+
+	This function takes no arguments.
+
+_______________________________________________________________________________
+
+
+SonicLibrary->iOS->CustomAudioUnit.h/CustomAudioUnit.cpp
+	This is the interface between the developer and the iOS system calls and an AudioUnit instance. The functions included here invoke the 3d mixer that will perform real-time audio processing for binaural audio.
+
+	The class CustomAudioUnit looks thus:
+	class CustomAudioUnit {
+	    
+	    AudioUnit audioUnitInstance;
+	    
+	    void init();
+	    World *myWorld;
+	    int index;
+
+	public:
+	    CustomAudioUnit();
+	    ~CustomAudioUnit();
+	    void play();
+	    void stop();
+	    AudioObj* addAudioObjectInWorld(string, VariableForLocation, VariableForLocation, VariableForLocation);
+	    void setPlayerPosition(VariableForLocation, VariableForLocation, VariableForLocation);
+	    
+	};
+
+	-- void init();
+	This is the initialization function for the CustomAudioUnit. Here native iOS functions are invoked to interace the Sonic library functions with the audioUnitInstance. The audioUnitInstance will be the object that will be playing the final output sound.
+
+	This function takes no arguments.
+
+
+	-- CustomAudioUnit();
+	This is the CustomAudioUnit constructor. This is invoked in the createWorld() function, described above. The CustomAudioUnit constructor creates a new World object and invoked the init() function described above.
+
+	This is the default constructor and takes no parameters.
+
+
+	-- ~CustomAudioUnit();
+	This is the default destructor for CustomAudioUnit. It removes the audioUnitInstance from memory.
+
+
+	-- void play();
+	This function is invoked in Sonic::startPlaying(). It invokes the World object function to start the thread that writes audio data to the circular buffer. It also begins playing the iOS audioUnitInstance, which gets the processed audio.
+
+	This function takes no arguments.
+
+
+	-- void stop();
+	This function merely stops playing the audioUnitInstance.
+
+	This function takes no arguments.
+
+
+	-- AudioObj* addAudioObjectInWorld(string, VariableForLocation, VariableForLocation, VariableForLocation);
+	This function is invoked in the Sonic::addAudioObject function. It takes the same argument provided to the calling function and invokes a World object function to create an AudioObj.
+
+	This function takes four arguments.
+		-> String variable for the filename of the wav object that will be stored in the AudioObj.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the AudioObj in the game world coordinate system.
+
+
+	-- void setPlayerPosition(VariableForLocation, VariableForLocation, VariableForLocation);
+	This function is invoked in the Sonic::setPlayerLocation function, described above. It uses the arguments provided by that function to invoke a World object function, that sets the player's position within the game world.
+
+	This function takes three arguments.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the Player object in the game world coordinate system.
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->World.h and SonicLibrary->source->World.cpp
+	The World class is used to create a game world environment, which houses all the other environment elements. The main game elements that the library supports at this stage is the Player and a vector list of AudioObjs.
+	The private members of the World class are as follows.
+
+		Player player;
+	    vector<AudioObj *> objList;
+		float threshold;
+	    pthread_t writeThread;
+	    bool isWriteThreadCreated;
+	    
+	    static void *writeAudioObjects (void *);
+
+	The Player class describes the attributes of the player object. It will be described later in detail. The player object is the main listener in the game world.
+
+	The AudioObj class describes the AudioObjs that will be used in the game world. They are stored as a vector list because the number of AudioObjs in the game world could dynamically change, depending on the developer's requirements.
+
+	float threshold is used to calculate the relative volume of an AudioObj in the game world. If the AudioObj is too far from the player, we don't need to process it in the 3DMixer and saves on computation.
+
+	pthread_t writeThread and bool isWriteThreadCreated are variables used to start the write thread, that will write raw audio data to the circular buffer.
+
+	
+	-- static void *writeAudioObjects (void *);
+	This function is the main function which will write data to the circular buffers. It is a static void function as that is the requirement of the pthread library, used to perform multi-threading. It accepts an AudioObj object from the vector list and passes this on to the circular buffer. The audio data from the associated wav file is then written to circular buffers.
+
+	This function takes one argument.
+		-> It accepts a void pointer, which we can typecast to any object.
+
+
+	
+	The following are the public members of World class.
+
+
+	-- World()
+	This is the default constructor for the World object and takes no parameters.
+
+	-- World(const Location& loc, const Velocity& vel, float bear)
+	This parameterized constructor accepts location, velocity and bearing objects. Location and Velocity are custom classes which we will discuss later in detail. These parameters are passed on to the Player object which will inhabit the World.
+
+	-- Player* getPlayer() ;
+	This will return an object of type Player. It will return the active Player in the current World.
+
+	-- Location getPlayerLocation() const;
+	This will return the active Player's current Location in the current World.
+
+	-- AudioObj* addAudioObj(const std::string);
+	This function can be invoked by CustomAudioUnit::addAudioObjectInWorld described above. It accepts the parameters provided by the calling function and passes them on to the appropriate AudioObj constructor. The AudioObj is pushed into the vector list maintained in the World object. The function returns the index of the latest addition to the vector list.
+
+	This function takes one argument.
+		-> String variable which is the name of the wav file that will be stored in the AudioObj.
+
+
+	-- AudioObj* addAudioObj(const Location& loc, const Velocity& vel, const std::string);
+	This function is invoked by CustomAudioUnit::addAudioObjectInWorld described above. It accepts the parameters provided by the calling function and passes them on to the appropriate AudioObj constructor. The AudioObj is pushed into the vector list maintained in the World object. The function returns the index of the latest addition to the vector list.
+
+	This function takes four arguments.
+		-> Location object which will accept the AudioObj initial location.
+		-> Velocity object which will accept the AudioObj initial velocity.
+		-> String variable which is the name of the wav file that will be stored in the AudioObj.
+
+
+	-- AudioObj* getAudioObj(size_t index) const;
+	This function will return the AudioObj object specified at the index mentioned in the argument. It will retrieve this object from the vector list that holds all AudioObj objects in the World.
+
+	This function takes one argument.
+		-> size_t index (int), this integer value specifies the index from where to retrieve the AudioObj from the vector list.
+
+
+	-- void setPlayerPosition(VariableForLocation x, VariableForLocation y, VariableForLocation z)
+	This function sets the position of the Player in the game World.
+
+	This function takes three arguments.
+			-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the Player object in the game world coordinate system.
+
+
+	-- int  getNumObj()
+	This function simply returns the number of AudioObj objects currently stored in the vector list, in effect, the number of audio objects in the current World.
+
+	This function takes no arguments.
+
+
+	-- void createWriteThread (void)
+	This is a function created according to the POSIX thread specifications, and is used to initiate the write thread to write raw audio data to the circular buffers. This function invokes the writeAudioObjects function described above.
+
+	This function takes no arguments.
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->AudioObj.h and SonicLibrary->source->AudioObj.cpp
+	The AudioObj class is the main entity that will used to create objects as audio sources within the game World for the Sonic library.
+
+	The private members of the AudioObj class are as follows.
+
+		Location location;
+	    Velocity velocity;
+	    bool active;
+	    float volume;
+	    bool repeat;
+	    CircBuff<complex> circBuff;
+	    WavObject wavObject;
+	    bool toLoadMoreData;
+	    friend class Mixer3D;
+	    friend class World;
+	    void writeCircBuff (void);
+	    bool fillAudioData(complex *, unsigned int);
+
+	The Location class stores location data with respect to a local coordinate system for the game World. We will see this class later in detail.
+
+	The Velocity class stores velocity data for game objects within the game World. We will see this class later in detail.
+
+	The bool active tells us if the AudioObj object is active and if the system should consider it for audio processing.
+
+	The float volume specifies the absolute volume of the AudioObj object. Its value ranges from 0 to 1.
+
+	The bool repeat specifies if the AudioObj object is going to be continuously played, ie. if the audio will be repeated during gameplay.
+
+	The CircBuff object is the circular buffer object. This is where the raw audio data is written and from where the 3DMixer pulls data to process.
+
+	The WavObject object is the actual source file object. Currently this object supports only 16 bit PCM wav files, but there would expansion to accomodate more formats in future versions of the Sonic Library. We will see the WavObject class later in detail.
+
+	The bool toLoadMoreData specifies if there is space in the circular buffer to load additional raw audio data from the wav file.
+
+	The friend classes Mixer3D and World require access to the private member functions of AudioObj class.
+
+
+	-- void writeCircBuff (void);
+	This function is invoked in the function World::writeAudioObjects from the friend class World. It itself, in turn, invokes functions of the CircBuff class. It checks the circular buffer for free space and then writes raw audio data to the circular buffer.
+
+	This function takes no arguments.
+
+
+	-- bool fillAudioData(complex *, unsigned int);
+	This function is invoked by the function Mixer3D::overlapConvolution from the friend class Mixer3D. It queries the circular buffer for data to read and pass to the 3D Mixer for audio processing. If there isn't enough data in the circular buffer to read into memory, the particular iteration is skipped until there is enough data to read into memory.
+
+	This function takes two arguments.
+		-> Pointer to a target object of type complex. This is memory allocated for audio processing by the 3D Mixer. If there is enough data for the mixer, the raw data from the circular buffer is read into this memory.
+		-> unsigned int length is the length of data required by the mixer for audio processing. If the circular buffer has less than this amount of data, the iteration is skipped until the circular buffer is filled with more raw data.
+
+
+	The following are the public members of the AudioObj class.
+
+
+	-- AudioObj(const std::string wavFileName)
+	This is an AudioObj constructor that accepts the filename of the wav object from which to read raw audio data. It then writes data from the particular wav file to the circular buffer. The constructor is invoked from the World class, when adding audio objects to the World's vector list.
+
+	This function takes one argument.
+		-> String variable which accepts the filename of the wav file from which to read data into the circular buffer.
+
+
+	-- AudioObj(const Location& loc, const Velocity& vel, const std::string wavFileName)
+	This is an AudioObj constructor that accepts the inital location, initial velocity and the filename of the wav object from which to read raw audio data. It then writes data from the particular wav file to the circular buffer. The constructor is invoked from the World class, when adding audio objects to the World's vector list.
+
+	This function takes three arguments.
+		-> Location object reference which will accept the AudioObj initial location.
+		-> Velocity object reference which will accept the AudioObj initial velocity.
+		-> String variable which accepts the filename of the wav file from which to read data into the circular buffer.
+
+
+	-- ~AudioObj ()
+	This is the default destructor for the AudioObj.
+
+
+	-- Location getLocation() const;
+	This function will return the current Location of the AudioObj.
+
+	This function takes no arguments.
+
+
+	-- void setLocation (const Location& loc);
+	This function will set the location for the AudioObj object by passing reference of a Location object.
+
+	This function takes one argument.
+		-> Location object passed by reference.
+
+
+	-- void setLocation (VariableForLocation x, VariableForLocation y, VariableForLocation z);
+	This function will set the location of the AudioObj object by passing actual x, y, z coordinates and creating a new Location member object for the AudioObj object.
+
+	This function takes three arguments.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the AudioObj object in the game world coordinate system.
+
+
+	-- Velocity getVelocity() const;
+	This function will return the current Velocity of the AudioObj object.
+
+	This function takes no arguments.
+
+
+	-- void setVelocity (const Velocity& vel);
+	This function will set the velocity of the AudioObj by passing reference of a Velocity object.
+
+	This function takes one argument.
+		-> Velocity object passed by reference.
+
+
+	-- void setVelocity (VariableForVelocity dx, VariableForVelocity dy, VariableForVelocity dz);
+	This function will set the velocity of the AudioObj object by passing actual dx, dy, dz VariableForVelocity (typedef int) and creating a new Velocity member object for the AudioObj object.
+
+	This function takes three arguments.
+		-> VariableForVelocity (typedef int) variables to store the dx, dy, dz velocities of the AudioObj object in the game World.
+
+
+	-- float getVolume() const;
+	This function will return the current absolute volume of the AudioObj object.
+
+	This function takes no arguments.
+
+
+	-- void setVolume(float vol);
+	This function will set the absolute volume of the AudioObj object. The volume must range between 0 and 1.
+
+	This function takes one argument.
+		-> Float value ranging from 0 to 1 for absolute volume.
+
+
+	-- void randomVolume();
+	This function will set a random absolute volume for the AudioObj object. The values would range between 0 and 1.
+
+	This function takes no arguments.
+
+
+	-- bool isActive() const;
+	This function returns the bool value of bool active to tell us if the AudioObj is active and if the mixer should consider the audio object for processing.
+
+	This function takes no arguments.
+
+
+	-- void setActive(bool active);
+	This function sets the boolean value of the bool active. This makes the audio object active and the mixer would consider it for processing.
+
+
+	-- void setRepeat(bool rep)
+	This function sets the boolean value for the bool repeat described earlier.
+
+	This function takes one argument.
+		-> Boolean rep to set the bool value repeat.
+
+
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->Player.h and SonicLibrary->source->Player.cpp
+	The Player class signifies the main user or player who will interact with game objects in a game or application. It is also the main listener in any application built.
+
+	The following are the private members of the Player class.
+
+	Location location;
+	Velocity velocity;
+	float bearing;
+
+	The Location object stores location of the Player object.
+
+	The Velocity object stores the velocity of the Player object.
+
+	Bearing stores the angle with respect to the x-axis. 90 degrees is facing 'forward'.
+
+	These are the public members of the Player class.
+
+	-- Player ()
+	This is the default constructor for the Player object. It creates a Player object at the origin (0,0,0) and bearing 90 degrees (facing 'forward').
+
+	This constructor takes no parameters.
+
+
+	-- Player (const Location& loc, const Velocity& vel, float bear)
+	This is a parameterized constructor. It is invoked in the parameterized constructor of the World class.
+
+	This constructor takes three parameters.
+		-> Initial Location of the Player, passed by reference.
+		-> Initial Velocity of the Player, passed by reference.
+		-> float bear, initial bearing of the Player.
+
+
+	-- Location getLocation() const;
+	This function will return the current Location of the Player object.
+
+	This function takes no arguments.
+
+
+	-- void setLocation(const Location& loc);
+	This function will set a location for the Player object by passing reference of a Location object.
+
+	This function takes one argument.
+		-> Location object passed by reference.
+
+
+	-- void setLocation (VariableForLocation x, VariableForLocation y, VariableForLocation z);
+	This function will set the location of the AudioObj object by passing actual x, y, z coordinates and creating a new Location member object for the AudioObj object.
+
+	This function takes three arguments.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the AudioObj object in the game world coordinate system.
+
+
+	-- Velocity getVelocity() const;
+	This function will return the current Velocity of the Player object.
+
+	This function takes no arguments.
+
+
+	-- void setVelocity (const Velocity& vel);
+	This function will set the velocity of the Player by passing reference of a Velocity object.
+
+	This function takes one argument.
+		-> Velocity object passed by reference.
+
+
+	-- void setVelocity (VariableForVelocity dx, VariableForVelocity dy, VariableForVelocity dz);
+	This function will set the velocity of the Player object by passing actual dx, dy, dz VariableForVelocity (typedef int) and creating a new Velocity member object for the AudioObj object.
+
+	This function takes three arguments.
+		-> VariableForVelocity (typedef int) variables to store the dx, dy, dz velocities of the Player object in the game World.
+
+
+	-- float getBearing() const;
+	This function will return the bearing of the Player object with respect to the World origin (0,0,0). The bearing will be in degrees.
+
+	This function takes no arguments.
+
+
+	-- void setBearing(float bear);
+	This function will set the bearing for the Player object with respect to the World origin (0,0,0). The bearing will be in degrees.
+
+	This function takes one argument.
+		-> float bear is the bearing in degrees for the Player object in the game World. 90 degrees is facing 'forward'.
+
+
+	-- float getAzimuth(AudioObj* obj) const;
+	This function returns the azimuth angle of a specified audio object with respect to the Player object in the game World. Typically, the Player would always be at the origin (0,0,0).
+
+	This function takes one argument.
+		-> An AudioObj object is passed by reference. We calculate the azimuth for this audio object with respect to the Player object at the origin.
+
+
+	-- float getDistance(AudioObj* obj) const;
+	This function will return the distance of an AudiObj object from a Player in the game World.
+
+	This function takes one argument.
+		-> An AudioObj object is passed by reference. We calculate the distance of this audio object from the Player object at the origin.
+
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->WavObject.h and SonicLibrary->source->WavObject.mm
+	The WavObject class is the class responsible for holding the actual audio file. The members of this class hold the raw data of the audio file in binary format.
+
+	The private members of the WavObject class are as follows.
+
+	FILE* soundFile;
+	struct
+	{
+	    long n;
+	    int sampleRate;
+	    int bitDepth;
+	    int channels;
+	}wavFileData;
+	long startOfWavData;
+	long endOfWavData;
+
+	The file pointer soundfile is the memory allocation for the raw data that we will mine from the source wav file.
+
+	The struct wavFileData will be storing data that we will extract from the wav file.
+
+	The variables startofWavData and endOfWavData are used to signify the beginnning and end of the wav data that is being read from the raw source file.
+
+
+	The following public structures will be used to extract all the various chunks from the wav file.
+
+	struct RIFF_Header {
+	    char chunkID[4];
+	    unsigned int chunkSize;
+	    char format[4];
+	};
+	This struct will hold the RIFF header from the source wav file. Appropriate data variables have been provided to hold the header elements.
+
+
+	struct WAVE_Format {
+	    unsigned int subChunkSize;
+	    short audioFormat;
+	    short numChannels;
+	    unsigned int sampleRate;
+	    unsigned int byteRate;
+	    short blockAlign;
+	    short bitsPerSample;
+	};
+	This struct will hold data from the 'fmt' or wave format subchunk from a wav file.
+
+
+	struct WAVE_Data {
+	    long subChunk2Size;
+	};
+	This struct will hold the actual audio data from the raw source wav file. It is data from here that will be fed into the circular buffer for audio processing.
+
+
+	struct CHUNK_ID {
+	    char chunkID[4];
+	};
+	This struct will be holding the subchunk id of the data section of the wav file.
+
+	short *shortTempData and complex *complexTempData are two memory locations where the data extracted from the wav file will be stored. They are temporary storage locations.
+
+
+	-- WavObject (unsigned int size,const std::string wavFileName)
+	This is the constructor for the WavObject. It is invoked in the AudioObj constructor. It creates the temporary storage for the raw audio data and begins operations to extract the header information from the raw wav file source.
+
+	This constructor takes two parameters.
+		-> int size, which is accepted from the AudioObj constructor. This size is the buffer size.
+		-> String filename is the filename of the wav file.
+
+
+	-- void extractWavHeader (const std::string fname);
+	This function is invoked in the WavObject constructor. This function extracts the header information from the wav file and points the pointed to the beginning of the data section, so that the circular buffer can start writing the audio data to the circular buffer.
+
+	This function takes one argument.
+		-> String variable to accept the filename of the wav file.
+
+
+	-- bool loadMoreData (unsigned int, bool);
+	This is a function that determines if we can add more data to the circualr buffer. It returns a bool value to ascertain if we can do this. Within the function, if it ascertains that there is enough space in the circular buffer, more data will be written into the circular buffer from the raw wav file.
+
+	This function takes two arguments.
+		-> unsigned int is the accepted buffer size of the circular buffer.
+		-> bool variable tells the calling function if there is enough space in the circular buffer to write data to it in the current iteration.
+
+
+	-- ~WavObject ()
+	Default destructor for the WavObject object. This will clean the temporary memory created to hold the wav file data and close the fstream connection to the wav file.
+
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->CircBuff.h
+	This class is used to implement circular buffer functionality. This helps in keeping the memory use to a manageable level.
+
+	These are the protected members of the CircBuff class.
+
+	size_t _begIndex, _endIndex, _capacity;
+	std::atomic<size_t>_size;
+	T *_data;
+
+	_begIndex, _endIndex are variables used to indicate the head and tail of the circular buffer. The 3DMixer will read data from the 'head' of the buffer and the raw audio data from the wav file will be written to the 'tail' of the buffer.
+
+	_capacity is the total capacity of the buffer to hold data. This is initialized in the constructor.
+
+	std::atomic<size_t>_size is the current available size in the buffer to store data. It keeps changing as data is written to and read from the buffer. Because two simultaneous operations are happening on the buffer, this variable is declared atomic.
+
+	T *_data is a pointer maintained to denote where to write new data into the circular buffer. As more data is written to the buffer, this pointer keeps changing.
+
+
+	The following are the public members of the CircBuff class.
+
+	-- CircBuff(size_t capacity)
+	This is the constructor to the CircBuff class. It initializes the protected members of the class to 0, except _capacity, which is initialized to the parameter passed to it.
+
+	This constructor accepts one parameter.
+		-> size_t capacity is the capacity of the circular buffer. This is provided in the AudioObj constructor.
+
+
+	-- ~CircBuff()
+	This is the default destructor of the CircBuff class. It clears the memory created to store the data written into the circular buffer.
+
+
+	-- size_t write(T *dataPtr, size_t samples);
+	This is a templated function, meaning it can accept pointer to any data type. This function is invoked in the AudioObj constructor. This is the function that writes data to the circular buffer. It accepts raw data from the wav file/WavObject object and writes data into the circular buffer.
+
+	This function takes two arguments.
+		-> The *dataPtr is a pointer to the source of data. In our case, this function provides the pointer to the WavObject, from which data will be written to the circular buffer.
+		-> size_t samples is the number of samples that will be written to the circular buffer. It is provided by the AudioObj object.
+
+
+	-- size_t writeSizeRemaining();
+	This function determines the space remaining in the circular buffer to write data to it. It's difference of the capacity of the buffer and the size of data already written to the buffer.
+
+	This function takes no arguments.
+
+
+	-- size_t readSizeRemaining();
+	This function will give the amount of data stored in the circular buffer. In our case, the 3DMixer will be requiring this function to know how much data it can read from the circular buffer to perform audio processing.
+
+
+	-- size_t read(V *dataPtr, size_t samples);
+	This is a templated function, meaning it can accept pointer to any data type. This function is invoked in the AudioObj::fillAudioData function described earlier. This function will help the 3DMixer object to read data from the circular buffer.  Depending on how much data is present in the circular buffer, the mixer will read the maximum data it can read or however much data is present in the circular buffer, whichever is lesser.
+
+	This function takes two arguments.
+		-> The *dataPtr is the pointer to the memory location that the Mixer3D uses to store data that it processes.
+		-> size_t samples is the amount of data that will be read out to the memory location specified by dataPtr. It trickles down from the Mixer3D to AudioObj to CircBuff. In our case, it is the size of Mixer3D buffer.
+
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->location.h and SonicLibrary->source->location.cpp
+	This class would be used to signify the Location for various game objects in the game World. It signifies the location in a 3-dimensional coordinate system. The x-y plane makes up the horizontal plane and the z-axis is the vertical axis.
+
+	We have a typedef variable to denote the location values on each axis.
+
+	typedef float VariableForLocation;
+
+	The following are the private members of the Location class.
+
+	VariableForLocation x;
+	VariableForLocation y;
+	VariableForLocation z;
+
+	These variables denote location values in each of the axes.
+
+	The following are the public members of the Location class.
+
+	-- Location ()
+	This is the default constructor of the Location class. It sets the location of the game entity to the origin of the game World coordinates.
+
+	This constructor takes no parameters.
+
+
+	-- Location (VariableForLocation x0, VariableForLocation y0, VariableForLocation z0)
+	This constructor accepts coordinates for the three axes and assigns them to the three location variables.
+
+	This constructor takes three parameters.
+		-> VariableForLocation (typedef float) variables to store the x, y, z coordinates of the game entity in the game World coordinate system.
+
+
+	-- Location& operator= (const Location&);
+	This is operator overloading of the equal operator (=). The operator is overloaded to copy one Location object to another Location object.
+
+	This function takes one argument.
+		-> It accepts const Location object reference.
+
+
+	-- Location& operator+=(const Location&);
+	This is operator overloading of the plus and equal to operator (+=). The operator is overloaded to add a Location object to itself and then assign the result to itself.
+
+	This function takes one argument.
+		-> It accepts const Location object reference.
+
+
+	-- bool operator< (const Location&) const;
+	This is operator overloading for the less than operator (<). It compares two Location objects and returns a bool value based on which Location object is lesser; the caller or the callee.
+
+	This function takes one argument.
+		-> It accepts const Location object reference.
+
+
+	-- VariableForLocation getX (void) const;
+    -- VariableForLocation getY (void) const;
+    -- VariableForLocation getZ (void) const;
+    These three functions simply return the x, y, and z coordinate of any game entity, respectively.
+
+
+_______________________________________________________________________________
+
+
+SonicLibrary->include->velocity.h and SonicLibrary->source->velocity.cpp
+	This class would be used to signify the Velocity for various game objects in the game World. It signifies the velocity in a 3-dimensional coordinate system. The x-y plane makes up the horizontal plane and the z-axis is the vertical axis.
+
+	We have a typedef variable to denote the velocity values with respect to each axis.
+
+	typedef int VariableForVelocity;
+
+	The following are the private members of the Velocity class.
+
+	VariableForVelocity dx;
+	VariableForVelocity dy;
+	VariableForVelocity dz;
+
+	These variables denote velocity values with respect to each of the axes.
+
+	The following are the public members of the Velocity class.
+
+	-- Velocity ()
+	This is the default constructor of the Velocity class. It sets the velocity of the game entity to zero.
+
+	This constructor takes no parameters.
+
+
+	-- Velocity (VariableForVelocity dx0, VariableForVelocity dy0, VariableForVelocity dz0)
+	This constructor accepts velocities in the three axes and then assigns them to the three velocity variables.
+
+	This constructor takes three parameters.
+		-> VariableForVelocity (typedef int) variables to store the dx, dy, dz velocities of the game entity in the game World coordinate system.
+
+
+	-- Velocity& operator= (const Velocity&);
+	This is operator overloading of the equal operator (=). The operator is overloaded to copy one Velocity object to another Velocity object.
+
+	This function takes one argument.
+		-> It accepts const Velocity object reference.
+
+
+	-- Velocity& operator+=(const Velocity&);
+	This is operator overloading of the plus and equal to operator (+=). The operator is overloaded to add a Velocity object to itself and then assign the result to itself.
+
+	This function takes one argument.
+		-> It accepts const Velocity object reference.
+
+
+	-- bool operator< (const Velocity&) const;
+	This is operator overloading for the less than operator (<). It compares two Velocity objects and returns a bool value based on which Velocity object is lesser; the caller or the callee.
+
+	This function takes one argument.
+		-> It accepts const Velocity object reference.
+
+
+	-- VariableForVelocity getdX (void) const;
+    -- VariableForVelocity getdY (void) const;
+    -- VariableForVelocity getdZ (void) const;
+    These three functions simply return the dx, dy, and dz velocities of any game entity, respectively.
