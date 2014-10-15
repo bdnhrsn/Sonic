@@ -83,6 +83,9 @@ int Mixer3D::loadHRTF(int* pAzimuth, int* pElevation, unsigned int samplerate, u
 {
     int size = mit_hrtf_get(pAzimuth, pElevation, samplerate, diffused, leftFilter, rightFilter);
 
+    if (size == 0) {
+        // TODO: Throw MIT HRTF filter does not exist exception
+    }
     for (int i = 0; i < size; i++)
     {
         leftFilterIn[i] = (double)(leftFilter[i]);
@@ -143,7 +146,7 @@ void Mixer3D::performMix(short *ioDataLeft, short *ioDataRight)
         }        
        
         // scale volume according to distance of object from player
-        // TODO: Is this realistic?
+        // TODO: Is linear decay by distance realistic?
         iVolume = iAudioObj->getVolume();
         iDistance = player.computeDistanceFrom(iAudioObj) ;
         iAmplitudeFactor = iVolume / iDistance;

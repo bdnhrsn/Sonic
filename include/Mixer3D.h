@@ -33,7 +33,7 @@ public:
 	  	  audio data is the processed result of 3D mixing on the current buffers of data in the audio objects and their current 3D positions. The ioData 
 		  arrays must be equal to the bufferSize of the 3D Mixer.
 	*/
-	void performMix(short *ioDataLeft,short *ioDataRight);
+	void performMix(short *ioDataLeft, short *ioDataRight);
 
 private:
 	/**
