@@ -34,6 +34,8 @@ complex* CFFT::convolutionF(const complex *input,const complex *filter, long nSI
 	//Perform zero padding.
 	complex *fInput, *fFilter;
 
+    // TODO: We're not zero-padding here, and these
+    // shouldn't be declared on the heap
 	fInput = new complex[NFFT];
 	for(int i = 0; i < nSIG; i++)
 		fInput[i] = input[i];
@@ -52,6 +54,7 @@ complex* CFFT::convolutionF(const complex *input,const complex *filter, long nSI
 	for(int i = 0; i < NFFT; i++)
 		output[i] = fInput[i] * fFilter[i];
 
+    //TODO: Caller is responsible for deleting output
 	return output;
 }
 
@@ -94,7 +97,8 @@ complex* CFFT::stereoConvMonoInputT(const complex *input,const complex *filterLe
 
 	delete tempLeft;
 	delete tempRight;
-	
+
+    // TODO: Caller is responsible for deleting result	
 	return result;
 }
 
