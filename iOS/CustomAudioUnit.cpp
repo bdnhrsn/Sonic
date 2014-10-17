@@ -120,6 +120,8 @@ CustomAudioUnit::CustomAudioUnit() {
 CustomAudioUnit::~CustomAudioUnit() {
     AudioUnitUninitialize(audioUnitInstance);
     AudioComponentInstanceDispose(audioUnitInstance);
+    delete mixer3D;
+    delete myWorld;
     std::cout<<"\nDestructor";
 }
 
