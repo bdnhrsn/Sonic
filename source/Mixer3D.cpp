@@ -51,19 +51,32 @@ myWorld(w), bufferSize(bufSize), sampleRate(smpRate), bitDepth(bitD), player(myW
 Mixer3D::~Mixer3D()
 {
     delete [] inputAO;
-    delete [] outputLeft;
-    delete [] outputLeft;
-    delete [] leftFilter;
-    delete [] rightFilter;
-    delete [] complexLeftFilter;
-    delete [] complexRightFilter;
-    delete [] overlapLeft;
-    delete [] overlapRight;
     delete [] overlapInput;
-    delete [] prevAzimuths;
-    delete [] prevElevations;
+    delete [] fInput;
+    delete [] fFilter;
     delete [] azimuths;
     delete [] elevations;
+    delete [] prevAzimuths;
+    delete [] prevElevations;
+
+    delete [] leftFilter;
+    delete [] rightFilter;
+    
+    for (int i=0; i < World::MAX_OBJ; i++) {
+        delete [] overlapLeft[i];
+        delete [] overlapRight[i];
+        delete [] outputLeft[i];
+        delete [] outputRight[i];
+        delete [] complexLeftFilter[i];
+        delete [] complexRightFilter[i];
+    }
+ 
+    delete [] overlapLeft;
+    delete [] overlapRight;
+    delete [] outputLeft;
+    delete [] outputRight;
+    delete [] complexLeftFilter;
+    delete [] complexRightFilter;
 }
 
 void Mixer3D::updateAngles() {
