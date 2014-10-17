@@ -22,6 +22,12 @@
 #define BIT_DEPTH 16
 #define SAMPLE_RATE 44100
 
+
+/**
+ *@class CustomAudioUnit
+ *
+ * adapted from the tutorial here: http://atastypixel.com/blog/using-remoteio-audio-unit/
+ */
 class CustomAudioUnit {
     
     AudioUnit audioUnitInstance;

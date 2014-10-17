@@ -34,6 +34,7 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     //Notes: ioData contains buffers (may be more than one)
     //Fill them up as much as you can. Remember to set the size value in each buffer to match how much data is in each buffer.
     
+    // DEBUGGING CODE FOR PLAYING SILENCE
     //ioData->mBuffers[i].mNumberChannels is no. of channels per buffer
     //*ioActionFlags |= kAudioUnitRenderAction_OutputIsSilence;
     //for (UInt32 i=0; i<ioData->mNumberBuffers; ++i) {
@@ -57,7 +58,7 @@ void CustomAudioUnit::init () {
     AudioComponentDescription desc;
     
     desc.componentType = kAudioUnitType_Output;
-    desc.componentSubType = kAudioUnitSubType_RemoteIO;
+    desc.componentSubType = kAudioUnitSubType_RemoteIO; // Remote I/O is for talking with the hardware
     desc.componentFlags = 0;
     desc.componentFlagsMask = 0;
     desc.componentManufacturer = kAudioUnitManufacturer_Apple;
@@ -77,13 +78,12 @@ void CustomAudioUnit::init () {
     enableIO = 1;
     AudioUnitSetProperty(audioUnitInstance, kAudioOutputUnitProperty_EnableIO, kAudioUnitScope_Output, outputBus, &enableIO, sizeof(enableIO));
     
-    
-    UInt32 bytesPerSample = sizeof(short) ;  //sizeof(AudioUnitSampleType);
+    UInt32 bytesPerSample = BIT_DEPTH/8.0;
     AudioStreamBasicDescription stereoStreamFormat = {0};
     stereoStreamFormat.mBitsPerChannel = 8 * bytesPerSample;
     stereoStreamFormat.mBytesPerFrame = bytesPerSample;
     stereoStreamFormat.mBytesPerPacket = bytesPerSample;
-    stereoStreamFormat.mChannelsPerFrame = 2;   // 2 incdicates stereo
+    stereoStreamFormat.mChannelsPerFrame = 2;   // 2 indicates stereo
     stereoStreamFormat.mFormatFlags = kAudioFormatFlagIsSignedInteger |
     kAudioFormatFlagsNativeEndian |
     kAudioFormatFlagIsPacked |
@@ -98,9 +98,9 @@ void CustomAudioUnit::init () {
     
     //Setting input callback
     AURenderCallbackStruct callbackStruct;
-    callbackStruct.inputProc = &recordingCallback;    //////Should there be an ampersand
+    callbackStruct.inputProc = &recordingCallback;    //TODO: Should there be an ampersand?
     callbackStruct.inputProcRefCon = audioUnitInstance;
-    AudioUnitSetProperty(audioUnitInstance, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Output, inputBus, &callbackStruct, sizeof(callbackStruct));   /////Not sure of scope and bus/element
+    AudioUnitSetProperty(audioUnitInstance, kAudioOutputUnitProperty_SetInputCallback, kAudioUnitScope_Output, inputBus, &callbackStruct, sizeof(callbackStruct));   //TODO: Not sure of scope and bus/element
  
     //Setting output callback
     callbackStruct.inputProc = &playbackCallback;
@@ -108,7 +108,6 @@ void CustomAudioUnit::init () {
     AudioUnitSetProperty(audioUnitInstance, kAudioUnitProperty_SetRenderCallback, kAudioUnitScope_Input, outputBus, &callbackStruct, sizeof(callbackStruct));
     
     AudioUnitInitialize(audioUnitInstance);
-
 }
  
 CustomAudioUnit::CustomAudioUnit() {
