@@ -1,4 +1,17 @@
 #include "../include/World.h"
+//TODO: function order should match header file
+
+World::~World() {
+    //TODO: Figure out how best to delete vector<AudioObj *> World::objList
+    // maybe use boost::pointer_vector ("smart pointers"?)
+    // http://stackoverflow.com/questions/15942706/c-deleting-vector-of-pointers
+    // but for now:
+    
+    while(!objList.empty()) {
+        delete objList.back();
+        objList.pop_back();
+    }
+}
 
 Player& World::getPlayer() {
     return player;

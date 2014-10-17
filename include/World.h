@@ -42,6 +42,8 @@ class World {
     */
 	World(const Location& loc, const Velocity& vel, float bear) : player(Player(loc,vel, bear)), threshold(0.05), isWriteThreadCreated(false) {}
 
+    ~World();
+
     //Getters
     
 	/**
@@ -95,6 +97,5 @@ class World {
 
 
 };
-
 
 #endif
