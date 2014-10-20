@@ -36,6 +36,11 @@ void AudioObj::setVolume(float vol) {
     this->volume = vol;
 }
 
+void AudioObj::setRandomVolume() {
+	float randVol = (rand() % 100 + 1) / 100.0
+	this->setVolume(randVol);
+}
+	
 bool AudioObj::isActive() const {
     return this->active;
 }

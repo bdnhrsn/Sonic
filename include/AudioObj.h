@@ -68,6 +68,10 @@ class AudioObj {
     // Sets the volume of the audio object. This will only accept values from 0 to 1.
 	void setVolume(float vol);
 
+	// Sets the volume of the audio object to a random value in the range
+	// [0.01, 1].
+	void setRandomVolume();
+
 	// Returns whether or not the object is active
 	bool isActive() const;
 
