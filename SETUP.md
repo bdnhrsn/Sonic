@@ -4,7 +4,7 @@ Use this guide to import [Sonic](https://github.com/philadelphiagamelab/Sonic), 
 
 #### iOS Setup
 
-If you're just starting your application, consider using the [SonicDemo project](https://github.com/ as a starting point. If for whatever reason you'd rather set things up manually, follow these instructions:
+If you're just starting your application, consider using the [SonicDemo project](https://github.com/) as a starting point. If for whatever reason you'd rather set things up manually, follow these instructions:
 
 1. Create a new github repository for your demo app. It's a good idea to initialize it with a README and a LICENSE. Then clone the github repo to your local machine and, assuming you've already started your XCode project, add your project to it:
 
