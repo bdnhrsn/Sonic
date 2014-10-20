@@ -57,7 +57,12 @@ void * World::writeAudioObjects (void* obj) {
         for (int i=0; i < size ; i++){
             (*objListCurrent)[i]->writeCircBuff();
         }
-        usleep(10000);
+        // TODO: Perform other game-level processing, e.g. moving players and collision handling
+        // TODO: Wait for callback flag, instead of hard-coded time, then
+        // update AudioObjects' input and re-perform mix
+        // World::Mixer3D->performMix(globalOutputLeft, globalOutputRight)
+        // TODO: Need to set World::MAX_OBJ such that the mixing happens faster than the callback
+        usleep(10000); // TODO: fix hard code sleep
     }
     return NULL;
 }

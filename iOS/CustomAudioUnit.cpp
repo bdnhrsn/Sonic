@@ -45,6 +45,8 @@ static OSStatus playbackCallback (void *inRefCon, AudioUnitRenderActionFlags *io
     
     //clock_t t1, t2;
     //t1 = clock();
+    
+    // TODO: Move the mixing from the playback to World::writeThread, set a "playback called" flag so World::writeThread will know when it can iterate again
     mixer3D->performMix((short *)ioData->mBuffers[0].mData, (short *) ioData->mBuffers[1].mData);
     //t2 = clock();
     //cout<<"The time consumption is "<<((double)(t2-t1))/CLOCKS_PER_SEC<<endl;
