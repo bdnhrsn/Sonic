@@ -17,6 +17,10 @@ processing on mobile devices. The current version supports only iOS devices.
     
 `soundFiles/` Sound files for testing. File are arranged in subdirectories by file type. Files are named with the convention `<bit-depth>-<sample-rate>-<description>.<extension>`.
 
+### Documentation
+
+Documentation for Sonic was generated using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), and can be found [here](sonic.philadelphiagamelab.org). The Doxygen-style documentation was in turn generated using the `doxit.py` script included in [testgen 0.11](http://sourceforge.net/projects/testgen/files/).
+
 ### Demo iOS applications
 
 [SonicDemo](https://github.com/philadelphiagamelab/SonicDemo): A starting point for your Sonic app.
