@@ -21,6 +21,14 @@ processing on mobile devices. The current version supports only iOS devices.
 
 Documentation for Sonic was generated using [Doxygen](http://www.stack.nl/~dimitri/doxygen/), and can be found [here](sonic.philadelphiagamelab.org). The Doxygen-style documentation was in turn generated using the `doxit.py` script included in [testgen 0.11](http://sourceforge.net/projects/testgen/files/).
 
+### Sound-file format
+
+Officially Sonic is only compatible with 16-bit WAV LPCM @ 44.1kHz, though converting other formats to this is very easy using [Sox, the Sound eXchange library](http://sox.sourceforge.net/):
+
+   $> sox <input-file> -b 16 <output-file>.wav rate 44100 dither -s 
+
+Work is currently being done on interfacing the Sonic library with a config file where parameters like bit-depth and sampling rate can be adjusted, making Sonic compatible with other formats without need for file conversion.
+
 ### Demo iOS applications
 
 [SonicDemo](https://github.com/philadelphiagamelab/SonicDemo): A starting point for your Sonic app.
