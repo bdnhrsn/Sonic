@@ -37,7 +37,7 @@ void AudioObj::setVolume(float vol) {
 }
 
 void AudioObj::setRandomVolume() {
-	float randVol = (rand() % 100 + 1) / 100.0
+    float randVol = (rand() % 100 + 1) / 100.0;
 	this->setVolume(randVol);
 }
 	
